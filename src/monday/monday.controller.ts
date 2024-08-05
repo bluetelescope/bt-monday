@@ -1,5 +1,6 @@
 import { Controller, Post, Get, Param, Query, Body } from '@nestjs/common';
 import { ValidateMondayDto } from './dto/validate-monday.dto';
+import { MondayService } from './monday.service';
 
 @Controller('monday')
 export class MondayController {
@@ -16,8 +17,9 @@ export class MondayController {
   }
   //   POST validate
   @Post()
-  postMonday(@Body() validateMonday: ValidateMondayDto) {
-    return { challenge: validateMonday.challenge };
+  postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
+    const service = new MondayService();
+    return service.postValidateMonday(validateMonday.challenge);
   }
   // POST event
 
