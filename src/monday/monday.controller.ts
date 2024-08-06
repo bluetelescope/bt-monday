@@ -1,12 +1,5 @@
-import { Controller, Post, Get, Param, Query, Body } from '@nestjs/common';
-import { RawBodyRequest, Req } from '@nestjs/common';
+import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
-
-import { ValidateMondayDto } from './dto/validate-monday.dto';
-// import { PostStatusToWonDto } from './dto/status-won.dto';
-// import { PostTestDto } from './dto/post-test.dto';
-
-import { MondayService } from './monday.service';
 
 @Controller('monday')
 export class MondayController {
@@ -31,11 +24,13 @@ export class MondayController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
+      if (!!data.event) {
+        console.log('data:', data);
+      } else {
+        console.log('no event:', data);
+      }
       // body is parsed by NestJS
-      console.log('data:', data);
     }
-
-    // ...
   }
   // create(@Req() req: RawBodyRequest<Request>) {
   //   const raw = req.rawBody; // returns a `Buffer`.
@@ -45,6 +40,10 @@ export class MondayController {
   //   return service.postMonday(validateMonday.challenge);
   // }
 }
+// import { ValidateMondayDto } from './dto/validate-monday.dto';
+// import { MondayService } from './monday.service';
+// import { PostStatusToWonDto } from './dto/status-won.dto';
+// import { PostTestDto } from './dto/post-test.dto';
 
 // @Controller('monday')
 // export class MondayController {
