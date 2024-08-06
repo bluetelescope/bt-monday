@@ -23,12 +23,15 @@ export class MondayController {
     const service = new MondayService();
     return service.postValidateMonday(validateMonday.challenge);
   }
+
   // POST status to won
   @Post()
   postStatusToWon(@Body() postStatusToWonDto: PostStatusToWonDto) {
     const service = new MondayService();
     return service.postStatusToWon(postStatusToWonDto);
-
-    // test creation of item in board in different workspace??
+  }
+  @Post()
+  postTest() {
+    return 'i recived your post';
   }
 }
