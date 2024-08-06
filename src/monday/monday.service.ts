@@ -15,13 +15,13 @@ export class MondayService {
     const requestBody = JSON.stringify({
       challenge: `${challenge}`,
     });
-    this.logger.log('Doing something...');
+    this.logger.log('postValidateMonday running...');
 
     return requestBody;
   }
 
-  // postStatusToWon(type?: any) {
-  //   console.log('type', type);
-  //   return type;
-  // }
+  postStatusToWon() {
+    this.logger.log('postStatusToWon running...');
+    return 'testing';
+  }
 }

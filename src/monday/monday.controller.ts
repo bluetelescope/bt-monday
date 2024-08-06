@@ -36,9 +36,9 @@ export class MondayController {
   //   return 'i recived your post';
   // }
 
-  // @Post()
-  // postStatusToWon(@Body() postStatusToWonDto: PostTestDto) {
-  //   const service = new MondayService();
-  //   return 'testing post';
-  // }
+  @Post()
+  postStatusToWon(@Body() postStatusToWonDto: PostTestDto) {
+    const service = new MondayService();
+    return service.postStatusToWon();
+  }
 }
