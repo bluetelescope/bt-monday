@@ -24,6 +24,7 @@ export class MondayController {
     return service.postValidateMonday(validateMonday.challenge);
   }
   // POST status to won
+  @Post()
   postStatusToWon(@Body() postStatusToWonDto: PostStatusToWonDto) {
     const service = new MondayService();
     return service.postStatusToWon(postStatusToWonDto);
