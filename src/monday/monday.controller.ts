@@ -1,5 +1,7 @@
 import { Controller, Post, Get, Param, Query, Body } from '@nestjs/common';
 import { ValidateMondayDto } from './dto/validate-monday.dto';
+import { PostStatusToWonDto } from './dto/status-won.dto';
+
 import { MondayService } from './monday.service';
 
 @Controller('monday')
@@ -16,16 +18,16 @@ export class MondayController {
     return { id };
   }
   //   POST validate
-  // how do i get the url that this post request is being sent from?
   @Post()
   postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
     const service = new MondayService();
     return service.postValidateMonday(validateMonday.challenge);
   }
-  // POST event
+  // POST status to won
+  postStatusToWon(@Body() postStatusToWonDto: PostStatusToWonDto) {
+    const service = new MondayService();
+    return service.postStatusToWon(postStatusToWonDto);
 
-  //   @Get(':challenge')
-  //   postValidate(@Query('challenge') challenge: string) {
-  //     return [{ challenge }];
-  //   }
+    // test creation of item in board in different workspace??
+  }
 }

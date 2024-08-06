@@ -28,4 +28,9 @@ export class MondayService {
     //   return this.httpService.post(requestUrl, requestBody, requestConfig).
     // send post request back to monday with the challenge
   }
+
+  postStatusToWon(event?: any) {
+    console.log('event', event);
+    return event;
+  }
 }
