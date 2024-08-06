@@ -16,6 +16,7 @@ export class MondayController {
     return { id };
   }
   //   POST validate
+  // how do i get the url that this post request is being sent from?
   @Post()
   postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
     const service = new MondayService();
