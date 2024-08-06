@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Param, Query, Body } from '@nestjs/common';
 import { ValidateMondayDto } from './dto/validate-monday.dto';
 import { PostStatusToWonDto } from './dto/status-won.dto';
+import { PostTestDto } from './dto/post-test.dto';
 
 import { MondayService } from './monday.service';
 
@@ -18,20 +19,27 @@ export class MondayController {
     return { id };
   }
   //   POST validate
-  @Post()
-  postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
-    const service = new MondayService();
-    return service.postValidateMonday(validateMonday.challenge);
-  }
+  // @Post()
+  // postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
+  //   const service = new MondayService();
+  //   return service.postValidateMonday(validateMonday.challenge);
+  // }
 
-  // POST status to won
+  // // POST status to won
+  // @Post()
+  // postStatusToWon(@Body() postStatusToWonDto: PostStatusToWonDto) {
+  //   const service = new MondayService();
+  //   return service.postStatusToWon(postStatusToWonDto);
+  // }
+  // @Post()
+  // postTest() {
+  //   return 'i recived your post';
+  // }
+
   @Post()
-  postStatusToWon(@Body() postStatusToWonDto: PostStatusToWonDto) {
+  postStatusToWon(@Body() postStatusToWonDto: PostTestDto) {
     const service = new MondayService();
-    return service.postStatusToWon(postStatusToWonDto);
-  }
-  @Post()
-  postTest() {
-    return 'i recived your post';
+    return 'testing post';
+    // return service.postValidateMonday(validateMonday.challenge);
   }
 }
