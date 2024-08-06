@@ -1,5 +1,5 @@
 export class PostStatusToWonDto {
-  event: any;
+  type: any;
 }
 
 // export class PostStatusToWonDto {

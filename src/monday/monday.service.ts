@@ -29,8 +29,8 @@ export class MondayService {
     // send post request back to monday with the challenge
   }
 
-  postStatusToWon(event?: any) {
-    console.log('event', event);
-    return event;
+  postStatusToWon(type?: any) {
+    console.log('type', type);
+    return type;
   }
 }
