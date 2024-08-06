@@ -18,12 +18,12 @@ export class MondayController {
   getMondayID(@Param('id') id: string) {
     return { id };
   }
-  //   POST validate
-  // @Post()
-  // postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
-  //   const service = new MondayService();
-  //   return service.postValidateMonday(validateMonday.challenge);
-  // }
+  // POST validate
+  @Post()
+  postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
+    const service = new MondayService();
+    return service.postValidateMonday(validateMonday.challenge);
+  }
 
   // // POST status to won
   // @Post()
@@ -36,10 +36,9 @@ export class MondayController {
   //   return 'i recived your post';
   // }
 
-  @Post()
-  postStatusToWon(@Body() postStatusToWonDto: PostTestDto) {
-    const service = new MondayService();
-    return 'testing post';
-    // return service.postValidateMonday(validateMonday.challenge);
-  }
+  // @Post()
+  // postStatusToWon(@Body() postStatusToWonDto: PostTestDto) {
+  //   const service = new MondayService();
+  //   return 'testing post';
+  // }
 }
