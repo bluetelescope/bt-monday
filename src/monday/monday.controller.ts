@@ -19,11 +19,11 @@ export class MondayController {
     return { id };
   }
   // POST validate
-  @Post()
-  postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
-    const service = new MondayService();
-    return service.postValidateMonday(validateMonday.challenge);
-  }
+  // @Post()
+  // postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
+  //   const service = new MondayService();
+  //   return service.postValidateMonday(validateMonday.challenge);
+  // }
 
   // // POST status to won
   // @Post()

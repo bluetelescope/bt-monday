@@ -11,14 +11,14 @@ export class MondayService {
   //     return this.httpService.post('http://localhost:3000/cats',);
 
   //   }
-  postValidateMonday(challenge?: string) {
-    const requestBody = JSON.stringify({
-      challenge: `${challenge}`,
-    });
-    this.logger.log('postValidateMonday running...');
+  // postValidateMonday(challenge?: string) {
+  //   const requestBody = JSON.stringify({
+  //     challenge: `${challenge}`,
+  //   });
+  //   this.logger.log('postValidateMonday running...');
 
-    return requestBody;
-  }
+  //   return requestBody;
+  // }
 
   postStatusToWon() {
     this.logger.log('postStatusToWon running...');
