@@ -11,6 +11,7 @@ export class MondayService {
   //     return this.httpService.post('http://localhost:3000/cats',);
 
   //   }
+
   // postValidateMonday(challenge?: string) {
   //   const requestBody = JSON.stringify({
   //     challenge: `${challenge}`,
@@ -20,8 +21,10 @@ export class MondayService {
   //   return requestBody;
   // }
 
-  postStatusToWon() {
+  postStatusToWon(data?: any) {
     this.logger.log('postStatusToWon running...');
+    this.logger.log(data);
+
     return 'testing';
   }
 }
