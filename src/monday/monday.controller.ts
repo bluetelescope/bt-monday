@@ -28,6 +28,10 @@ export class MondayController {
         console.log('data:', data);
       } else {
         console.log('no event:', data);
+        const requestBody = JSON.stringify({
+          challenge: `${data.challenge}`,
+        });
+        return requestBody;
       }
       // body is parsed by NestJS
     }
