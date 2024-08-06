@@ -37,7 +37,7 @@ export class MondayController {
   // }
 
   @Post()
-  postStatusToWon(@Body() postStatusToWonDto: PostTestDto) {
+  postStatusToWon(@Body() data: any) {
     const service = new MondayService();
     return service.postStatusToWon();
   }
