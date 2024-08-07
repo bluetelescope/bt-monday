@@ -108,7 +108,6 @@ export class MondayController {
             const subscribers = responseData.subscribers;
             //[ { id: '23774585' }, { id: '26473580' } ]
             const columns = responseData.column_values;
-
             const proposal = columns.filter((column) => {
               return column.column.title.includes('Proposal');
             })[0].value;
@@ -147,10 +146,9 @@ export class MondayController {
               },
               data: graphqlPost,
             };
-
             console.log('configPostItem', configPostItem);
             // //make post request with data that has been put into variables above
-            return axios.post(configPostItem);
+            return axios.request(configPostItem);
           })
           .then((response) => {
             console.log(
