@@ -81,11 +81,15 @@ export class MondayController {
             const itemName = response.data.data.items.name;
             const subscribers = response.data.data.items.subscribers;
             const columns = response.data.data.items.column_values;
+            console.log(
+              'columns*************************************',
+              columns,
+            );
 
             const proposal = columns.filter((column) => {
               return column.column.title.includes('Proposal');
             });
-            console.log('proposal', proposal);
+            console.log('proposal**************************', proposal);
             const estRevenue = '';
             const forecastValue = '';
             const actualProjectValue = '';
