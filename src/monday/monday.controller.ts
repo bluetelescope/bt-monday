@@ -57,7 +57,7 @@ export class MondayController {
           method: 'POST',
           headers: myHeaders,
           body: graphql,
-          redirect: 'follow',
+          // redirect: 'follow',
         };
 
         fetch('https://api.monday.com/v2', requestOptions)
