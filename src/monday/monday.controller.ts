@@ -66,20 +66,35 @@ export class MondayController {
           .request(config)
           .then((response) => {
             console.log('*********************************response');
-            console.log('response', response);
-            console.log('response.data', response.data);
+            // console.log('response', response);
+            // console.log('response.data', response.data);
+            // console.log(
+            //   'JSON.stringify(response.data)*******************************************',
+            //   JSON.stringify(response.data),
+            // );
+
             console.log(
               'response.data.data.items *******************************************',
               response.data.data.items,
             );
-            console.log(
-              'JSON.stringify(response.data)*******************************************',
-              JSON.stringify(response.data),
-            );
+
+            const itemName = response.data.data.items.name;
+            const subscribers = response.data.data.items.subscribers;
+            const columns = response.data.data.items.column_values;
+
+            const proposal = columns.filter((column) => {
+              return column.column.title.includes('Proposal');
+            });
+            console.log('proposal', proposal);
+            const estRevenue = '';
+            const forecastValue = '';
+            const actualProjectValue = '';
+            const costOfProd = '';
+            const files = '';
+            const gDrive = '';
           })
           .catch((error) => {
             console.log('*********************************response');
-
             console.log(error);
           });
         //event info has information regarding only the value of this particular column information
