@@ -40,10 +40,30 @@ export class MondayController {
         //if there is not an event field on the body
         //it's the verification request
         console.log('no event:', data);
-        const requestBody = JSON.stringify({
-          challenge: `${data.challenge}`,
+        const myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        myHeaders.append('Authorization', '••••••');
+        myHeaders.append(
+          'Cookie',
+          '__cf_bm=m8zc61.IT0xf6oKWKbBo0QWuPhgxPFUC1dW87JwdnpE-1723044832-1.0.1.1-jUOMtZtUcNVOa.AdRWzi6gzMAurMpB6iDfAZol1F8eKTorhtD5fLHGey_bZSPocyVGvoqr2OMshqhyFugxndrzYrXfWvJml80MJlgJOvxY8',
+        );
+
+        const graphql = JSON.stringify({
+          query:
+            'mutation{\n create_board(  \ntemplate_id: 6198096739\n  board_name: "Testing"\ndescription: "board created as test for automation"\nboard_kind: public\nfolder_id: 7860571\nworkspace_id: 1080416\nboard_owner_ids: [37385671]\nboard_owner_team_ids: [614284]\nboard_subscriber_ids: [37385671]\nboard_subscriber_teams_ids: [614284]\nempty: false\n){id}\n\n}',
+          variables: {},
         });
-        return requestBody;
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: graphql,
+          redirect: 'follow',
+        };
+
+        fetch('https://api.monday.com/v2', requestOptions)
+          .then((response) => response.text())
+          .then((result) => console.log(result))
+          .catch((error) => console.error(error));
       }
       // body is parsed by NestJS
     }
