@@ -99,6 +99,9 @@ export class MondayController {
         axios
           .request(configGetItem)
           .then((response) => {
+            console.log(
+              'response get ***************************************************',
+            );
             const responseData = response.data.data.items[0];
             const itemName = responseData.name;
             //Hadley_Colored Musicians Club
@@ -145,24 +148,26 @@ export class MondayController {
               data: graphqlPost,
             };
 
-            //make post request with data that has been put into variables above
-            return axios.post(configPostItem);
+            console.log('configPostItem', configPostItem);
+            // //make post request with data that has been put into variables above
+            // return axios.post(configPostItem);
           })
-          .then((response) => {
-            console.log(
-              '*********************************response to post 1',
-              response,
-            );
-            console.log(
-              '*********************************response to post 1',
-              response.data,
-            );
+          // .then((response) => {
+          //   console.log(
+          //     '*********************************response to post 1',
+          //     response,
+          //   );
+          //   console.log(
+          //     '*********************************response to post 1',
+          //     response.data,
+          //   );
 
-            // return axios.get('https://maps.googleapis.com/maps/api/geocode/json?&address=' + this.props.p3);
-          });
-        // .then(response => {
-        //   this.setState({ p3Location: response.data });
-        // }).catch(error => console.log(error.response));
+          // return axios.get('https://maps.googleapis.com/maps/api/geocode/json?&address=' + this.props.p3);
+          // });
+          //   .then((response) => {
+          // this.setState({ p3Location: response.data });
+          //  })
+          .catch((error) => console.log(error.response));
 
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
