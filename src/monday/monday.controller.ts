@@ -72,36 +72,31 @@ export class MondayController {
             //   'JSON.stringify(response.data)*******************************************',
             //   JSON.stringify(response.data),
             // );
+            // console.log(
+            //   'response.data.data.items *******************************************',
+            //   response.data.data.items,
+            // );
 
-            console.log(
-              'response.data.data.items *******************************************',
-              response.data.data.items,
-            );
             console.log(
               'response.data.data.items[0] *******************************************',
               response.data.data.items[0],
             );
 
-            const itemName = response.data.data.items[0].name;
-            console.log(
-              'itemName*************************************',
-              itemName,
-            );
-            const subscribers = response.data.data.items[0].subscribers;
-            console.log(
-              'subscribers*************************************',
-              subscribers,
-            );
-            const columns = response.data.data.items[0].column_values;
-            console.log(
-              'columns*************************************',
-              columns,
-            );
+            const responseData = response.data.data.items[0];
+            const itemName = responseData.name;
+            //Hadley_Colored Musicians Club
+            const subscribers = responseData.subscribers;
+            //[ { id: '23774585' }, { id: '26473580' } ]
+            const columns = responseData.column_values;
+            // console.log(
+            //   'columns*************************************',
+            //   columns,
+            // );
 
-            // const proposal = columns.filter((column) => {
-            //   return column.column.title.includes('Proposal');
-            // });
-            // console.log('proposal**************************', proposal);
+            const proposal = columns.filter((column) => {
+              return column.column.title.includes('Proposal');
+            });
+            console.log('proposal**************************', proposal);
             const estRevenue = '';
             const forecastValue = '';
             const actualProjectValue = '';
