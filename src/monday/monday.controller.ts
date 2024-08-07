@@ -10,7 +10,7 @@ const PIPELINE_BOARD = 5552219681;
 const TIMETRACKING_BOARD = 5872168554;
 const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
-
+const MIDLEVEL_FOLDER = 14770065;
 @Controller('monday')
 export class MondayController {
   @Get()
@@ -37,15 +37,12 @@ export class MondayController {
       //if there is an event field on the body
       if (!!data.event) {
         console.log('data:', data);
-
         const axios = require('axios');
-
         const graphql = JSON.stringify({
           query:
             'query {\n  items(limit: 1, ids: [5104037469]) {\n    column_values {\n      value\n      column {\n        title\n      }\n    }\n    name\n    subscribers {\n      id\n      \n    }\n  }\n}',
         });
-
-        let config = {
+        let configGetItem = {
           method: 'get',
           maxBodyLength: Infinity,
           url: 'https://api.monday.com/v2',
@@ -58,56 +55,113 @@ export class MondayController {
           data: graphql,
         };
 
-        console.log(
-          'config*************************************************************************',
-          config,
-        );
+        // axios
+        //   .request(configGetItem)
+        //   .then((response) => {
+        //     console.log('*********************************response to get 1');
+
+        //     const responseData = response.data.data.items[0];
+        //     const itemName = responseData.name;
+        //     //Hadley_Colored Musicians Club
+        //     const subscribers = responseData.subscribers;
+        //     //[ { id: '23774585' }, { id: '26473580' } ]
+        //     const columns = responseData.column_values;
+
+        //     const proposal = columns.filter((column) => {
+        //       return column.column.title.includes('Proposal');
+        //     })[0].value;
+        //     const estRevenue = columns.filter((column) => {
+        //       return column.column.title.includes('Est Revenue');
+        //     })[0].value;
+        //     const forecastValue = columns.filter((column) => {
+        //       return column.column.title.includes('Forecast Value');
+        //     })[0].value;
+        //     const actualProjectValue = columns.filter((column) => {
+        //       return column.column.title.includes('Project Value');
+        //     })[0].value;
+        //     const costOfProd = columns.filter((column) => {
+        //       return column.column.title.includes('Cost of Production');
+        //     })[0].value;
+        //     const files = columns.filter((column) => {
+        //       return column.column.title.includes('Files');
+        //     })[0].value;
+        //     const gDrive = columns.filter((column) => {
+        //       return column.column.title.includes('(G-Drive)');
+        //     })[0].value;
+        //   })
+        //   .catch((error) => {
+        //     console.log('*********************************response');
+        //     console.log(error);
+        //   });
+
         axios
-          .request(config)
+          .request(configGetItem)
           .then((response) => {
-            console.log('*********************************response');
-            // console.log('response', response);
-            // console.log('response.data', response.data);
-            // console.log(
-            //   'JSON.stringify(response.data)*******************************************',
-            //   JSON.stringify(response.data),
-            // );
-            // console.log(
-            //   'response.data.data.items *******************************************',
-            //   response.data.data.items,
-            // );
-
-            console.log(
-              'response.data.data.items[0] *******************************************',
-              response.data.data.items[0],
-            );
-
             const responseData = response.data.data.items[0];
             const itemName = responseData.name;
             //Hadley_Colored Musicians Club
             const subscribers = responseData.subscribers;
             //[ { id: '23774585' }, { id: '26473580' } ]
             const columns = responseData.column_values;
-            // console.log(
-            //   'columns*************************************',
-            //   columns,
-            // );
 
             const proposal = columns.filter((column) => {
               return column.column.title.includes('Proposal');
+            })[0].value;
+            const estRevenue = columns.filter((column) => {
+              return column.column.title.includes('Est Revenue');
+            })[0].value;
+            const forecastValue = columns.filter((column) => {
+              return column.column.title.includes('Forecast Value');
+            })[0].value;
+            const actualProjectValue = columns.filter((column) => {
+              return column.column.title.includes('Project Value');
+            })[0].value;
+            const costOfProd = columns.filter((column) => {
+              return column.column.title.includes('Cost of Production');
+            })[0].value;
+            const files = columns.filter((column) => {
+              return column.column.title.includes('Files');
+            })[0].value;
+            const gDrive = columns.filter((column) => {
+              return column.column.title.includes('(G-Drive)');
+            })[0].value;
+
+            const graphqlPost = JSON.stringify({
+              query: `mutation{\n create_board(  \ntemplate_id: ${TEMPLATE_BOARD}\n  board_name: \"${TEMPLATE_BOARD}\"\ndescription: \"Board automatically generated from template.\"\nboard_kind: public\nfolder_id: ${MIDLEVEL_FOLDER}\nworkspace_id: ${PROD_WORKSPACE}\nboard_owner_ids: [37385671]\nboard_owner_team_ids: [614284]\nboard_subscriber_ids: [37385671]\nboard_subscriber_teams_ids: [614284]\nempty: false\n){id}\n\n}`,
             });
-            console.log('proposal**************************', proposal);
-            const estRevenue = '';
-            const forecastValue = '';
-            const actualProjectValue = '';
-            const costOfProd = '';
-            const files = '';
-            const gDrive = '';
+
+            let configPostItem = {
+              method: 'post',
+              maxBodyLength: Infinity,
+              url: 'https://api.monday.com/v2',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.MONDAY_AUTH}`,
+                Cookie:
+                  '__cf_bm=m8zc61.IT0xf6oKWKbBo0QWuPhgxPFUC1dW87JwdnpE-1723044832-1.0.1.1-jUOMtZtUcNVOa.AdRWzi6gzMAurMpB6iDfAZol1F8eKTorhtD5fLHGey_bZSPocyVGvoqr2OMshqhyFugxndrzYrXfWvJml80MJlgJOvxY8',
+              },
+              data: graphqlPost,
+            };
+
+            //make post request with data that has been put into variables above
+            return axios.post(configPostItem);
           })
-          .catch((error) => {
-            console.log('*********************************response');
-            console.log(error);
+          .then((response) => {
+            console.log(
+              '*********************************response to post 1',
+              response,
+            );
+            console.log(
+              '*********************************response to post 1',
+              response.data,
+            );
+
+            // return axios.get('https://maps.googleapis.com/maps/api/geocode/json?&address=' + this.props.p3);
           });
+        // .then(response => {
+        //   this.setState({ p3Location: response.data });
+        // }).catch(error => console.log(error.response));
+
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
       } else {
