@@ -132,7 +132,7 @@ export class MondayController {
             })[0].value;
 
             const graphqlPost = JSON.stringify({
-              query: `mutation{\n create_board(  \ntemplate_id: ${TEMPLATE_BOARD}\n  board_name: \"${TEMPLATE_BOARD}\"\ndescription: \"Board automatically generated from template.\"\nboard_kind: public\nfolder_id: ${ACTIVE_FOLDER}\nworkspace_id: ${PROD_WORKSPACE}\nboard_owner_ids: [37385671]\nboard_owner_team_ids: [614284]\nboard_subscriber_ids: [37385671]\nboard_subscriber_teams_ids: [614284]\nempty: false\n){id}\n\n}`,
+              query: `mutation{\n create_board(  \ntemplate_id: ${TEMPLATE_BOARD}\n  board_name: \"${itemName}\"\ndescription: \"Board automatically generated from template.\"\nboard_kind: public\nfolder_id: ${ACTIVE_FOLDER}\nworkspace_id: ${PROD_WORKSPACE}\nboard_owner_ids: [37385671]\nboard_owner_team_ids: [614284]\nboard_subscriber_ids: [37385671]\nboard_subscriber_teams_ids: [614284]\nempty: false\n){id}\n\n}`,
             });
 
             let configPostItem = {
@@ -150,23 +150,18 @@ export class MondayController {
 
             console.log('configPostItem', configPostItem);
             // //make post request with data that has been put into variables above
-            // return axios.post(configPostItem);
+            return axios.post(configPostItem);
           })
-          // .then((response) => {
-          //   console.log(
-          //     '*********************************response to post 1',
-          //     response,
-          //   );
-          //   console.log(
-          //     '*********************************response to post 1',
-          //     response.data,
-          //   );
-
-          // return axios.get('https://maps.googleapis.com/maps/api/geocode/json?&address=' + this.props.p3);
-          // });
-          //   .then((response) => {
-          // this.setState({ p3Location: response.data });
-          //  })
+          .then((response) => {
+            console.log(
+              '*********************************response to post 1',
+              response,
+            );
+            console.log(
+              '*********************************response.data to post 1',
+              response.data,
+            );
+          })
           .catch((error) => console.log(error.response));
 
         //event info has information regarding only the value of this particular column information
