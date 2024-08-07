@@ -1,5 +1,6 @@
 import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
+import * as process from 'process';
 
 @Controller('monday')
 export class MondayController {
@@ -30,7 +31,7 @@ export class MondayController {
 
         const myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-        myHeaders.append('Authorization', '••••••');
+        myHeaders.append('Authorization', process.env.MONDAY_AUTH);
         myHeaders.append(
           'Cookie',
           '__cf_bm=m8zc61.IT0xf6oKWKbBo0QWuPhgxPFUC1dW87JwdnpE-1723044832-1.0.1.1-jUOMtZtUcNVOa.AdRWzi6gzMAurMpB6iDfAZol1F8eKTorhtD5fLHGey_bZSPocyVGvoqr2OMshqhyFugxndrzYrXfWvJml80MJlgJOvxY8',
@@ -47,11 +48,13 @@ export class MondayController {
           body: graphql,
           // redirect: 'follow',
         };
-
+        console.log('requestOptions', requestOptions);
         fetch('https://api.monday.com/v2', requestOptions)
-          .then((response) => response.text())
-          .then((result) => console.log(result))
-          .catch((error) => console.error(error));
+          .then((response) =>
+            console.log(console.log('response.text()', response.text())),
+          )
+          .then((result) => console.log('result ', result))
+          .catch((error) => console.error('error', error));
 
         //send post request to monday
       } else {
