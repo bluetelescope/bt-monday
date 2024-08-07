@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as process from 'process';
 
 export default function getItemInfo() {
   const axios = require('axios');
