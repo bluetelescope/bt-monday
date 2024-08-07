@@ -11,6 +11,8 @@ const TIMETRACKING_BOARD = 5872168554;
 const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
 const MIDLEVEL_FOLDER = 14770065;
+const ACTIVE_FOLDER = 7860571;
+
 @Controller('monday')
 export class MondayController {
   @Get()
@@ -127,7 +129,7 @@ export class MondayController {
             })[0].value;
 
             const graphqlPost = JSON.stringify({
-              query: `mutation{\n create_board(  \ntemplate_id: ${TEMPLATE_BOARD}\n  board_name: \"${TEMPLATE_BOARD}\"\ndescription: \"Board automatically generated from template.\"\nboard_kind: public\nfolder_id: ${MIDLEVEL_FOLDER}\nworkspace_id: ${PROD_WORKSPACE}\nboard_owner_ids: [37385671]\nboard_owner_team_ids: [614284]\nboard_subscriber_ids: [37385671]\nboard_subscriber_teams_ids: [614284]\nempty: false\n){id}\n\n}`,
+              query: `mutation{\n create_board(  \ntemplate_id: ${TEMPLATE_BOARD}\n  board_name: \"${TEMPLATE_BOARD}\"\ndescription: \"Board automatically generated from template.\"\nboard_kind: public\nfolder_id: ${ACTIVE_FOLDER}\nworkspace_id: ${PROD_WORKSPACE}\nboard_owner_ids: [37385671]\nboard_owner_team_ids: [614284]\nboard_subscriber_ids: [37385671]\nboard_subscriber_teams_ids: [614284]\nempty: false\n){id}\n\n}`,
             });
 
             let configPostItem = {
