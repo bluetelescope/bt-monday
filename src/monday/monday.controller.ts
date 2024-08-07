@@ -77,18 +77,22 @@ export class MondayController {
               'response.data.data.items *******************************************',
               response.data.data.items,
             );
+            console.log(
+              'response.data.data.items[0] *******************************************',
+              response.data.data.items[0],
+            );
 
-            const itemName = response.data.data.items.name;
+            const itemName = response.data.data.items[0].name;
             console.log(
               'itemName*************************************',
               itemName,
             );
-            const subscribers = response.data.data.items.subscribers;
+            const subscribers = response.data.data.items[0].subscribers;
             console.log(
               'subscribers*************************************',
               subscribers,
             );
-            const columns = response.data.data.items.column_values;
+            const columns = response.data.data.items[0].column_values;
             console.log(
               'columns*************************************',
               columns,
