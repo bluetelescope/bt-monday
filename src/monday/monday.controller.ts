@@ -87,7 +87,7 @@ empty: false
           url: 'https://api.monday.com/v2',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.MONDAY_AUTH}`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjI0MjgxODkyOSwiYWFpIjoxMSwidWlkIjozNzM4NTY3MSwiaWFkIjoiMjAyMy0wMy0wOFQyMzo1OTo1OS4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6OTY0MzczMiwicmduIjoidXNlMSJ9.m7YznLLAOBecwBL3j6k0TUkLYAVOtX24AW5BGePdQCY`,
             Cookie:
               '__cf_bm=m8zc61.IT0xf6oKWKbBo0QWuPhgxPFUC1dW87JwdnpE-1723044832-1.0.1.1-jUOMtZtUcNVOa.AdRWzi6gzMAurMpB6iDfAZol1F8eKTorhtD5fLHGey_bZSPocyVGvoqr2OMshqhyFugxndrzYrXfWvJml80MJlgJOvxY8',
           },
