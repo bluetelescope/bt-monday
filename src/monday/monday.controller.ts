@@ -67,6 +67,7 @@ export class MondayController {
           .then((response) => {
             console.log('*********************************response');
             console.log(JSON.stringify(response.data));
+            return JSON.stringify(response.data);
           })
           .catch((error) => {
             console.log('*********************************response');
