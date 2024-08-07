@@ -24,9 +24,21 @@ export class MondayController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
+      //if there is an event field on the body
       if (!!data.event) {
         console.log('data:', data);
+        const graphql = JSON.stringify({
+          query:
+            'mutation{\n create_board(  \ntemplate_id: 6198096739\n  board_name: "Testing"\ndescription: "board created as test for automation"\nboard_kind: public\nfolder_id: 7860571\nworkspace_id: 1080416\nboard_owner_ids: [37385671]\nboard_owner_team_ids: [614284]\nboard_subscriber_ids: [37385671]\nboard_subscriber_teams_ids: [614284]\nempty: false\n){id}\n\n}',
+          variables: {},
+        });
+
+        return graphql;
+
+        //send post request to monday
       } else {
+        //if there is not an event field on the body
+        //it's the verification request
         console.log('no event:', data);
         const requestBody = JSON.stringify({
           challenge: `${data.challenge}`,
@@ -36,14 +48,16 @@ export class MondayController {
       // body is parsed by NestJS
     }
   }
-  // create(@Req() req: RawBodyRequest<Request>) {
-  //   const raw = req.rawBody; // returns a `Buffer`.
-  // }
-  // postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
-  //   const service = new MondayService();
-  //   return service.postMonday(validateMonday.challenge);
-  // }
 }
+
+// create(@Req() req: RawBodyRequest<Request>) {
+//   const raw = req.rawBody; // returns a `Buffer`.
+// }
+// postValidateMonday(@Body() validateMonday: ValidateMondayDto) {
+//   const service = new MondayService();
+//   return service.postMonday(validateMonday.challenge);
+// }
+
 // import { ValidateMondayDto } from './dto/validate-monday.dto';
 // import { MondayService } from './monday.service';
 // import { PostStatusToWonDto } from './dto/status-won.dto';
