@@ -9,7 +9,7 @@ export function returnPostBoardQuery(
   subscriberTeamID: number,
 ) {
   return JSON.stringify({
-    query: `mutation{\n create_board(  \ntemplate_id: ${TEMPLATE_BOARD}\n  board_name: \"${itemName}\"\ndescription: \"Board automatically generated from template.\"\nboard_kind: public\nfolder_id: ${ACTIVE_FOLDER}\nworkspace_id: ${PROD_WORKSPACE}\nboard_owner_ids: [${ownerIds.map((id) => `${id},`)}]\nboard_owner_team_ids: [${ownerTeamID}]\nboard_subscriber_ids: [${subscriberIds.map((id) => `${id},`)}]\nboard_subscriber_teams_ids: [${subscriberTeamID}]\nempty: false\n){id}\n\n}`,
+    query: `mutation{\n create_board(  \ntemplate_id: ${TEMPLATE_BOARD}\n  board_name: \"${itemName}\"\ndescription: \"Board automatically generated from template.\"\nboard_kind: public\nfolder_id: ${ACTIVE_FOLDER}\nworkspace_id: ${PROD_WORKSPACE}\nboard_owner_ids: [${ownerIds.map((id) => `${id}`)}]\nboard_owner_team_ids: [${ownerTeamID}]\nboard_subscriber_ids: [${subscriberIds.map((id) => `${id}`)}]\nboard_subscriber_teams_ids: [${subscriberTeamID}]\nempty: false\n){id}\n\n}`,
   });
 }
 

@@ -73,23 +73,6 @@ export class MondayController {
         let itemName = ''; //Hadley_Colored Musicians Club
         let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
         let columns = [];
-        // let proposal;
-        // let estRevenue;
-        // let forecastValue;
-        // let actualProjectValue;
-        // let costOfProd;
-        // let files = '';
-        // let gDrive = '';
-        // let team = [];
-        // let boards = [];
-
-        // const graphqlPostBoard = returnPostBoardQuery(
-        //   TEMPLATE_BOARD,
-        //   itemName,
-        //   ACTIVE_FOLDER,
-        //   PROD_WORKSPACE,
-        // );
-        // let configPostBoard = returnPostBoardConfig(graphqlPostBoard);
 
         axios
           .request(configGetItem)
@@ -99,7 +82,7 @@ export class MondayController {
             );
             const item = responseConfigGetItem.data.data.items[0];
             console.log('item', item);
-            itemName = item.name.replace('_', ''); //Hadley_Colored Musicians Club
+            itemName = item.name.replace('_', ' '); //Hadley_Colored Musicians Club
             subscribers = item.subscribers; //[ { id: '23774585' }, { id: '26473580' } ]
             columns = item.column_values;
             const columnData = parseColumnValues(item.column_values);
@@ -109,7 +92,6 @@ export class MondayController {
           .then((responseConfigGetBoards) => {
             console.log(
               'responseConfigGetBoards *********************************',
-              // responseConfigGetBoards,
             );
             //
             const boards = responseConfigGetBoards.data.data.boards;
@@ -125,14 +107,12 @@ export class MondayController {
           .then((responseConfigGetUsers) => {
             console.log(
               'responseConfigGetUsers *********************************',
-              // responseConfigGetUsers,
             );
             const users = responseConfigGetUsers.data.data.users;
             const userIds = parseUsers(users);
-            // console.log('adminUserIds', userIds.adminUsers);
-            // console.log('prodTeamIds', userIds.prodTeam);
+
             //prod = owners, admin = subs
-            const postBoardQuery = returnPostBoardQuery(
+            const graphqlPostBoard = returnPostBoardQuery(
               TEMPLATE_BOARD,
               itemName,
               ACTIVE_FOLDER,
@@ -142,7 +122,15 @@ export class MondayController {
               PROD_TEAM,
               ADMIN_TEAM,
             );
-            console.log('postBoardQuery', postBoardQuery);
+            let configPostBoard = returnGetUsersConfig(graphqlPostBoard);
+
+            return axios.request(configPostBoard);
+          })
+          .then((postBoardResponse) => {
+            console.log(
+              'postBoardResponse***************************************************************',
+              postBoardResponse,
+            );
           })
           .catch((error) => {
             console.log(
