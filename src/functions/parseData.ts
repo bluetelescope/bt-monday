@@ -36,7 +36,7 @@ export function parseBoards(boards: any, activeProjFolderId: number) {
   }
 
   const numbers = activeProdBoards
-    .map((board) => board.name.substing(0, 4))
+    .map((board) => board.name.substring(0, 4))
     .sort(compareNumbers);
   console.log('-----------------------------numbers', numbers);
 }
