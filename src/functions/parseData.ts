@@ -21,6 +21,7 @@ export function parseColumnValues(columnData: any) {
       value: value,
     };
   });
+
   return newArray;
 }
 

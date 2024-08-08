@@ -55,6 +55,7 @@ export class MondayController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
+      console.log('data', data);
       //if there is an event field on the body
       if (!!data.event) {
         console.log('data:', data);
@@ -110,7 +111,6 @@ export class MondayController {
             itemName = item.name.replace('_', ''); //Hadley_Colored Musicians Club
             subscribers = item.subscribers; //[ { id: '23774585' }, { id: '26473580' } ]
             columns = item.column_values;
-            //TODO: function that parses columns
             const columnData = parseColumnValues(item.column_values);
             console.log('columnData', columnData);
             return axios.request(configGetBoards);
