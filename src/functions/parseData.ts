@@ -37,8 +37,12 @@ export function parseBoards(boards: any, activeProjFolderId: number) {
 
   const numbers = activeProdBoards
     .map((board) => board.name.substring(0, 4))
+    .filter((name) => name[0] === 1 || name[0] === '1')
     .sort(compareNumbers);
+
+  const biggestNumber = numbers[numbers.length - 1];
   console.log('-----------------------------numbers', numbers);
+  console.log('-----------------------------biggestNumber', biggestNumber);
 }
 
 export function parseUsers() {}
