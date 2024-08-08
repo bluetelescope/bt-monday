@@ -120,7 +120,7 @@ export class MondayController {
               'responseConfigGetBoards *********************************',
               // responseConfigGetBoards,
             );
-
+            //
             const boards = responseConfigGetBoards.data.data.boards[0];
 
             console.log('boards', boards);
