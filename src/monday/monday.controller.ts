@@ -115,27 +115,17 @@ export class MondayController {
             // subscribers = responseData.subscribers;
             // //[ { id: '23774585' }, { id: '26473580' } ]
             // columns = responseData.column_values;
-            // proposal = columns.filter((column) => {
-            //   return column.column.title.includes('Proposal');
-            // })[0].value;
-            // estRevenue = columns.filter((column) => {
-            //   return column.column.title.includes('Est Revenue');
-            // })[0].value;
-            // forecastValue = columns.filter((column) => {
-            //   return column.column.title.includes('Forecast Value');
-            // })[0].value;
-            // actualProjectValue = columns.filter((column) => {
-            //   return column.column.title.includes('Project Value');
-            // })[0].value;
-            // costOfProd = columns.filter((column) => {
-            //   return column.column.title.includes('Cost of Production');
-            // })[0].value;
-            // files = columns.filter((column) => {
-            //   return column.column.title.includes('Files');
-            // })[0].value;
-            // gDrive = columns.filter((column) => {
-            //   return column.column.title.includes('(G-Drive)');
-            // })[0].value;
+
+            let columnValues = [
+              { proposal: 'Proposal', value: '' },
+              { estRevenue: 'Est Revenue', value: '' },
+              { forecastValue: 'Forecast Value', value: '' },
+              { actualProjectValue: 'Project Value', value: '' },
+              { costOfProd: 'Cost of Production', value: '' },
+              { files: 'Files', value: '' },
+              { gDrive: '(G-Drive)', value: '' },
+              { boards: 'Project Value', value: '' },
+            ];
 
             // const graphqlPostBoard = returnPostBoardQuery(
             //   TEMPLATE_BOARD,
@@ -162,6 +152,7 @@ export class MondayController {
             console.log(
               'error ***************************************************************',
             );
+            console.log('error', error);
             console.log(error.response);
           });
 
