@@ -108,30 +108,37 @@ export class MondayController {
           .then((responseConfigGetItem) => {
             console.log(
               'responseConfigGetItem *********************************',
-              responseConfigGetItem,
+              // responseConfigGetItem,
             );
-
+            const item = responseConfigGetItem.data.data.boards;
+            console.log('item', item);
             return axios.request(configGetBoards);
           })
           .then((responseConfigGetBoards) => {
             console.log(
               'responseConfigGetBoards *********************************',
-              responseConfigGetBoards,
+              // responseConfigGetBoards,
             );
+
+            const boards = responseConfigGetBoards.data.data.boards;
+            console.log('boards', boards);
+
             return axios.request(configGetUsers);
           })
           .then((responseConfigGetUsers) => {
             console.log(
               'responseConfigGetUsers *********************************',
-              responseConfigGetUsers,
+              // responseConfigGetUsers,
             );
+            const users = responseConfigGetUsers.data.data.boards;
+            console.log('users', users);
           })
+
           .catch((error) => {
             console.log(
               'error ***************************************************************',
+              error,
             );
-            console.log('error', error);
-            console.log(error.response);
           });
 
         //event info has information regarding only the value of this particular column information
