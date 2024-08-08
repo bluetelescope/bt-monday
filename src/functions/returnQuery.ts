@@ -29,3 +29,20 @@ export function returnGetBoardsQuery(workspaceID: number) {
     query: `query {\n  boards (\n    limit: 1000\n    workspace_ids: [${workspaceID}]\n  ) {name  board_folder_id } \n}\n`,
   });
 }
+
+export function returnGetBoardGroupsQuery(boardId: number) {
+  return JSON.stringify({
+    query: `query {\n  boards(\n    ids: [${boardId}]\n  ) {\n    groups { id title}\n  }\n}`,
+  });
+}
+
+export function returnPostColumnValueQuery(
+  itemID: number,
+  columnID: string,
+  boardID: number,
+  value: string,
+) {
+  return JSON.stringify({
+    query: `mutation {\n  change_simple_column_value(\n    item_id: ${itemID}\n    column_id: \"${columnID}\",\n    board_id: ${boardID}\n    create_labels_if_missing:true\n    value: \"${value}\"\n  ) {\n    name\n  }\n}`,
+  });
+}

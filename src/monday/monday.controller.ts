@@ -5,12 +5,16 @@ import {
   returnGetUsersConfig,
   returnGetItemConfig,
   returnPostBoardConfig,
+  returnPostColumnValueConfig,
+  returnGetBoardGroupsConfig,
 } from 'src/functions/returnConfig';
 import {
   returnPostBoardQuery,
   returnGetUsersQuery,
   returnGetItemQuery,
   returnGetBoardsQuery,
+  returnPostColumnValueQuery,
+  returnGetBoardGroupsQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -27,6 +31,8 @@ import { bindCallback } from 'rxjs';
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
 const TIMETRACKING_BOARD = 5872168554;
+const TIMETRACKING_ITEM = 6721689025;
+const TIMETRACKING_PROJECT_COL = 'dropdown';
 const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
 const MIDLEVEL_FOLDER = 14770065;
@@ -34,6 +40,17 @@ const ACTIVE_FOLDER = 7860571;
 const testItemID = 5104037469;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
+const graphqlGetItem = returnGetItemQuery(testItemID);
+let configGetItem = returnGetItemConfig(graphqlGetItem);
+const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
+let configGetBoards = returnGetBoardsConfig(graphqlGetBoards);
+const graphqlGetUsers = returnGetUsersQuery();
+let configGetUsers = returnGetUsersConfig(graphqlGetUsers);
+const graphqlGetBoardGroups = returnGetBoardGroupsQuery(5872168554);
+let configGetBoardGroups = returnGetBoardGroupsConfig(graphqlGetBoardGroups);
+let itemName = ''; //Hadley_Colored Musicians Club
+let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
+let columns = [];
 
 @Controller('monday')
 export class MondayController {
@@ -63,23 +80,13 @@ export class MondayController {
         console.log('data:', data);
         //TODO: get item id (pulse_id) from event data
         const axios = require('axios');
-        const graphqlGetItem = returnGetItemQuery(testItemID);
-        let configGetItem = returnGetItemConfig(graphqlGetItem);
-        const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
-        let configGetBoards = returnGetBoardsConfig(graphqlGetBoards);
-        const graphqlGetUsers = returnGetUsersQuery();
-        let configGetUsers = returnGetUsersConfig(graphqlGetUsers);
-
-        let itemName = ''; //Hadley_Colored Musicians Club
-        let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
-        let columns = [];
 
         axios
+          // GET ITEM ---------------------------------------------------------------------------------------------------
           .request(configGetItem)
           .then((responseConfigGetItem) => {
-            console.log(
-              'responseConfigGetItem *********************************',
-            );
+            // Parse item data ---------------------------------------------------------------------------------------------------
+            console.log('responseConfigGetItem **************');
             const item = responseConfigGetItem.data.data.items[0];
             console.log('item', item);
             itemName = item.name.replace('_', ' '); //Hadley_Colored Musicians Club
@@ -87,50 +94,61 @@ export class MondayController {
             columns = item.column_values;
             const columnData = parseColumnValues(item.column_values);
             console.log('columnData', columnData);
+            // GET boards, to calcuate item number -----------------------------------------------------------------------
             return axios.request(configGetBoards);
           })
           .then((responseConfigGetBoards) => {
-            console.log(
-              'responseConfigGetBoards *********************************',
-            );
+            // Parse boards data, to calcuate item number -----------------------------------------------------------------------
+            console.log('responseConfigGetBoards **************');
             //
             const boards = responseConfigGetBoards.data.data.boards;
             console.log('boards', boards);
             const boardNumber = parseBoards(boards, ACTIVE_FOLDER);
             itemName = `${boardNumber}_${itemName}`;
-            console.log(
-              'itemName------------------------------------------',
-              itemName,
-            );
+            // Get users data -------------------------------------------------------------------------------------------
             return axios.request(configGetUsers);
           })
           .then((responseConfigGetUsers) => {
-            console.log(
-              'responseConfigGetUsers *********************************',
-            );
+            // Parse user data to get admin and prod users----------------------------------------------------------------
+            console.log('responseConfigGetUsers **************');
             const users = responseConfigGetUsers.data.data.users;
             const userIds = parseUsers(users);
+            // get groups from time tracking board -----------------------------------------------------------------------
 
-            //prod = owners, admin = subs
-            const graphqlPostBoard = returnPostBoardQuery(
-              TEMPLATE_BOARD,
+            return axios.request(configGetBoardGroups);
+          })
+          .then((getBoardGroupResponse) => {
+            console.log('getBoardGroupResponse **************');
+            // parse data from time tracking board groups -----------------------------------------------------------------------
+
+            const graphqlPostColValue = returnPostColumnValueQuery(
+              TIMETRACKING_ITEM,
+              TIMETRACKING_PROJECT_COL,
+              TIMETRACKING_BOARD,
               itemName,
-              ACTIVE_FOLDER,
-              PROD_WORKSPACE,
-              userIds.prodTeam,
-              userIds.adminUsers,
-              PROD_TEAM,
-              ADMIN_TEAM,
             );
-            let configPostBoard = returnGetUsersConfig(graphqlPostBoard);
+            let configPostColValue =
+              returnPostColumnValueConfig(graphqlPostColValue);
+            // POST new label to time tracking column -----------------------------------------------------------------------
+            return axios.request(configPostColValue);
+          })
+          .then((postColValueResponse) => {
+            console.log('postColValueResponse **************');
+            // POST to add the project name to the timetracking form ------------------------------------------------------
 
+            const graphqlPostColValue = returnPostColumnValueQuery(
+              TIMETRACKING_ITEM,
+              TIMETRACKING_PROJECT_COL,
+              TIMETRACKING_BOARD,
+              itemName,
+            );
+            let configPostBoard =
+              returnPostColumnValueConfig(graphqlPostColValue);
             return axios.request(configPostBoard);
           })
           .then((postBoardResponse) => {
-            console.log(
-              'postBoardResponse***************************************************************',
-              postBoardResponse,
-            );
+            console.log('postBoardResponse **************');
+            // POST to add the project name to the timetracking form ------------------------------------------------------
           })
           .catch((error) => {
             console.log(
@@ -151,3 +169,18 @@ export class MondayController {
     }
   }
 }
+
+//  //prod = owners, admin = subs
+//  const graphqlPostBoard = returnPostBoardQuery(
+//   TEMPLATE_BOARD,
+//   itemName,
+//   ACTIVE_FOLDER,
+//   PROD_WORKSPACE,
+//   userIds.prodTeam,
+//   userIds.adminUsers,
+//   PROD_TEAM,
+//   ADMIN_TEAM,
+// );
+// let configPostBoard = returnGetUsersConfig(graphqlPostBoard);
+// // Post board to active projects board----------------------------------------------------------------
+// return axios.request(configPostBoard);
