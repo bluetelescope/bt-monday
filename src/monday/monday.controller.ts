@@ -55,7 +55,6 @@ export class MondayController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
-      console.log('data', data);
       //if there is an event field on the body
       if (!!data.event) {
         console.log('data:', data);
@@ -89,17 +88,6 @@ export class MondayController {
         // );
         // let configPostBoard = returnPostBoardConfig(graphqlPostBoard);
 
-        let columnValues = [
-          { name: 'proposal', string: 'Proposal', value: '' },
-          { name: 'estRevenue', string: 'Est Revenue', value: '' },
-          { name: 'forecastValue', string: 'Forecast Value', value: '' },
-          { name: 'actualProjectValue', string: 'Project Value', value: '' },
-          { name: 'costOfProd', string: 'Cost of Production', value: '' },
-          { name: 'files', string: 'Files', value: '' },
-          { name: 'gDrive', string: '(G-Drive)', value: '' },
-          { name: 'boards', string: 'Project Value', value: '' },
-        ];
-
         axios
           .request(configGetItem)
           .then((responseConfigGetItem) => {
@@ -121,10 +109,10 @@ export class MondayController {
               // responseConfigGetBoards,
             );
             //
-            const boards = responseConfigGetBoards.data.data.boards[0];
+            const boards = responseConfigGetBoards.data.data.boards;
 
             console.log('boards', boards);
-
+            parseBoards(boards, ACTIVE_FOLDER);
             return axios.request(configGetUsers);
           })
           .then((responseConfigGetUsers) => {

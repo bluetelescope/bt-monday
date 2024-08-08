@@ -25,6 +25,20 @@ export function parseColumnValues(columnData: any) {
   return newArray;
 }
 
-export function parseBoards() {}
+export function parseBoards(boards: any, activeProjFolderId: number) {
+  console.log('-----------------------------parse boards called');
+
+  const activeProdBoards = boards.filter(
+    (board) => Number(board.board_folder_id) === Number(activeProjFolderId),
+  );
+  function compareNumbers(a, b) {
+    return a - b;
+  }
+
+  const numbers = activeProdBoards
+    .map((board) => board.name.substing(0, 4))
+    .sort(compareNumbers);
+  console.log('-----------------------------numbers', numbers);
+}
 
 export function parseUsers() {}
