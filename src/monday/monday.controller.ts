@@ -74,12 +74,6 @@ export class MondayController {
         // let gDrive = '';
         // let team = [];
         // let boards = [];
-        // const responseData = response.data.data.items[0];
-        // itemName = responseData.name;
-        // //Hadley_Colored Musicians Club
-        // subscribers = responseData.subscribers;
-        // //[ { id: '23774585' }, { id: '26473580' } ]
-        // columns = responseData.column_values;
 
         // const graphqlPostBoard = returnPostBoardQuery(
         //   TEMPLATE_BOARD,
@@ -90,19 +84,16 @@ export class MondayController {
         // let configPostBoard = returnPostBoardConfig(graphqlPostBoard);
 
         let columnValues = [
-          { proposal: 'Proposal', value: '' },
-          { estRevenue: 'Est Revenue', value: '' },
-          { forecastValue: 'Forecast Value', value: '' },
-          { actualProjectValue: 'Project Value', value: '' },
-          { costOfProd: 'Cost of Production', value: '' },
-          { files: 'Files', value: '' },
-          { gDrive: '(G-Drive)', value: '' },
-          { boards: 'Project Value', value: '' },
+          { name: 'proposal', string: 'Proposal', value: '' },
+          { name: 'estRevenue', string: 'Est Revenue', value: '' },
+          { name: 'forecastValue', string: 'Forecast Value', value: '' },
+          { name: 'actualProjectValue', string: 'Project Value', value: '' },
+          { name: 'costOfProd', string: 'Cost of Production', value: '' },
+          { name: 'files', string: 'Files', value: '' },
+          { name: 'gDrive', string: '(G-Drive)', value: '' },
+          { name: 'boards', string: 'Project Value', value: '' },
         ];
 
-        console.log('configGetItem:', configGetItem);
-        console.log('configGetBoards:', configGetBoards);
-        console.log('configGetUsers:', configGetUsers);
         axios
           .request(configGetItem)
           .then((responseConfigGetItem) => {
@@ -110,8 +101,12 @@ export class MondayController {
               'responseConfigGetItem *********************************',
               // responseConfigGetItem,
             );
-            const item = responseConfigGetItem.data.data.boards;
+            const item = responseConfigGetItem.data.data.items[0];
             console.log('item', item);
+            itemName = item.name.replace('_', ''); //Hadley_Colored Musicians Club
+            subscribers = item.subscribers; //[ { id: '23774585' }, { id: '26473580' } ]
+            columns = item.column_values;
+
             return axios.request(configGetBoards);
           })
           .then((responseConfigGetBoards) => {
@@ -120,7 +115,7 @@ export class MondayController {
               // responseConfigGetBoards,
             );
 
-            const boards = responseConfigGetBoards.data.data.boards;
+            const boards = responseConfigGetBoards.data.data.boards[0];
             console.log('boards', boards);
 
             return axios.request(configGetUsers);
@@ -130,7 +125,7 @@ export class MondayController {
               'responseConfigGetUsers *********************************',
               // responseConfigGetUsers,
             );
-            const users = responseConfigGetUsers.data.data.boards;
+            const users = responseConfigGetUsers.data.data.users[0];
             console.log('users', users);
           })
 
