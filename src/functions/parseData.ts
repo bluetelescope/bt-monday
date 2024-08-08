@@ -26,7 +26,7 @@ export function parseColumnValues(columnData: any) {
 }
 
 export function parseBoards(boards: any, activeProjFolderId: number) {
-  console.log('-----------------------------parse boards called');
+  //   console.log('-----------------------------parse boards called');
 
   const activeProdBoards = boards.filter(
     (board) => Number(board.board_folder_id) === Number(activeProjFolderId),
@@ -41,8 +41,9 @@ export function parseBoards(boards: any, activeProjFolderId: number) {
     .sort(compareNumbers);
 
   const biggestNumber = numbers[numbers.length - 1];
-  console.log('-----------------------------numbers', numbers);
-  console.log('-----------------------------biggestNumber', biggestNumber);
+  //   console.log('-----------------------------numbers', numbers);
+  //   console.log('-----------------------------biggestNumber', biggestNumber);
+  return Number(biggestNumber) + 1;
 }
 
 export function parseUsers() {}

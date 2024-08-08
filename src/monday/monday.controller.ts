@@ -22,6 +22,7 @@ import getVariables from 'src/functions/getVariables';
 import getItemInfo from 'src/functions/getItemInfo';
 // import * as process from 'process';
 import axios from 'axios';
+import { bindCallback } from 'rxjs';
 
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
@@ -110,9 +111,13 @@ export class MondayController {
             );
             //
             const boards = responseConfigGetBoards.data.data.boards;
-
             console.log('boards', boards);
-            parseBoards(boards, ACTIVE_FOLDER);
+            const boardNumber = parseBoards(boards, ACTIVE_FOLDER);
+            itemName = `${boardNumber}_${itemName}`;
+            console.log(
+              'itemName------------------------------------------',
+              itemName,
+            );
             return axios.request(configGetUsers);
           })
           .then((responseConfigGetUsers) => {
