@@ -12,6 +12,11 @@ import {
   returnGetItemQuery,
   returnGetBoardsQuery,
 } from 'src/functions/returnQuery';
+import {
+  parseColumnValues,
+  parseBoards,
+  parseUsers,
+} from 'src/functions/parseData';
 
 import getVariables from 'src/functions/getVariables';
 import getItemInfo from 'src/functions/getItemInfo';
@@ -99,14 +104,15 @@ export class MondayController {
           .then((responseConfigGetItem) => {
             console.log(
               'responseConfigGetItem *********************************',
-              // responseConfigGetItem,
             );
             const item = responseConfigGetItem.data.data.items[0];
             console.log('item', item);
             itemName = item.name.replace('_', ''); //Hadley_Colored Musicians Club
             subscribers = item.subscribers; //[ { id: '23774585' }, { id: '26473580' } ]
             columns = item.column_values;
-
+            //TODO: function that parses columns
+            const columnData = parseColumnValues(item.column_values);
+            console.log('columnData', columnData);
             return axios.request(configGetBoards);
           })
           .then((responseConfigGetBoards) => {
@@ -116,6 +122,7 @@ export class MondayController {
             );
 
             const boards = responseConfigGetBoards.data.data.boards[0];
+
             console.log('boards', boards);
 
             return axios.request(configGetUsers);
