@@ -65,89 +65,67 @@ export class MondayController {
         let itemName = ''; //Hadley_Colored Musicians Club
         let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
         let columns = [];
-        let proposal;
-        let estRevenue;
-        let forecastValue;
-        let actualProjectValue;
-        let costOfProd;
-        let files = '';
-        let gDrive = '';
-        let team = [];
-        let boards = [];
+        // let proposal;
+        // let estRevenue;
+        // let forecastValue;
+        // let actualProjectValue;
+        // let costOfProd;
+        // let files = '';
+        // let gDrive = '';
+        // let team = [];
+        // let boards = [];
+        // const responseData = response.data.data.items[0];
+        // itemName = responseData.name;
+        // //Hadley_Colored Musicians Club
+        // subscribers = responseData.subscribers;
+        // //[ { id: '23774585' }, { id: '26473580' } ]
+        // columns = responseData.column_values;
+
+        // const graphqlPostBoard = returnPostBoardQuery(
+        //   TEMPLATE_BOARD,
+        //   itemName,
+        //   ACTIVE_FOLDER,
+        //   PROD_WORKSPACE,
+        // );
+        // let configPostBoard = returnPostBoardConfig(graphqlPostBoard);
 
         let columnValues = [
-          { proposal: '' },
-          { estRevenue: '' },
-          { forecastValue: '' },
-          { actualProjectValue: '' },
+          { proposal: 'Proposal', value: '' },
+          { estRevenue: 'Est Revenue', value: '' },
+          { forecastValue: 'Forecast Value', value: '' },
+          { actualProjectValue: 'Project Value', value: '' },
+          { costOfProd: 'Cost of Production', value: '' },
+          { files: 'Files', value: '' },
+          { gDrive: '(G-Drive)', value: '' },
+          { boards: 'Project Value', value: '' },
         ];
+
         console.log('configGetItem:', configGetItem);
         console.log('configGetBoards:', configGetBoards);
         console.log('configGetUsers:', configGetUsers);
-
-        Promise.all([
-          axios.get(configGetItem),
-          axios.get(configGetBoards),
-          axios.get(configGetUsers),
-        ])
-          .then((response) => {
+        axios
+          .request(configGetItem)
+          .then((responseConfigGetItem) => {
             console.log(
-              'response Promise.all ***************************************************',
-            );
-            const [response1, response2, response3] = response;
-
-            console.log(
-              'response1 ***************************************************',
-              response1,
-            );
-            console.log(
-              'response2 ***************************************************',
-              response2,
-            );
-            console.log(
-              'response3 ***************************************************',
-              response3,
+              'responseConfigGetItem *********************************',
+              responseConfigGetItem,
             );
 
-            // const responseData = response.data.data.items[0];
-            // itemName = responseData.name;
-            // //Hadley_Colored Musicians Club
-            // subscribers = responseData.subscribers;
-            // //[ { id: '23774585' }, { id: '26473580' } ]
-            // columns = responseData.column_values;
-
-            let columnValues = [
-              { proposal: 'Proposal', value: '' },
-              { estRevenue: 'Est Revenue', value: '' },
-              { forecastValue: 'Forecast Value', value: '' },
-              { actualProjectValue: 'Project Value', value: '' },
-              { costOfProd: 'Cost of Production', value: '' },
-              { files: 'Files', value: '' },
-              { gDrive: '(G-Drive)', value: '' },
-              { boards: 'Project Value', value: '' },
-            ];
-
-            // const graphqlPostBoard = returnPostBoardQuery(
-            //   TEMPLATE_BOARD,
-            //   itemName,
-            //   ACTIVE_FOLDER,
-            //   PROD_WORKSPACE,
-            // );
-            // let configPostBoard = returnPostBoardConfig(graphqlPostBoard);
-
-            // // //make post request with data that has been put into variables above
-            // return axios.request(configPostBoard);
+            return axios.request(configGetBoards);
           })
-          // .then((response) => {
-          //   console.log(
-          //     '*********************************response to post 1',
-          //     response,
-          //   );
-          //   console.log(
-          //     '*********************************response.data to post 1',
-          //     response.data,
-          //   );
-          // })
+          .then((responseConfigGetBoards) => {
+            console.log(
+              'responseConfigGetBoards *********************************',
+              responseConfigGetBoards,
+            );
+            return axios.request(configGetUsers);
+          })
+          .then((responseConfigGetUsers) => {
+            console.log(
+              'responseConfigGetUsers *********************************',
+              responseConfigGetUsers,
+            );
+          })
           .catch((error) => {
             console.log(
               'error ***************************************************************',
