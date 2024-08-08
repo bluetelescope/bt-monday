@@ -75,6 +75,16 @@ export class MondayController {
         let team = [];
         let boards = [];
 
+        let columnValues = [
+          { proposal: '' },
+          { estRevenue: '' },
+          { forecastValue: '' },
+          { actualProjectValue: '' },
+        ];
+        console.log('configGetItem:', configGetItem);
+        console.log('configGetBoards:', configGetBoards);
+        console.log('configGetUsers:', configGetUsers);
+
         Promise.all([
           axios.get(configGetItem),
           axios.get(configGetBoards),
@@ -148,7 +158,12 @@ export class MondayController {
           //     response.data,
           //   );
           // })
-          .catch((error) => console.log(error.response));
+          .catch((error) => {
+            console.log(
+              'error ***************************************************************',
+            );
+            console.log(error.response);
+          });
 
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
