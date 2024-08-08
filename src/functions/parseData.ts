@@ -46,4 +46,24 @@ export function parseBoards(boards: any, activeProjFolderId: number) {
   return Number(biggestNumber) + 1;
 }
 
-export function parseUsers() {}
+export function parseUsers(usersArray: any) {
+  function teamIsProd(teamArray: any) {
+    const isProd = teamArray.filter(
+      (teamName) => teamName.name === 'Producers / PM',
+    );
+    console.log('isProd', isProd);
+    if (isProd.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  const adminUsers = usersArray
+    .filter((user) => user.is_admin)
+    .map((user) => user.id);
+  const prodTeam = usersArray
+    .filter((user) => teamIsProd(user.teams))
+    .map((user) => user.id);
+
+  return { adminUsers, prodTeam };
+}

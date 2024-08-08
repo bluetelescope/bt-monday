@@ -32,6 +32,8 @@ const BIZDEV_WORKSPACE = 3839751;
 const MIDLEVEL_FOLDER = 14770065;
 const ACTIVE_FOLDER = 7860571;
 const testItemID = 5104037469;
+const PROD_TEAM = 614284;
+const ADMIN_TEAM = 614287;
 
 @Controller('monday')
 export class MondayController {
@@ -125,10 +127,23 @@ export class MondayController {
               'responseConfigGetUsers *********************************',
               // responseConfigGetUsers,
             );
-            const users = responseConfigGetUsers.data.data.users[0];
-            console.log('users', users);
+            const users = responseConfigGetUsers.data.data.users;
+            const userIds = parseUsers(users);
+            // console.log('adminUserIds', userIds.adminUsers);
+            // console.log('prodTeamIds', userIds.prodTeam);
+            //prod = owners, admin = subs
+            const postBoardQuery = returnPostBoardQuery(
+              TEMPLATE_BOARD,
+              itemName,
+              ACTIVE_FOLDER,
+              PROD_WORKSPACE,
+              userIds.prodTeam,
+              userIds.adminUsers,
+              PROD_TEAM,
+              ADMIN_TEAM,
+            );
+            console.log('postBoardQuery', postBoardQuery);
           })
-
           .catch((error) => {
             console.log(
               'error ***************************************************************',
