@@ -51,6 +51,7 @@ let configGetBoardGroups = returnGetBoardGroupsConfig(graphqlGetBoardGroups);
 let itemName = ''; //Hadley_Colored Musicians Club
 let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
 let columns = [];
+let users = { adminUsers: [], prodTeam: [] };
 
 @Controller('monday')
 export class MondayController {
@@ -111,8 +112,10 @@ export class MondayController {
           .then((responseConfigGetUsers) => {
             // Parse user data to get admin and prod users----------------------------------------------------------------
             console.log('responseConfigGetUsers **************');
-            const users = responseConfigGetUsers.data.data.users;
-            const userIds = parseUsers(users);
+            const usersData = responseConfigGetUsers.data.data.users;
+            const userIds = parseUsers(usersData);
+            users = userIds;
+
             // get groups from time tracking board -----------------------------------------------------------------------
 
             return axios.request(configGetBoardGroups);
@@ -136,14 +139,20 @@ export class MondayController {
             console.log('postColValueResponse **************');
             // POST to add the project name to the timetracking form ------------------------------------------------------
 
-            const graphqlPostColValue = returnPostColumnValueQuery(
-              TIMETRACKING_ITEM,
-              TIMETRACKING_PROJECT_COL,
-              TIMETRACKING_BOARD,
+            //prod = owners, admin = subs
+            const graphqlPostBoard = returnPostBoardQuery(
+              TEMPLATE_BOARD,
               itemName,
+              ACTIVE_FOLDER,
+              PROD_WORKSPACE,
+              users.prodTeam,
+              users.adminUsers,
+              PROD_TEAM,
+              ADMIN_TEAM,
             );
-            let configPostBoard =
-              returnPostColumnValueConfig(graphqlPostColValue);
+            let configPostBoard = returnGetUsersConfig(graphqlPostBoard);
+            console.log('configPostBoard', configPostBoard);
+            // Post board to active projects board----------------------------------------------------------------
             return axios.request(configPostBoard);
           })
           .then((postBoardResponse) => {
