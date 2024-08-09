@@ -9,12 +9,12 @@ import {
   returnGetBoardGroupsConfig,
 } from 'src/functions/returnConfig';
 import {
-  returnPostBoardQuery,
+  returnGetBoardGroupsQuery,
   returnGetUsersQuery,
   returnGetItemQuery,
   returnGetBoardsQuery,
+  returnPostBoardQuery,
   returnPostColumnValueQuery,
-  returnGetBoardGroupsQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -178,18 +178,3 @@ export class MondayController {
     }
   }
 }
-
-//  //prod = owners, admin = subs
-//  const graphqlPostBoard = returnPostBoardQuery(
-//   TEMPLATE_BOARD,
-//   itemName,
-//   ACTIVE_FOLDER,
-//   PROD_WORKSPACE,
-//   userIds.prodTeam,
-//   userIds.adminUsers,
-//   PROD_TEAM,
-//   ADMIN_TEAM,
-// );
-// let configPostBoard = returnGetUsersConfig(graphqlPostBoard);
-// // Post board to active projects board----------------------------------------------------------------
-// return axios.request(configPostBoard);
