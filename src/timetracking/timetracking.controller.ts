@@ -49,6 +49,11 @@ let users = { adminUsers: [], prodTeam: [] };
 @Controller('timetracking')
 export class TimetrackingController {
   // POST validate
+  @Get()
+  getTimetracking() {
+    return {};
+  }
+
   @Post()
   async index(@Body() data, @Req() req) {
     // we have to check req.readable because of raw-body issue #57
