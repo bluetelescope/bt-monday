@@ -46,18 +46,8 @@ let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
 let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
 
-@Controller('monday')
+@Controller('timetracking')
 export class TimetrackingController {
-  @Get()
-  getMonday() {
-    return {};
-  }
-
-  @Get(':id')
-  getMondayID(@Param('id') id: string) {
-    return { id };
-  }
-
   // POST validate
   @Post()
   async index(@Body() data, @Req() req) {
