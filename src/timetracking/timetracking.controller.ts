@@ -66,6 +66,39 @@ export class TimetrackingController {
     } else {
       //if there is an event field on the body
       if (!!data.event) {
+        // data: {
+        //   event: {
+        //     app: 'monday',
+        //     type: 'create_pulse',
+        //     triggerTime: '2024-08-09T20:40:34.198Z',
+        //     subscriptionId: 396074603,
+        //     userId: -6,
+        //     originalTriggerUuid: null,
+        //     boardId: 5872168554,
+        //     pulseId: 7199391638,
+        //     pulseName: 'Incoming form answer',
+        //     groupId: 'new_group14586',
+        //     groupName: 'New',
+        //     groupColor: '#c4c4c4',
+        //     isTopGroup: false,
+        //     columnValues: {
+        //       dropdown: [Object],
+        //       person: [Object],
+        //       numbers: [Object],
+        //       date_range: [Object]
+        //     },
+        //     triggerUuid: '59ea1cf96b3ded9aac6ab99deb8ad8e5'
+        //   }
+        // }
+        if (data.event.type === 'create_pulse') {
+          const formData = data.event.columnValues;
+          console.log('formData.dropdown', formData.dropdown);
+          console.log('formData.person', formData.person);
+          console.log('formData.numbers', formData.numbers);
+          console.log('formData.date_range', formData.date_range);
+
+          //TODO:
+        }
         console.log('data:', data);
       } else {
         //if there is not an event field on the body
