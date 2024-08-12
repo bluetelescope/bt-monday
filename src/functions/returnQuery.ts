@@ -26,7 +26,7 @@ export function returnGetItemQuery(itemID: number) {
 }
 export function returnGetBoardsQuery(workspaceID: number) {
   return JSON.stringify({
-    query: `query {\n  boards (\n    limit: 1000\n    workspace_ids: [${workspaceID}]\n  ) {name  board_folder_id } \n}\n`,
+    query: `query {\n  boards (\n    limit: 1000\n    workspace_ids: [${workspaceID}]\n  ) {id name  board_folder_id } \n}\n`,
   });
 }
 
@@ -50,5 +50,11 @@ export function returnPostTimetrackLabelQuery(
 export function returnPostTimetrackItemQuery(itemID: number, boardID: number) {
   return JSON.stringify({
     query: `mutation {\n duplicate_item(\n    item_id: ${itemID}\n        board_id: ${boardID}\n      ) {\n    name\n  }\n}`,
+  });
+}
+
+export function returnGetItemsinBoardQuery(boardID: number) {
+  return JSON.stringify({
+    query: `query \n{ boards (ids: [${boardID}]){\n  items_page {items {id name}}\n}\n}`,
   });
 }

@@ -1,25 +1,17 @@
 import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
+import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
+
 import {
-  returnGetBoardsConfig,
-  returnGetUsersConfig,
-  returnGetItemConfig,
-  returnPostBoardConfig,
-  returnPostTimetrackLabelConfig,
-  returnGetBoardGroupsConfig,
-} from 'src/functions/returnConfig';
-import {
-  returnGetBoardGroupsQuery,
-  returnGetUsersQuery,
-  returnGetItemQuery,
+  returnGetItemsinBoardQuery,
   returnGetBoardsQuery,
-  returnPostBoardQuery,
-  returnPostTimetrackLabelQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
   parseBoards,
   parseUsers,
+  getBoardID,
+  getItemID,
 } from 'src/functions/parseData';
 
 import getVariables from 'src/functions/getVariables';
@@ -43,11 +35,99 @@ const testItemID = 5104037469;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 
-let itemName = ''; //Hadley_Colored Musicians Club
-let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
-let columns = [];
-let users = { adminUsers: [], prodTeam: [] };
+const users = [
+  {
+    id: '23774585',
+    rate: 150,
+    name: 'Trent Oliver',
+    title: 'Principal + Managing Director',
+  },
+  {
+    id: '25891866',
+    rate: 150,
+    name: 'Dustin Stephan',
+    title: 'Sr. Creative Producer',
+  },
+  {
+    id: '26473580',
+    rate: 150,
+    name: 'Judith Zissman',
+    title: 'Exec. Creative Director',
+  },
+  {
+    id: '26815252',
+    rate: 150,
+    name: 'Reese Patillo',
+    title: 'Sr. Creative Designer',
+  },
+  {
+    id: '27253155',
+    rate: 150,
+    name: 'Shane Gallardo',
+    title: 'Back Office Support',
+  },
+  {
+    id: '27397545',
+    rate: 150,
+    name: 'Ron Cunningham',
+    title: 'Senior Creative Technologist',
+  },
+  {
+    id: '27397551',
+    rate: 150,
+    name: 'Valeria',
+    title: 'Lead Creative Developer',
+  },
+  {
+    id: '37385671',
+    name: 'Carly Hayter',
+    rate: 150,
 
+    title: 'Creative Software Developer',
+  },
+  {
+    id: '38929843',
+    rate: 150,
+    name: 'Patti Sande',
+    title: 'Back Office Administration - Support President/Owner',
+  },
+  {
+    id: '42467420',
+    rate: 150,
+    name: 'Anthony DeRita',
+    title: 'Creative Producer',
+  },
+  {
+    id: '42749849',
+    rate: 150,
+    name: 'Gianna Capadona',
+    title: 'Creative Producer',
+  },
+  {
+    id: '48317427',
+    rate: 150,
+    name: 'Renee Mancino',
+    title: 'Director of Creative Growth',
+  },
+  {
+    id: '62282324',
+    rate: 150,
+    name: 'Gabo Núñez Rojas',
+    title: 'Creative Graphic Designer',
+  },
+  {
+    id: '64324790',
+    rate: 150,
+    name: 'Patrick Snee',
+    title: null,
+  },
+];
+
+let hours = 0;
+let cost = 0;
+let personId = '';
+let label = ' ';
+let boardID = 0;
 @Controller('timetracking')
 export class TimetrackingController {
   // POST validate
@@ -68,55 +148,48 @@ export class TimetrackingController {
     } else {
       //if there is an event field on the body
       if (!!data.event) {
-        // data: {
-        //   event: {
-        //     app: 'monday',
-        //     type: 'create_pulse',
-        //     triggerTime: '2024-08-09T20:40:34.198Z',
-        //     subscriptionId: 396074603,
-        //     userId: -6,
-        //     originalTriggerUuid: null,
-        //     boardId: 5872168554,
-        //     pulseId: 7199391638,
-        //     pulseName: 'Incoming form answer',
-        //     groupId: 'new_group14586',
-        //     groupName: 'New',
-        //     groupColor: '#c4c4c4',
-        //     isTopGroup: false,
-        //     columnValues: {
-        //       dropdown: [Object],
-        //       person: [Object],
-        //       numbers: [Object],
-        //       date_range: [Object]
-        //     },
-        //     triggerUuid: '59ea1cf96b3ded9aac6ab99deb8ad8e5'
-        //   }
-        // }
         if (data.event.type === 'create_pulse') {
+          console.log(
+            'event is create pulse ****************************************************',
+          );
           const formData = data.event.columnValues;
-          console.log('formData.dropdown', formData.dropdown); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
-          console.log('formData.person', formData.person);
-          //   {
-          //   changed_at: '2024-08-09T21:31:59.927Z',
-          //   personsAndTeams: [ { id: 37385671, kind: 'person' } ]
-          // }
-          console.log('formData.numbers', formData.numbers);
-          // {
-          //   value: 10,b
-          //   unit: { symbol: 'custom', custom_unit: ' Hours', direction: 'right' }
-          // }
-          console.log('formData.date_range', formData.date_range);
-          // {
-          //   from: '2024-08-01',
-          //   to: '2024-08-04',
-          //   visualization_type: null,
-          //   changed_at: '2024-08-09T21:31:59.943Z'
-          // }
+          label = formData.dropdown.chosenValues[0].name;
+          personId = String(formData.person.personsAndTeams[0].id);
+          hours = formData.numbers.value;
+          console.log('personId', personId); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
+          console.log('label', formData.dropdown.chosenValues[0].name); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
+          console.log('hours', hours);
 
-          //TODO: create new item in 'active' group in timetracking board
-          //TODO: get group names from timetracking board
+          const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
+          const getBoardsQuery = returnGetConfig(graphqlGetBoards);
+          console.log('getBoardsQuery', getBoardsQuery);
+          axios
+            .request(getBoardsQuery)
+            .then((resGetBoards) => {
+              console.log(
+                'resGetBoardsQuery *****************************',
+                resGetBoards,
+              );
+              console.log(
+                'resGetBoards.data.data.boards',
+                resGetBoards.data.data.boards,
+              );
+              boardID = getBoardID(resGetBoards.data.data.boards, label);
+              console.log('boardID', boardID);
+              const items = returnGetItemsinBoardQuery(boardID);
+              const itemID = getItemID(users, items, personId);
+              console.log('itemID', itemID);
+              console.log('items', items);
+              // axios.get()
+            })
+            .then((res) => {})
+            .catch((error) => {
+              console.log(
+                'error ***************************************************************',
+                error,
+              );
+            });
         }
-        console.log('data:', data);
       } else {
         //if there is not an event field on the body
         //it's the verification request

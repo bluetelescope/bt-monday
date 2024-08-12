@@ -107,22 +107,6 @@ export class MondayController {
             const boardNumber = parseBoards(boards, ACTIVE_FOLDER);
             itemName = `${boardNumber}_${itemName}`;
             // Get users data -------------------------------------------------------------------------------------------
-            return axios.request(configGetUsers);
-          })
-          .then((responseConfigGetUsers) => {
-            // Parse user data to get admin and prod users----------------------------------------------------------------
-            console.log('responseConfigGetUsers **************');
-            const usersData = responseConfigGetUsers.data.data.users;
-            const userIds = parseUsers(usersData);
-            users = userIds;
-
-            // get groups from time tracking board -----------------------------------------------------------------------
-
-            return axios.request(configGetBoardGroups);
-          })
-          .then((getBoardGroupResponse) => {
-            console.log('getBoardGroupResponse **************');
-            // parse data from time tracking board groups -----------------------------------------------------------------------
 
             const graphqlPostColValue = returnPostTimetrackLabelQuery(
               TIMETRACKING_ITEM_FORLABEL,
