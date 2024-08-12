@@ -1,20 +1,14 @@
 import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
-import {
-  returnGetBoardsConfig,
-  returnGetUsersConfig,
-  returnGetItemConfig,
-  returnPostBoardConfig,
-  returnPostColumnValueConfig,
-  returnGetBoardGroupsConfig,
-} from 'src/functions/returnConfig';
+import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
 import {
   returnGetBoardGroupsQuery,
   returnGetUsersQuery,
   returnGetItemQuery,
   returnGetBoardsQuery,
   returnPostBoardQuery,
-  returnPostColumnValueQuery,
+  returnPostTimetrackLabelQuery,
+  returnPostTimetrackItemQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -31,7 +25,8 @@ import { bindCallback } from 'rxjs';
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
 const TIMETRACKING_BOARD = 5872168554;
-const TIMETRACKING_ITEM = 6721689025;
+const TIMETRACKING_ITEM_FORLABEL = 6721689025;
+const TIMETRACKING_ITEM_FORACTIVE = 7209467255;
 const TIMETRACKING_PROJECT_COL = 'dropdown';
 const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
@@ -41,13 +36,13 @@ const testItemID = 5104037469;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 const graphqlGetItem = returnGetItemQuery(testItemID);
-let configGetItem = returnGetItemConfig(graphqlGetItem);
+let configGetItem = returnGetConfig(graphqlGetItem);
 const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
-let configGetBoards = returnGetBoardsConfig(graphqlGetBoards);
+let configGetBoards = returnGetConfig(graphqlGetBoards);
 const graphqlGetUsers = returnGetUsersQuery();
-let configGetUsers = returnGetUsersConfig(graphqlGetUsers);
+let configGetUsers = returnGetConfig(graphqlGetUsers);
 const graphqlGetBoardGroups = returnGetBoardGroupsQuery(5872168554);
-let configGetBoardGroups = returnGetBoardGroupsConfig(graphqlGetBoardGroups);
+let configGetBoardGroups = returnGetConfig(graphqlGetBoardGroups);
 let itemName = ''; //Hadley_Colored Musicians Club
 let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
 let columns = [];
@@ -65,7 +60,12 @@ export class MondayController {
     return { id };
   }
 
-  // POST validate
+  // POST
+  //when an items status is changed, this triggers a casacade which:
+  // + new board in active items
+  // + new time tracking label
+  // + new time tracking item
+  // +
   @Post()
   async index(@Body() data, @Req() req) {
     // we have to check req.readable because of raw-body issue #57
@@ -124,14 +124,13 @@ export class MondayController {
             console.log('getBoardGroupResponse **************');
             // parse data from time tracking board groups -----------------------------------------------------------------------
 
-            const graphqlPostColValue = returnPostColumnValueQuery(
-              TIMETRACKING_ITEM,
+            const graphqlPostColValue = returnPostTimetrackLabelQuery(
+              TIMETRACKING_ITEM_FORLABEL,
               TIMETRACKING_PROJECT_COL,
               TIMETRACKING_BOARD,
               itemName,
             );
-            let configPostColValue =
-              returnPostColumnValueConfig(graphqlPostColValue);
+            let configPostColValue = returnPostConfig(graphqlPostColValue);
             // POST new label to time tracking column -----------------------------------------------------------------------
             return axios.request(configPostColValue);
           })
@@ -150,14 +149,22 @@ export class MondayController {
               PROD_TEAM,
               ADMIN_TEAM,
             );
-            let configPostBoard = returnGetUsersConfig(graphqlPostBoard);
+            let configPostBoard = returnGetConfig(graphqlPostBoard);
             console.log('configPostBoard', configPostBoard);
             // Post board to active projects board----------------------------------------------------------------
             return axios.request(configPostBoard);
           })
           .then((postBoardResponse) => {
             console.log('postBoardResponse **************');
-            // POST to add the project name to the timetracking form ------------------------------------------------------
+            const graphqlPostTimeTrackItemValue = returnPostTimetrackItemQuery(
+              TIMETRACKING_ITEM_FORACTIVE,
+              TIMETRACKING_BOARD,
+            );
+            let configPostTimeTrackItem = returnPostConfig(
+              graphqlPostTimeTrackItemValue,
+            );
+            // POST new label to time tracking column -----------------------------------------------------------------------
+            return axios.request(configPostTimeTrackItem);
           })
           .catch((error) => {
             console.log(

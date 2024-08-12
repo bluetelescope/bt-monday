@@ -36,7 +36,7 @@ export function returnGetBoardGroupsQuery(boardId: number) {
   });
 }
 
-export function returnPostColumnValueQuery(
+export function returnPostTimetrackLabelQuery(
   itemID: number,
   columnID: string,
   boardID: number,
@@ -44,5 +44,11 @@ export function returnPostColumnValueQuery(
 ) {
   return JSON.stringify({
     query: `mutation {\n  change_simple_column_value(\n    item_id: ${itemID}\n    column_id: \"${columnID}\",\n    board_id: ${boardID}\n    create_labels_if_missing:true\n    value: \"${value}\"\n  ) {\n    name\n  }\n}`,
+  });
+}
+
+export function returnPostTimetrackItemQuery(itemID: number, boardID: number) {
+  return JSON.stringify({
+    query: `mutation {\n duplicate_item(\n    item_id: ${itemID}\n        board_id: ${boardID}\n      ) {\n    name\n  }\n}`,
   });
 }

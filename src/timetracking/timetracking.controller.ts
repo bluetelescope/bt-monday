@@ -5,7 +5,7 @@ import {
   returnGetUsersConfig,
   returnGetItemConfig,
   returnPostBoardConfig,
-  returnPostColumnValueConfig,
+  returnPostTimetrackLabelConfig,
   returnGetBoardGroupsConfig,
 } from 'src/functions/returnConfig';
 import {
@@ -14,7 +14,7 @@ import {
   returnGetItemQuery,
   returnGetBoardsQuery,
   returnPostBoardQuery,
-  returnPostColumnValueQuery,
+  returnPostTimetrackLabelQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -31,7 +31,9 @@ import { bindCallback } from 'rxjs';
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
 const TIMETRACKING_BOARD = 5872168554;
-const TIMETRACKING_ITEM = 6721689025;
+const TIMETRACKING_GROUP_ACTIVE = 'duplicate_of_products';
+const TIMETRACKING_ITEM_FORLABEL = 6721689025;
+const TIMETRACKING_ITEM_FORACTIVE = 7209467255;
 const TIMETRACKING_PROJECT_COL = 'dropdown';
 const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
@@ -92,12 +94,27 @@ export class TimetrackingController {
         // }
         if (data.event.type === 'create_pulse') {
           const formData = data.event.columnValues;
-          console.log('formData.dropdown', formData.dropdown);
+          console.log('formData.dropdown', formData.dropdown); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
           console.log('formData.person', formData.person);
+          //   {
+          //   changed_at: '2024-08-09T21:31:59.927Z',
+          //   personsAndTeams: [ { id: 37385671, kind: 'person' } ]
+          // }
           console.log('formData.numbers', formData.numbers);
+          // {
+          //   value: 10,b
+          //   unit: { symbol: 'custom', custom_unit: ' Hours', direction: 'right' }
+          // }
           console.log('formData.date_range', formData.date_range);
+          // {
+          //   from: '2024-08-01',
+          //   to: '2024-08-04',
+          //   visualization_type: null,
+          //   changed_at: '2024-08-09T21:31:59.943Z'
+          // }
 
-          //TODO:
+          //TODO: create new item in 'active' group in timetracking board
+          //TODO: get group names from timetracking board
         }
         console.log('data:', data);
       } else {
