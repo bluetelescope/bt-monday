@@ -193,10 +193,7 @@ export class TimetrackingController {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
-              console.log(
-                'getBoardItemsRes.data.data',
-                getBoardItemsRes.data.data,
-              );
+              console.log('getBoardItemsRes', getBoardItemsRes);
             })
             .catch((error) => {
               console.log(
