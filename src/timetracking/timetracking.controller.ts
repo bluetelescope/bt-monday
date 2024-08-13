@@ -175,10 +175,10 @@ export class TimetrackingController {
               console.log(
                 'resGetBoardsQuery *****************************************************************',
               );
-              console.log(
-                'resGetBoards.data.data.boards',
-                resGetBoards.data.data.boards,
-              );
+              // console.log(
+              //   'resGetBoards.data.data.boards',
+              //   resGetBoards.data.data.boards,
+              // );
 
               boardID = parseBoardID(resGetBoards.data.data.boards, label);
               console.log('boardID', boardID);
