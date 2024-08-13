@@ -152,7 +152,11 @@ export class TimetrackingController {
           console.log(
             'event is create pulse ****************************************************',
           );
+          console.log('data', data);
+          console.log('data.event', data.event);
+
           const formData = data.event.columnValues;
+          console.log('formData.dropdown', formData.dropdown);
           label = formData.dropdown.chosenValues[0].name;
           personId = String(formData.person.personsAndTeams[0].id);
           hours = formData.numbers.value;
