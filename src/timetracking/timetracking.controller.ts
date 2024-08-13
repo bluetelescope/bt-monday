@@ -5,6 +5,7 @@ import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
 import {
   returnGetItemsinBoardQuery,
   returnGetBoardsQuery,
+  returnGetColumnsinBoardQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -12,6 +13,7 @@ import {
   parseUsers,
   parseBoardID,
   parseItemIDfromUserTitle,
+  parseColumnsForIDS,
 } from 'src/functions/parseData';
 
 import getVariables from 'src/functions/getVariables';
@@ -19,6 +21,7 @@ import getItemInfo from 'src/functions/getItemInfo';
 // import * as process from 'process';
 import axios from 'axios';
 import { bindCallback } from 'rxjs';
+import { brotliCompress } from 'zlib';
 
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
@@ -205,6 +208,26 @@ export class TimetrackingController {
               );
 
               console.log('itemID', itemID);
+              const getBoardColumnsQuery =
+                returnGetColumnsinBoardQuery(boardID);
+              const getBoardColumnsConfig =
+                returnGetConfig(getBoardColumnsQuery);
+
+              return axios.request(getBoardColumnsConfig);
+            })
+            .then((getBoardColumnsRes) => {
+              console.log(
+                'getBoardColumnsRes *****************************************************************',
+              );
+              console.log(
+                'getBoardColumnsRes',
+                getBoardColumnsRes.data.data.columns,
+              );
+
+              const colIDS = parseColumnsForIDS(
+                getBoardColumnsRes.data.data.columns,
+              );
+              console.log('colIDS', colIDS);
             })
             .catch((error) => {
               console.log(

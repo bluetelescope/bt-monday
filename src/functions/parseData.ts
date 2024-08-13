@@ -85,3 +85,11 @@ export function parseItemIDfromUserTitle(
   console.log('foundItem', foundItem);
   return foundItem.id;
 }
+
+export function parseColumnsForIDS(columns: any) {
+  const foundCost = columns.filter((col) => col.title === 'Cost')[0].id;
+  console.log('foundCost', foundCost);
+  const foundItem = columns.filter((item) => item.name === 'Hours')[0].id;
+  console.log('foundItem', foundItem);
+  return { foundCost, foundItem };
+}
