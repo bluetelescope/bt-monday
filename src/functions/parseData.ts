@@ -70,7 +70,7 @@ export function parseUsers(usersArray: any) {
 
 export function parseBoardID(boards: any, label: string) {
   const board = boards.filter((board) => board.name === label)[0];
-  console.log('board', board[0]);
+  console.log('board', board);
   return board.id;
 }
 
