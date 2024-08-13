@@ -179,17 +179,25 @@ export class TimetrackingController {
                 'resGetBoards.data.data.boards',
                 resGetBoards.data.data.boards,
               );
+
               boardID = parseBoardID(resGetBoards.data.data.boards, label);
               console.log('boardID', boardID);
+              // const itemID = parseItemID(users, resGetBoards.data.data.boards, personId);
+              // console.log('itemID', itemID);
+              const getBoardItemsQuery = returnGetItemsinBoardQuery(boardID);
+              const getBoardItemsCofig = returnGetConfig(getBoardItemsQuery);
 
-              const items = returnGetItemsinBoardQuery(boardID);
-              console.log('items', items);
-
-              const itemID = parseItemID(users, items, personId);
-              console.log('itemID', itemID);
-              // axios.get()
+              axios.request(getBoardItemsCofig);
             })
-            .then((res) => {})
+            .then((getBoardItemsRes) => {
+              console.log(
+                'getBoardItemsRes *****************************************************************',
+              );
+              console.log(
+                'getBoardItemsRes.data.data',
+                getBoardItemsRes.data.data,
+              );
+            })
             .catch((error) => {
               console.log(
                 'error ***************************************************************',
