@@ -10,8 +10,8 @@ import {
   parseColumnValues,
   parseBoards,
   parseUsers,
-  getBoardID,
-  getItemID,
+  parseBoardID,
+  parseItemID,
 } from 'src/functions/parseData';
 
 import getVariables from 'src/functions/getVariables';
@@ -179,12 +179,14 @@ export class TimetrackingController {
                 'resGetBoards.data.data.boards',
                 resGetBoards.data.data.boards,
               );
-              boardID = getBoardID(resGetBoards.data.data.boards, label);
-              const items = returnGetItemsinBoardQuery(boardID);
-              const itemID = getItemID(users, items, personId);
+              boardID = parseBoardID(resGetBoards.data.data.boards, label);
               console.log('boardID', boardID);
-              console.log('itemID', itemID);
+
+              const items = returnGetItemsinBoardQuery(boardID);
               console.log('items', items);
+
+              const itemID = parseItemID(users, items, personId);
+              console.log('itemID', itemID);
               // axios.get()
             })
             .then((res) => {})

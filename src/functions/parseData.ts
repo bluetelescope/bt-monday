@@ -68,13 +68,13 @@ export function parseUsers(usersArray: any) {
   return { adminUsers, prodTeam };
 }
 
-export function getBoardID(boards: any, label: string) {
+export function parseBoardID(boards: any, label: string) {
   const board = boards.filter((board) => board.name === label);
   console.log('board', board[0]);
   return board.id;
 }
 
-export function getItemID(users: any, items: any, personID: string) {
+export function parseItemID(users: any, items: any, personID: string) {
   const foundUser = users.filter((user) => user.id === String(personID))[0];
   console.log('foundUser', foundUser);
   const foundItem = items.filter((item) => item.name === foundUser.title)[0];
