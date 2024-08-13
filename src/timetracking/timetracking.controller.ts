@@ -153,15 +153,12 @@ export class TimetrackingController {
           data,
         );
 
-        if (data.event.type === 'create_pulse') {
+        if (data.event.type === 'create_pulse' && !!data.event.columnValues) {
           console.log(
             'event is create pulse ****************************************************',
           );
-          console.log('data', data);
-          console.log('data.event', data.event);
 
           const formData = data.event.columnValues;
-          console.log('formData.dropdown', formData.dropdown);
           label = formData.dropdown.chosenValues[0].name;
           personId = String(formData.person.personsAndTeams[0].id);
           hours = formData.numbers.value;
@@ -171,22 +168,21 @@ export class TimetrackingController {
 
           const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
           const getBoardsQuery = returnGetConfig(graphqlGetBoards);
-          console.log('getBoardsQuery', getBoardsQuery);
+          // console.log('getBoardsQuery', getBoardsQuery);
           axios
             .request(getBoardsQuery)
             .then((resGetBoards) => {
               console.log(
-                'resGetBoardsQuery *****************************',
-                resGetBoards,
+                'resGetBoardsQuery *****************************************************************',
               );
               console.log(
                 'resGetBoards.data.data.boards',
                 resGetBoards.data.data.boards,
               );
               boardID = getBoardID(resGetBoards.data.data.boards, label);
-              console.log('boardID', boardID);
               const items = returnGetItemsinBoardQuery(boardID);
               const itemID = getItemID(users, items, personId);
+              console.log('boardID', boardID);
               console.log('itemID', itemID);
               console.log('items', items);
               // axios.get()
@@ -198,6 +194,10 @@ export class TimetrackingController {
                 error,
               );
             });
+        } else {
+          console.log(
+            'ERROR: event type is not create pulse, or column values does not exist ***********************************************',
+          );
         }
       } else {
         //if there is not an event field on the body
