@@ -197,10 +197,10 @@ export class TimetrackingController {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
-              console.log(
-                'getBoardItemsRes.data.data.boards[0].items_page.items',
-                getBoardItemsRes.data.data.boards[0].items_page.items,
-              );
+              // console.log(
+              //   'getBoardItemsRes.data.data.boards[0].items_page.items',
+              //   getBoardItemsRes.data.data.boards[0].items_page.items,
+              // );
 
               const itemID = parseItemIDfromUserTitle(
                 users,
@@ -220,15 +220,11 @@ export class TimetrackingController {
               console.log(
                 'getBoardColumnsRes *****************************************************************',
               );
-              console.log(
-                'getBoardColumnsRes',
-                getBoardColumnsRes.data.data.columns,
-              );
-
-              const colIDS = parseColumnsForIDS(
-                getBoardColumnsRes.data.data.columns,
-              );
-              console.log('colIDS', colIDS);
+              console.log('getBoardColumnsRes.data', getBoardColumnsRes.data);
+              // const colIDS = parseColumnsForIDS(
+              //   getBoardColumnsRes.data.data.columns,
+              // );
+              // console.log('colIDS', colIDS);
             })
             .catch((error) => {
               console.log(

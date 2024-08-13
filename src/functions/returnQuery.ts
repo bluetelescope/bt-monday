@@ -76,3 +76,14 @@ export function returnGetColumnsinBoardQuery(boardID: number) {
     query: `query \n{ boards (ids: [${boardID}]){\n  columns {title id}\n}\n}`,
   });
 }
+
+export function returnPostChangeColumnValue(
+  boardID: number,
+  colID: string,
+  item_id: number,
+  value: string,
+) {
+  return JSON.stringify({
+    query: `mutation {\n  change_simple_column_value(\n  item_id: ${item_id}\n    board_id: ${boardID}\n    column_id:  \"${colID}\"\n  value: \"${value}\"\n  ){name}\n}`,
+  });
+}
