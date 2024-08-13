@@ -6,6 +6,7 @@ import {
   returnGetItemsinBoardQuery,
   returnGetBoardsQuery,
   returnGetColumnsinBoardQuery,
+  returnPostChangeColumnValue,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -126,11 +127,12 @@ const users = [
   },
 ];
 
-let hours = 0;
+let hours = '0';
 let cost = 0;
 let personId = '';
 let label = ' ';
 let boardID = 0;
+let itemIDinBoard;
 @Controller('timetracking')
 export class TimetrackingController {
   // POST validate
@@ -207,7 +209,7 @@ export class TimetrackingController {
                 getBoardItemsRes.data.data.boards[0].items_page.items,
                 personId,
               );
-
+              itemIDinBoard = itemID;
               console.log('itemID', itemID);
               const getBoardColumnsQuery =
                 returnGetColumnsinBoardQuery(boardID);
@@ -220,11 +222,22 @@ export class TimetrackingController {
               console.log(
                 'getBoardColumnsRes *****************************************************************',
               );
-              console.log('getBoardColumnsRes.data', getBoardColumnsRes.data);
-              // const colIDS = parseColumnsForIDS(
-              //   getBoardColumnsRes.data.data.columns,
-              // );
-              // console.log('colIDS', colIDS);
+              let colID = '0';
+              console.log(
+                'getBoardColumnsRes.data',
+                getBoardColumnsRes.data.data.boards[0].columns,
+              );
+              const colIDS = parseColumnsForIDS(
+                getBoardColumnsRes.data.data.boards[0].columns,
+              );
+              console.log('colIDS', colIDS);
+
+              const postHoursToColumnQuery = returnPostChangeColumnValue(
+                boardID,
+                colID,
+                itemIDinBoard,
+                hours,
+              );
             })
             .catch((error) => {
               console.log(
