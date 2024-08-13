@@ -53,7 +53,19 @@ export function returnPostTimetrackItemQuery(itemID: number, boardID: number) {
   });
 }
 
+export function returnGetColumnsInBoard(boardID: number) {
+  return JSON.stringify({
+    query: `query \n{ boards (ids: [${boardID}]){\n  items_page {items {id name}}\n}\n}`,
+  });
+}
+
 export function returnGetItemsinBoardQuery(boardID: number) {
+  return JSON.stringify({
+    query: `query \n{ boards (ids: [${boardID}]){\n  items_page {items {id name}}\n}\n}`,
+  });
+}
+
+export function returnPostUpdateCostHoursInItemQuery(boardID: number) {
   return JSON.stringify({
     query: `query \n{ boards (ids: [${boardID}]){\n  items_page {items {id name}}\n}\n}`,
   });

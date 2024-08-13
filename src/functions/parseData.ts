@@ -74,7 +74,11 @@ export function parseBoardID(boards: any, label: string) {
   return board.id;
 }
 
-export function parseItemID(users: any, items: any, personID: string) {
+export function parseItemIDfromUserTitle(
+  users: any,
+  items: any,
+  personID: string,
+) {
   const foundUser = users.filter((user) => user.id === String(personID))[0];
   console.log('foundUser', foundUser);
   const foundItem = items.filter((item) => item.name === foundUser.title)[0];

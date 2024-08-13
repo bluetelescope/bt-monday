@@ -11,7 +11,7 @@ import {
   parseBoards,
   parseUsers,
   parseBoardID,
-  parseItemID,
+  parseItemIDfromUserTitle,
 } from 'src/functions/parseData';
 
 import getVariables from 'src/functions/getVariables';
@@ -193,7 +193,18 @@ export class TimetrackingController {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
-              console.log('getBoardItemsRes', getBoardItemsRes);
+              console.log(
+                'getBoardItemsRes.data.data.boards[0].items_page.items',
+                getBoardItemsRes.data.data.boards[0].items_page.items,
+              );
+
+              const itemID = parseItemIDfromUserTitle(
+                users,
+                getBoardItemsRes.data.data.boards[0].items_page.items,
+                personId,
+              );
+
+              console.log('itemID', itemID);
             })
             .catch((error) => {
               console.log(
