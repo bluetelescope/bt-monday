@@ -162,6 +162,7 @@ export class TimetrackingController {
           );
 
           const formData = data.event.columnValues;
+          console.log('data.event.columnValues', formData);
           label = formData.dropdown.chosenValues[0].name;
           personId = String(formData.person.personsAndTeams[0].id);
           hours = formData.numbers.value;
