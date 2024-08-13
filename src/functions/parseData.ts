@@ -89,7 +89,14 @@ export function parseItemIDfromUserTitle(
 export function parseColumnsForIDS(columns: any) {
   const foundCost = columns.filter((col) => col.title === 'Cost')[0].id;
   console.log('foundCost', foundCost);
-  const foundItem = columns.filter((item) => item.name === 'Hours')[0].id;
+  const foundItem = columns.filter((item) => item.title === 'Hours')[0].id;
   console.log('foundItem', foundItem);
-  return { foundCost, foundItem };
+  return { costColumnID: foundCost, hoursColumnID: foundItem };
+}
+
+export function parseRatefromUserID(users: any, personID: string) {
+  const foundUser = users.filter((user) => user.id === String(personID))[0];
+  console.log('foundUser', foundUser);
+
+  return foundUser.rate;
 }

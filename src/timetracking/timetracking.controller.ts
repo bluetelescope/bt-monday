@@ -15,6 +15,7 @@ import {
   parseBoardID,
   parseItemIDfromUserTitle,
   parseColumnsForIDS,
+  parseRatefromUserID,
 } from 'src/functions/parseData';
 
 import getVariables from 'src/functions/getVariables';
@@ -133,6 +134,9 @@ let personId = '';
 let label = ' ';
 let boardID = 0;
 let itemIDinBoard;
+let costColumnId = '';
+let colID = '0';
+
 @Controller('timetracking')
 export class TimetrackingController {
   // POST validate
@@ -171,7 +175,6 @@ export class TimetrackingController {
           console.log('personId', personId); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
           console.log('label', formData.dropdown.chosenValues[0].name); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
           console.log('hours', hours);
-
           const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
           const getBoardsQuery = returnGetConfig(graphqlGetBoards);
           // console.log('getBoardsQuery', getBoardsQuery);
@@ -222,23 +225,53 @@ export class TimetrackingController {
               console.log(
                 'getBoardColumnsRes *****************************************************************',
               );
-              let colID = '0';
               console.log(
                 'getBoardColumnsRes.data',
                 getBoardColumnsRes.data.data.boards[0].columns,
               );
-              const colIDS = parseColumnsForIDS(
+              const { costColumnID, hoursColumnID } = parseColumnsForIDS(
                 getBoardColumnsRes.data.data.boards[0].columns,
               );
-              console.log('colIDS', colIDS);
+
+              costColumnId = costColumnID;
 
               const postHoursToColumnQuery = returnPostChangeColumnValue(
                 boardID,
-                colID,
+                hoursColumnID,
                 itemIDinBoard,
                 hours,
               );
+
+              const postHoursToColumnConfig = returnPostConfig(
+                postHoursToColumnQuery,
+              );
+              return axios.request(postHoursToColumnConfig);
             })
+            .then((postHoursToColumnRes) => {
+              console.log('postHoursToColumnRes*************************');
+              console.log(postHoursToColumnRes);
+
+              let cost =
+                Number(hours) * Number(parseRatefromUserID(users, personId));
+              const postCostToColumnQuery = returnPostChangeColumnValue(
+                boardID,
+                costColumnId,
+                itemIDinBoard,
+                String(cost),
+              );
+
+              const postCostToColumnConfig = returnPostConfig(
+                postCostToColumnQuery,
+              );
+              return axios.request(postCostToColumnConfig);
+            })
+            .then((postCostToColumnRes) => {
+              console.log(
+                'postCostToColumnRes**********************************************************************',
+                postCostToColumnRes,
+              );
+            })
+
             .catch((error) => {
               console.log(
                 'error ***************************************************************',

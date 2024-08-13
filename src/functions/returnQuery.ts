@@ -65,12 +65,6 @@ export function returnGetItemsinBoardQuery(boardID: number) {
   });
 }
 
-export function returnPostUpdateCostHoursInItemQuery(boardID: number) {
-  return JSON.stringify({
-    query: `query \n{ boards (ids: [${boardID}]){\n  items_page {items {id name}}\n}\n}`,
-  });
-}
-
 export function returnGetColumnsinBoardQuery(boardID: number) {
   return JSON.stringify({
     query: `query \n{ boards (ids: [${boardID}]){\n  columns {title id}\n}\n}`,
