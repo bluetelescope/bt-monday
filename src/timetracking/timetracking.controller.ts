@@ -187,7 +187,7 @@ export class TimetrackingController {
               const getBoardItemsQuery = returnGetItemsinBoardQuery(boardID);
               const getBoardItemsCofig = returnGetConfig(getBoardItemsQuery);
               console.log('getBoardItemsCofig', getBoardItemsCofig);
-              axios.request(getBoardItemsCofig);
+              return axios.request(getBoardItemsCofig);
             })
             .then((getBoardItemsRes) => {
               console.log(
