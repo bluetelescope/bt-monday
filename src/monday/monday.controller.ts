@@ -146,33 +146,22 @@ export class MondayController {
             console.log('postTimeTrackItemRes **************');
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
             duplicatedItemID = postTimeTrackItemRes.data.data.event.pulseId;
-            //Post: modify item duplicated in previous request
-
-            const changeNameQuery = returnPostChangeColumnValueQuery(
-              TIMETRACKING_BOARD,
-              'name',
-              duplicatedItemID,
-              itemName,
+            //Post: get newly created
+            const getItemQuery = returnGetItemQuery(duplicatedItemID);
+            let configGetItem = returnGetConfig(getItemQuery);
+            return axios.request(configGetItem);
+          })
+          .then((getItemResponse) => {
+            console.log('getItemResponse **************');
+            console.log(
+              'getItemResponse.data',
+              getItemResponse.data.data.column_values,
             );
-            const changeNameConfig = returnPostConfig(changeNameQuery);
-            return axios.request(changeNameConfig);
           })
-          .then((changeNameResponse) => {
-            console.log('changeNameResponse ****************************');
-            console.log('changeNameResponse.data', changeNameResponse.data);
-            const changeLabelQuery = returnPostChangeColumnValueQuery(
-              TIMETRACKING_BOARD,
-              projectColumnId,
-              duplicatedItemID,
-              itemName,
-            );
-            const changeLabelConfig = returnPostConfig(changeLabelQuery);
-            return axios.request(changeLabelConfig);
-          })
-          .then((changeLabelResponse) => {
-            console.log('changeLabelResponse ****************************');
-            console.log('changeLabelResponse.data', changeLabelResponse.data);
-          })
+          // .then((changeLabelResponse) => {
+          //   console.log('changeLabelResponse ****************************');
+          //   console.log('changeLabelResponse.data', changeLabelResponse.data);
+          // })
           .catch((error) => {
             console.log(
               'error ***************************************************************',
