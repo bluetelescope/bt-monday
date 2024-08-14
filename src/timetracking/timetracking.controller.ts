@@ -1,7 +1,6 @@
-import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
-
 import {
   returnGetItemsinBoardQuery,
   returnGetBoardsQuery,
@@ -10,9 +9,6 @@ import {
   returnGetItemQuery,
 } from 'src/functions/returnQuery';
 import {
-  parseColumnValues,
-  parseBoards,
-  parseUsers,
   parseBoardID,
   parseValueofColumnFromColumnID,
   parseItemIDfromUserTitle,
@@ -20,27 +16,10 @@ import {
   parseRatefromUserID,
 } from 'src/functions/parseData';
 
-import getVariables from 'src/functions/getVariables';
-import getItemInfo from 'src/functions/getItemInfo';
 // import * as process from 'process';
 import axios from 'axios';
-import { bindCallback } from 'rxjs';
-import { brotliCompress } from 'zlib';
 
-const TEMPLATE_BOARD = 6198096739;
-const PIPELINE_BOARD = 5552219681;
-const TIMETRACKING_BOARD = 5872168554;
-const TIMETRACKING_GROUP_ACTIVE = 'duplicate_of_products';
-const TIMETRACKING_ITEM_FORLABEL = 6721689025;
-const TIMETRACKING_ITEM_FORACTIVE = 7209467255;
-const TIMETRACKING_PROJECT_COL = 'dropdown';
 const PROD_WORKSPACE = 1080416;
-const BIZDEV_WORKSPACE = 3839751;
-const MIDLEVEL_FOLDER = 14770065;
-const ACTIVE_FOLDER = 7860571;
-const testItemID = 5104037469;
-const PROD_TEAM = 614284;
-const ADMIN_TEAM = 614287;
 
 const users = [
   {

@@ -16,12 +16,6 @@ import {
   parseUsers,
 } from 'src/functions/parseData';
 
-import getVariables from 'src/functions/getVariables';
-import getItemInfo from 'src/functions/getItemInfo';
-// import * as process from 'process';
-import axios from 'axios';
-import { bindCallback } from 'rxjs';
-
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
 const TIMETRACKING_BOARD = 5872168554;
@@ -35,10 +29,7 @@ const ACTIVE_FOLDER = 7860571;
 const testItemID = 5104037469;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
-const graphqlGetItem = returnGetItemQuery(testItemID);
-let configGetItem = returnGetConfig(graphqlGetItem);
-const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
-let configGetBoards = returnGetConfig(graphqlGetBoards);
+
 const graphqlGetUsers = returnGetUsersQuery();
 let configGetUsers = returnGetConfig(graphqlGetUsers);
 const graphqlGetBoardGroups = returnGetBoardGroupsQuery(5872168554);
@@ -79,50 +70,35 @@ export class MondayController {
       //if there is an event field on the body
       if (!!data.event) {
         console.log('data:', data);
-        //TODO: get item id (pulse_id) from event data
         const axios = require('axios');
 
+        //get: item data
+        const graphqlGetItem = returnGetItemQuery(testItemID);
+        let configGetItem = returnGetConfig(graphqlGetItem);
         axios
-          // GET ITEM ---------------------------------------------------------------------------------------------------
           .request(configGetItem)
           .then((responseConfigGetItem) => {
-            // Parse item data ---------------------------------------------------------------------------------------------------
+            // parse item data
             console.log('responseConfigGetItem **************');
             const item = responseConfigGetItem.data.data.items[0];
-            console.log('item', item);
             itemName = item.name.replace('_', ' '); //Hadley_Colored Musicians Club
             subscribers = item.subscribers; //[ { id: '23774585' }, { id: '26473580' } ]
             columns = item.column_values;
             const columnData = parseColumnValues(item.column_values);
             console.log('columnData', columnData);
-            // GET boards, to calcuate item number -----------------------------------------------------------------------
+
+            //get all boards in prod workspace
+            const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
+            let configGetBoards = returnGetConfig(graphqlGetBoards);
             return axios.request(configGetBoards);
           })
           .then((responseConfigGetBoards) => {
-            // Parse boards data, to calcuate item number -----------------------------------------------------------------------
             console.log('responseConfigGetBoards **************');
-            //
+            // Parse boards data
             const boards = responseConfigGetBoards.data.data.boards;
-            console.log('boards', boards);
             const boardNumber = parseBoards(boards, ACTIVE_FOLDER);
             itemName = `${boardNumber}_${itemName}`;
-            // Get users data -------------------------------------------------------------------------------------------
-
-            const graphqlPostColValue = returnPostTimetrackLabelQuery(
-              TIMETRACKING_ITEM_FORLABEL,
-              TIMETRACKING_PROJECT_COL,
-              TIMETRACKING_BOARD,
-              itemName,
-            );
-            let configPostColValue = returnPostConfig(graphqlPostColValue);
-            // POST new label to time tracking column -----------------------------------------------------------------------
-            return axios.request(configPostColValue);
-          })
-          .then((postColValueResponse) => {
-            console.log('postColValueResponse **************');
-            // POST to add the project name to the timetracking form ------------------------------------------------------
-
-            //prod = owners, admin = subs
+            // post: new board to active folder in prod workspace
             const graphqlPostBoard = returnPostBoardQuery(
               TEMPLATE_BOARD,
               itemName,
@@ -135,11 +111,31 @@ export class MondayController {
             );
             let configPostBoard = returnGetConfig(graphqlPostBoard);
             console.log('configPostBoard', configPostBoard);
-            // Post board to active projects board----------------------------------------------------------------
             return axios.request(configPostBoard);
           })
           .then((postBoardResponse) => {
             console.log('postBoardResponse **************');
+            console.log('postBoardResponse', postBoardResponse.data);
+
+            // post new label to time tracking board
+            const graphqlPostCoLabelValue = returnPostTimetrackLabelQuery(
+              TIMETRACKING_ITEM_FORLABEL,
+              TIMETRACKING_PROJECT_COL,
+              TIMETRACKING_BOARD,
+              itemName,
+            );
+            let configPostColLabelValue = returnPostConfig(
+              graphqlPostCoLabelValue,
+            );
+            return axios.request(configPostColLabelValue);
+          })
+          .then((postColValueLabelResponse) => {
+            console.log('postColValueLabelResponse **************');
+            console.log(
+              'postColValueLabelResponse.data',
+              postColValueLabelResponse.data,
+            );
+            //post: duplicate item in 'active' group of time tracking board
             const graphqlPostTimeTrackItemValue = returnPostTimetrackItemQuery(
               TIMETRACKING_ITEM_FORACTIVE,
               TIMETRACKING_BOARD,
@@ -147,8 +143,13 @@ export class MondayController {
             let configPostTimeTrackItem = returnPostConfig(
               graphqlPostTimeTrackItemValue,
             );
-            // POST new label to time tracking column -----------------------------------------------------------------------
             return axios.request(configPostTimeTrackItem);
+          })
+          .then((postTimeTrackItemRes) => {
+            console.log('postTimeTrackItemRes **************');
+            console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
+
+            //Post: modify item duplicated in previous request
           })
           .catch((error) => {
             console.log(
