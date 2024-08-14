@@ -35,7 +35,6 @@ let configGetUsers = returnGetConfig(graphqlGetUsers);
 const graphqlGetBoardGroups = returnGetBoardGroupsQuery(5872168554);
 let configGetBoardGroups = returnGetConfig(graphqlGetBoardGroups);
 let itemName = ''; //Hadley_Colored Musicians Club
-let subscribers = []; //[ { id: '23774585' }, { id: '26473580' } ]
 let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
 
@@ -75,14 +74,15 @@ export class MondayController {
         //get: item data
         const graphqlGetItem = returnGetItemQuery(testItemID);
         let configGetItem = returnGetConfig(graphqlGetItem);
+
         axios
           .request(configGetItem)
           .then((responseConfigGetItem) => {
             // parse item data
             console.log('responseConfigGetItem **************');
             const item = responseConfigGetItem.data.data.items[0];
+            console.log('item.columns_values', item.columns_values);
             itemName = item.name.replace('_', ' '); //Hadley_Colored Musicians Club
-            subscribers = item.subscribers; //[ { id: '23774585' }, { id: '26473580' } ]
             columns = item.column_values;
             const columnData = parseColumnValues(item.column_values);
             console.log('columnData', columnData);
