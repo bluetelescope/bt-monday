@@ -26,14 +26,11 @@ const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
 const MIDLEVEL_FOLDER = 14770065;
 const ACTIVE_FOLDER = 7860571;
-const testItemID = 5104037469;
+// const testItemID = 5104037469;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 
-const graphqlGetUsers = returnGetUsersQuery();
-let configGetUsers = returnGetConfig(graphqlGetUsers);
-const graphqlGetBoardGroups = returnGetBoardGroupsQuery(5872168554);
-let configGetBoardGroups = returnGetConfig(graphqlGetBoardGroups);
+let itemIdFromForm;
 let itemName = ''; //Hadley_Colored Musicians Club
 let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
@@ -70,9 +67,9 @@ export class MondayController {
       if (!!data.event) {
         console.log('data:', data);
         const axios = require('axios');
-
+        itemIdFromForm = data.event.pulseId;
         //get: item data
-        const graphqlGetItem = returnGetItemQuery(testItemID);
+        const graphqlGetItem = returnGetItemQuery(itemIdFromForm);
         let configGetItem = returnGetConfig(graphqlGetItem);
 
         axios
