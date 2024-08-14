@@ -136,23 +136,12 @@ export class MondayController {
             console.log('postTimeTrackItemRes **************');
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
             duplicatedItemID = postTimeTrackItemRes.data.data.duplicate_item.id;
+          })
 
-            //Post: get newly created
-            const getItemQuery = returnGetItemQuery(duplicatedItemID);
-            let configGetItem = returnGetConfig(getItemQuery);
-            return axios.request(configGetItem);
+          .then((changeLabelResponse) => {
+            console.log('changeLabelResponse ****************************');
+            console.log('changeLabelResponse.data', changeLabelResponse.data);
           })
-          .then((getItemResponse) => {
-            console.log('getItemResponse **************');
-            console.log(
-              'getItemResponse.data',
-              getItemResponse.data.data.items[0].column_values,
-            );
-          })
-          // .then((changeLabelResponse) => {
-          //   console.log('changeLabelResponse ****************************');
-          //   console.log('changeLabelResponse.data', changeLabelResponse.data);
-          // })
           .catch((error) => {
             console.log(
               'error ***************************************************************',
