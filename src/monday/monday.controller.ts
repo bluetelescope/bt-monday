@@ -136,6 +136,7 @@ export class MondayController {
             console.log('postTimeTrackItemRes **************');
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
             duplicatedItemID = postTimeTrackItemRes.data.data.duplicate_item.id;
+
             //Post: get newly created
             const getItemQuery = returnGetItemQuery(duplicatedItemID);
             let configGetItem = returnGetConfig(getItemQuery);
@@ -143,10 +144,7 @@ export class MondayController {
           })
           .then((getItemResponse) => {
             console.log('getItemResponse **************');
-            console.log(
-              'getItemResponse.data',
-              getItemResponse.data.data.column_values,
-            );
+            console.log('getItemResponse.data', getItemResponse.data.data);
           })
           // .then((changeLabelResponse) => {
           //   console.log('changeLabelResponse ****************************');
