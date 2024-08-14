@@ -144,7 +144,10 @@ export class MondayController {
           })
           .then((getItemResponse) => {
             console.log('getItemResponse **************');
-            console.log('getItemResponse.data', getItemResponse.data.data);
+            console.log(
+              'getItemResponse.data',
+              getItemResponse.data.data.items[0].column_values,
+            );
           })
           // .then((changeLabelResponse) => {
           //   console.log('changeLabelResponse ****************************');
