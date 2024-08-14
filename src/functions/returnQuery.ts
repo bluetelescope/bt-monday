@@ -21,7 +21,7 @@ export function returnGetUsersQuery() {
 }
 export function returnGetItemQuery(itemID: number) {
   return JSON.stringify({
-    query: `query {\n  items(limit: 1, ids: [${itemID}]) {\n    column_values {\n  id \n   value\n      column {\n        title\n      }\n    }\n    name\n    subscribers {\n      id\n      \n    }\n  }\n}`,
+    query: `query {\n  items(limit: 1, ids: [${itemID}]) {\n    column_values {\n  id \n   value\n    text \n  column {\n        title\n      }\n    }\n    name\n    subscribers {\n      id\n      \n    }\n  }\n}`,
   });
 }
 export function returnGetBoardsQuery(workspaceID: number) {

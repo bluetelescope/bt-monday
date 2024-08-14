@@ -286,7 +286,7 @@ export class TimetrackingController {
             .then((postCostToColumnRes) => {
               console.log(
                 'postCostToColumnRes**********************************************************************',
-                postCostToColumnRes,
+                postCostToColumnRes.data,
               );
             })
 
