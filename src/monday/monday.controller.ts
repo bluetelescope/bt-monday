@@ -81,7 +81,7 @@ export class MondayController {
             // parse item data
             console.log('responseConfigGetItem **************');
             const item = responseConfigGetItem.data.data.items[0];
-            console.log('item.columns_values', item.columns_values);
+            console.log('item.columns_values', item.column_values);
             itemName = item.name.replace('_', ' '); //Hadley_Colored Musicians Club
             columns = item.column_values;
             const columnData = parseColumnValues(item.column_values);
