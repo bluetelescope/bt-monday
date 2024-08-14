@@ -49,7 +49,7 @@ export function returnPostTimetrackLabelQuery(
 
 export function returnPostTimetrackItemQuery(itemID: number, boardID: number) {
   return JSON.stringify({
-    query: `mutation {\n duplicate_item(\n    item_id: ${itemID}\n        board_id: ${boardID}\n      ) {\n    name\n  }\n}`,
+    query: `mutation {\n duplicate_item(\n    item_id: ${itemID}\n        board_id: ${boardID}\n      ) {\n  id\n  name\n  }\n}`,
   });
 }
 

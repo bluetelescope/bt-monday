@@ -9,6 +9,7 @@ import {
   returnPostBoardQuery,
   returnPostTimetrackLabelQuery,
   returnPostTimetrackItemQuery,
+  returnPostChangeColumnValueQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -34,7 +35,8 @@ let itemIdFromForm;
 let itemName = ''; //Hadley_Colored Musicians Club
 let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
-
+let projectColumnId = 'dropdown';
+let duplicatedItemID;
 @Controller('monday')
 export class MondayController {
   @Get()
@@ -78,11 +80,9 @@ export class MondayController {
             // parse item data
             console.log('responseConfigGetItem **************');
             const item = responseConfigGetItem.data.data.items[0];
-            console.log('item.columns_values', item.column_values);
-            itemName = item.name.replace('_', ' '); //Hadley_Colored Musicians Club
+            itemName = item.name.replace('_', ' ');
             columns = item.column_values;
             const columnData = parseColumnValues(item.column_values);
-            console.log('columnData', columnData);
 
             //get all boards in prod workspace
             const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
@@ -145,8 +145,33 @@ export class MondayController {
           .then((postTimeTrackItemRes) => {
             console.log('postTimeTrackItemRes **************');
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
-
+            duplicatedItemID = postTimeTrackItemRes.data.data.event.pulseId;
             //Post: modify item duplicated in previous request
+
+            const changeNameQuery = returnPostChangeColumnValueQuery(
+              TIMETRACKING_BOARD,
+              'name',
+              duplicatedItemID,
+              itemName,
+            );
+            const changeNameConfig = returnPostConfig(changeNameQuery);
+            return axios.request(changeNameConfig);
+          })
+          .then((changeNameResponse) => {
+            console.log('changeNameResponse ****************************');
+            console.log('changeNameResponse.data', changeNameResponse.data);
+            const changeLabelQuery = returnPostChangeColumnValueQuery(
+              TIMETRACKING_BOARD,
+              projectColumnId,
+              duplicatedItemID,
+              itemName,
+            );
+            const changeLabelConfig = returnPostConfig(changeLabelQuery);
+            return axios.request(changeLabelConfig);
+          })
+          .then((changeLabelResponse) => {
+            console.log('changeLabelResponse ****************************');
+            console.log('changeLabelResponse.data', changeLabelResponse.data);
           })
           .catch((error) => {
             console.log(
