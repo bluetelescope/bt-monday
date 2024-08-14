@@ -135,7 +135,7 @@ export class MondayController {
           .then((postTimeTrackItemRes) => {
             console.log('postTimeTrackItemRes **************');
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
-            duplicatedItemID = postTimeTrackItemRes.data.data.event.pulseId;
+            duplicatedItemID = postTimeTrackItemRes.data.data.duplicate_item.id;
             //Post: get newly created
             const getItemQuery = returnGetItemQuery(duplicatedItemID);
             let configGetItem = returnGetConfig(getItemQuery);
