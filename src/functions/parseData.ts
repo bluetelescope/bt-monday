@@ -97,6 +97,11 @@ export function parseColumnsForIDS(columns: any) {
 export function parseRatefromUserID(users: any, personID: string) {
   const foundUser = users.filter((user) => user.id === String(personID))[0];
   console.log('foundUser', foundUser);
+  return foundUser.rate || '150';
+}
 
-  return foundUser.rate;
+export function parseValueofColumnFromColumnID(columns: any, colID: string) {
+  const foundCol = columns.filter((col: any) => col.id === colID)[0];
+  console.log('foundCol', foundCol);
+  return foundCol.text || 'null';
 }

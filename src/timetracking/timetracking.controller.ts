@@ -6,13 +6,15 @@ import {
   returnGetItemsinBoardQuery,
   returnGetBoardsQuery,
   returnGetColumnsinBoardQuery,
-  returnPostChangeColumnValue,
+  returnPostChangeColumnValueQuery,
+  returnGetItemQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
   parseBoards,
   parseUsers,
   parseBoardID,
+  parseValueofColumnFromColumnID,
   parseItemIDfromUserTitle,
   parseColumnsForIDS,
   parseRatefromUserID,
@@ -128,15 +130,19 @@ const users = [
   },
 ];
 
-let hours = '0';
-let cost = 0;
+let hoursFromForm = '0';
+let costFromForm = 0;
 let personId = '';
+let rate = 0;
 let label = ' ';
-let boardID = 0;
+let boardId = 0;
 let itemIDinBoard;
 let costColumnId = '';
-let colID = '0';
-
+let hoursColumnId = '';
+let currentCostValue = '';
+let currentHoursValue = '';
+let newCostValue = '';
+let newHoursValue = '';
 @Controller('timetracking')
 export class TimetrackingController {
   // POST validate
@@ -166,82 +172,95 @@ export class TimetrackingController {
           console.log(
             'event is create pulse ****************************************************',
           );
-
+          //parse time tracking data
           const formData = data.event.columnValues;
-          console.log('data.event.columnValues', formData);
           label = formData.dropdown.chosenValues[0].name;
           personId = String(formData.person.personsAndTeams[0].id);
-          hours = formData.numbers.value;
-          console.log('personId', personId); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
-          console.log('label', formData.dropdown.chosenValues[0].name); //{ chosenValues: [ { id: 44, name: 'testLabel' } ] }
-          console.log('hours', hours);
+          hoursFromForm = formData.numbers.value;
+          console.log('personId', personId);
+          console.log('label', formData.dropdown.chosenValues[0].name);
+          console.log('hoursFromForm', hoursFromForm);
+          //parse users data
+          rate = parseRatefromUserID(users, personId);
+          console.log('rate', rate);
+
+          //get: boards query
           const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
           const getBoardsQuery = returnGetConfig(graphqlGetBoards);
-          // console.log('getBoardsQuery', getBoardsQuery);
           axios
             .request(getBoardsQuery)
             .then((resGetBoards) => {
               console.log(
                 'resGetBoardsQuery *****************************************************************',
               );
-              // console.log(
-              //   'resGetBoards.data.data.boards',
-              //   resGetBoards.data.data.boards,
-              // );
+              //parse boards data
+              boardId = parseBoardID(resGetBoards.data.data.boards, label);
 
-              boardID = parseBoardID(resGetBoards.data.data.boards, label);
-              console.log('boardID', boardID);
-              // const itemID = parseItemID(users, resGetBoards.data.data.boards, personId);
-              // console.log('itemID', itemID);
-              const getBoardItemsQuery = returnGetItemsinBoardQuery(boardID);
+              //GET: items in active project board
+              const getBoardItemsQuery = returnGetItemsinBoardQuery(boardId);
               const getBoardItemsCofig = returnGetConfig(getBoardItemsQuery);
-              console.log('getBoardItemsCofig', getBoardItemsCofig);
               return axios.request(getBoardItemsCofig);
             })
             .then((getBoardItemsRes) => {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
-              // console.log(
-              //   'getBoardItemsRes.data.data.boards[0].items_page.items',
-              //   getBoardItemsRes.data.data.boards[0].items_page.items,
-              // );
-
+              //parse items data
               const itemID = parseItemIDfromUserTitle(
                 users,
                 getBoardItemsRes.data.data.boards[0].items_page.items,
                 personId,
               );
               itemIDinBoard = itemID;
-              console.log('itemID', itemID);
+
+              //GET: columns in active project
               const getBoardColumnsQuery =
-                returnGetColumnsinBoardQuery(boardID);
+                returnGetColumnsinBoardQuery(boardId);
               const getBoardColumnsConfig =
                 returnGetConfig(getBoardColumnsQuery);
-
               return axios.request(getBoardColumnsConfig);
             })
             .then((getBoardColumnsRes) => {
-              console.log(
-                'getBoardColumnsRes *****************************************************************',
-              );
-              console.log(
-                'getBoardColumnsRes.data',
-                getBoardColumnsRes.data.data.boards[0].columns,
-              );
+              //parse columns data
               const { costColumnID, hoursColumnID } = parseColumnsForIDS(
                 getBoardColumnsRes.data.data.boards[0].columns,
               );
-
               costColumnId = costColumnID;
+              hoursColumnId = hoursColumnID;
 
-              const postHoursToColumnQuery = returnPostChangeColumnValue(
-                boardID,
-                hoursColumnID,
-                itemIDinBoard,
-                hours,
+              //GET: get item data
+              const getItemQuery = returnGetItemQuery(itemIDinBoard);
+              const getItemConfig = returnGetConfig(getItemQuery);
+              return axios.request(getItemConfig);
+            })
+            .then((getItemRes) => {
+              //parse item data
+              console.log('getItemRes.data', getItemRes.data.data);
+              const itemColumns = getItemRes.data.data.items[0].column_values;
+
+              currentHoursValue = parseValueofColumnFromColumnID(
+                itemColumns,
+                hoursColumnId,
               );
+              currentCostValue = parseValueofColumnFromColumnID(
+                itemColumns,
+                costColumnId,
+              );
+              console.log('currentHoursValue', currentHoursValue);
+              console.log('currentCostValue', currentCostValue);
 
+              newHoursValue = `${Number(currentHoursValue) + Number(hoursFromForm)}`;
+              newCostValue = `${Number(newHoursValue) * Number(rate)}`;
+              console.log('newHoursValue', newHoursValue);
+              console.log('newCostValue', newCostValue);
+
+              //POST: hoursFromForm value to column
+              const postHoursToColumnQuery = returnPostChangeColumnValueQuery(
+                boardId,
+                hoursColumnId,
+                itemIDinBoard,
+                newHoursValue,
+              );
               const postHoursToColumnConfig = returnPostConfig(
                 postHoursToColumnQuery,
               );
@@ -249,15 +268,14 @@ export class TimetrackingController {
             })
             .then((postHoursToColumnRes) => {
               console.log('postHoursToColumnRes*************************');
-              console.log(postHoursToColumnRes);
+              console.log(postHoursToColumnRes.data.data);
+              //parse hoursFromForm result
 
-              let cost =
-                Number(hours) * Number(parseRatefromUserID(users, personId));
-              const postCostToColumnQuery = returnPostChangeColumnValue(
-                boardID,
+              const postCostToColumnQuery = returnPostChangeColumnValueQuery(
+                boardId,
                 costColumnId,
                 itemIDinBoard,
-                String(cost),
+                newCostValue,
               );
 
               const postCostToColumnConfig = returnPostConfig(
