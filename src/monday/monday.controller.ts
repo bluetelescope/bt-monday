@@ -114,34 +114,24 @@ export class MondayController {
             console.log('postBoardResponse **************');
             console.log('postBoardResponse', postBoardResponse.data);
 
-            // post new label to time tracking board
-            const graphqlPostCoLabelValue = returnPostTimetrackLabelQuery(
-              TIMETRACKING_ITEM_FORLABEL,
-              TIMETRACKING_PROJECT_COL,
-              TIMETRACKING_BOARD,
-              itemName,
-            );
-            let configPostColLabelValue = returnPostConfig(
-              graphqlPostCoLabelValue,
-            );
-            return axios.request(configPostColLabelValue);
-          })
-          .then((postColValueLabelResponse) => {
-            console.log('postColValueLabelResponse **************');
-            console.log(
-              'postColValueLabelResponse.data',
-              postColValueLabelResponse.data,
-            );
             //post: duplicate item in 'active' group of time tracking board
-            const graphqlPostTimeTrackItemValue = returnPostTimetrackItemQuery(
+            const graphqlDuplicateTimeTrackItem = returnPostTimetrackItemQuery(
               TIMETRACKING_ITEM_FORACTIVE,
               TIMETRACKING_BOARD,
             );
-            let configPostTimeTrackItem = returnPostConfig(
-              graphqlPostTimeTrackItemValue,
+            let configDuplicateTimeTrackItem = returnPostConfig(
+              graphqlDuplicateTimeTrackItem,
             );
-            return axios.request(configPostTimeTrackItem);
+            return axios.request(configDuplicateTimeTrackItem);
           })
+          // .then((postColValueLabelResponse) => {
+          //   console.log('postColValueLabelResponse **************');
+          //   console.log(
+          //     'postColValueLabelResponse.data',
+          //     postColValueLabelResponse.data,
+          //   );
+
+          // })
           .then((postTimeTrackItemRes) => {
             console.log('postTimeTrackItemRes **************');
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
@@ -181,3 +171,15 @@ export class MondayController {
     }
   }
 }
+
+// post new label to time tracking board
+// const graphqlPostCoLabelValue = returnPostTimetrackLabelQuery(
+//   TIMETRACKING_ITEM_FORLABEL,
+//   TIMETRACKING_PROJECT_COL,
+//   TIMETRACKING_BOARD,
+//   itemName,
+// );
+// let configPostColLabelValue = returnPostConfig(
+//   graphqlPostCoLabelValue,
+// );
+// return axios.request(configPostColLabelValue);
