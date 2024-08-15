@@ -86,8 +86,10 @@ export class PopulateController {
         //if there is not an event field on the body
         //it's the verification request
         console.log('no event:', data);
-
-        // body is parsed by NestJS
+        const requestBody = JSON.stringify({
+          challenge: `${data.challenge}`,
+        });
+        return requestBody; // body is parsed by NestJS
       }
     }
   }
