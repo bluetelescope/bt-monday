@@ -241,8 +241,11 @@ export class TimetrackingController {
               console.log('currentHoursValue', currentHoursValue);
               console.log('currentCostValue', currentCostValue);
 
-              newHoursValue = `${Number(currentHoursValue) + Number(hoursFromForm)}`;
-              newCostValue = `${Number(newHoursValue) * Number(rate)}`;
+              newHoursValue = `${
+                Number(!!currentHoursValue ? currentHoursValue : 0) +
+                Number(hoursFromForm)
+              }`;
+              newCostValue = `${Number(!!newHoursValue ? newHoursValue : 0) * Number(rate)}`;
               console.log('newHoursValue', newHoursValue);
               console.log('newCostValue', newCostValue);
 
