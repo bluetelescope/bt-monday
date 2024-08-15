@@ -88,10 +88,15 @@ export class MondayController {
             columns = item.column_values;
             const { proposal, value } = parseColumnValues(item.column_values);
             console.log('proposal', proposal);
-
             console.log('value', value);
-            proposalURL = proposal.value;
+            proposalURL = proposal.value.substring(
+              proposal.value.indexOf('http'),
+              proposal.value.length,
+            );
             actualProjectValue = value.value;
+            console.log('proposalURL', proposalURL);
+            console.log('actualProjectValue', actualProjectValue);
+
             //get all boards in prod workspace
             const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
             let configGetBoards = returnGetConfig(graphqlGetBoards);
