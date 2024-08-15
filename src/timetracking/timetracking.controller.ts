@@ -202,6 +202,7 @@ export class TimetrackingController {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
+              console.log('getBoardItemsRes.data', getBoardItemsRes.data);
               //parse items data
               itemIDinBoard =
                 getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
@@ -243,10 +244,10 @@ export class TimetrackingController {
               console.log('currentCostValue', currentCostValue);
 
               newHoursValue = `${
-                Number(!!currentHoursValue ? currentHoursValue : 0) +
+                Number(currentHoursValue === null ? 0 : currentHoursValue) +
                 Number(hoursFromForm)
               }`;
-              newCostValue = `${Number(!!newHoursValue ? newHoursValue : 0) * Number(rate)}`;
+              newCostValue = `${Number(newHoursValue === null ? 0 : newHoursValue) * Number(rate)}`;
               console.log('newHoursValue', newHoursValue);
               console.log('newCostValue', newCostValue);
 
