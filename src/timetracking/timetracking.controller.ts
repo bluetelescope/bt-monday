@@ -7,6 +7,7 @@ import {
   returnGetColumnsinBoardQuery,
   returnPostChangeColumnValueQuery,
   returnGetItemQuery,
+  returnGetItemFromBoard,
 } from 'src/functions/returnQuery';
 import {
   parseBoardID,
@@ -112,6 +113,7 @@ const users = [
 let hoursFromForm = '0';
 let costFromForm = 0;
 let personId = '';
+let personData;
 let rate = 0;
 let label = ' ';
 let boardId = 0;
@@ -160,12 +162,16 @@ export class TimetrackingController {
           const formData = data.event.columnValues;
           label = formData.dropdown.chosenValues[0].name;
           personId = String(formData.person.personsAndTeams[0].id);
+          personData = users.filter((person) => {
+            person.id === personId;
+          })[0];
           hoursFromForm = formData.numbers.value;
           console.log('personId', personId);
           console.log('label', formData.dropdown.chosenValues[0].name);
           console.log('hoursFromForm', hoursFromForm);
           //parse users data
-          rate = parseRatefromUserID(users, personId);
+          // rate = parseRatefromUserID(users, personId);
+          rate = personData.rate;
           console.log('rate', rate);
 
           //get: boards query
@@ -178,11 +184,17 @@ export class TimetrackingController {
                 'resGetBoardsQuery *****************************************************************',
               );
               //parse boards data
+
               boardId = parseBoardID(resGetBoards.data.data.boards, label);
 
               //GET: items in active project board
-              const getBoardItemsQuery = returnGetItemsinBoardQuery(boardId);
-              const getBoardItemsCofig = returnGetConfig(getBoardItemsQuery);
+              // const getBoardItemsQuery = returnGetItemsinBoardQuery(boardId);
+              const getBoardItemQuery = returnGetItemFromBoard(
+                boardId,
+                'name',
+                personData.title,
+              );
+              const getBoardItemsCofig = returnGetConfig(getBoardItemQuery);
               return axios.request(getBoardItemsCofig);
             })
             .then((getBoardItemsRes) => {
@@ -190,12 +202,8 @@ export class TimetrackingController {
                 'getBoardItemsRes *****************************************************************',
               );
               //parse items data
-              const itemID = parseItemIDfromUserTitle(
-                users,
-                getBoardItemsRes.data.data.boards[0].items_page.items,
-                personId,
-              );
-              itemIDinBoard = itemID;
+              itemIDinBoard =
+                getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
 
               //GET: columns in active project
               const getBoardColumnsQuery =
