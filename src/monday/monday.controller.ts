@@ -37,6 +37,9 @@ let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
 let projectColumnId = 'dropdown';
 let duplicatedItemID;
+let proposalURL;
+let actualProjectValue;
+
 @Controller('monday')
 export class MondayController {
   @Get()
@@ -80,10 +83,15 @@ export class MondayController {
             // parse item data
             console.log('responseConfigGetItem **************');
             const item = responseConfigGetItem.data.data.items[0];
+
             itemName = item.name.replace('_', ' ');
             columns = item.column_values;
-            const columnData = parseColumnValues(item.column_values);
+            const { proposal, value } = parseColumnValues(item.column_values);
+            console.log('proposal', proposal);
 
+            console.log('value', value);
+            proposalURL = proposal.value;
+            actualProjectValue = value.value;
             //get all boards in prod workspace
             const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
             let configGetBoards = returnGetConfig(graphqlGetBoards);
