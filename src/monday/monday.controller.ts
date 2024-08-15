@@ -186,6 +186,15 @@ export class MondayController {
 
             let items =
               getItemsInNewBoardResponse.data.data.boards[0].items_page.items;
+            console.log('items', items);
+            let proposalItem = items.filter(
+              (item) => item.name === 'Proposal',
+            )[0];
+            console.log('proposalItem', proposalItem);
+            let actualValueItem = items.filter(
+              (item) => item.name === 'Actual Value of Project',
+            )[0];
+            console.log('actualValueItem', proposalItem);
             proposalItemId = items.filter((item) => item.name === 'Proposal')[0]
               .id;
             actualValueItemId = items.filter(
