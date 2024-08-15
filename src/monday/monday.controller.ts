@@ -139,9 +139,22 @@ export class MondayController {
             return axios.request(changeLabelConfig);
           })
 
-          .then((response) => {
-            console.log('response ****************************');
-            console.log('response.data', response.data);
+          .then((changeLabelResponse) => {
+            console.log('changeLabelResponse ****************************');
+            console.log('changeLabelResponse.data', changeLabelResponse.data);
+
+            const changeNameQuery = returnPostChangeColumnValueQuery(
+              TIMETRACKING_BOARD,
+              'name',
+              duplicatedItemID,
+              itemName,
+            );
+            const changeNameConfig = returnPostConfig(changeNameQuery);
+            return axios.request(changeNameConfig);
+          })
+          .then((changeNameResponse) => {
+            console.log('changeNameResponse ****************************');
+            console.log('changeNameResponse.data', changeNameResponse.data);
           })
           .catch((error) => {
             console.log(
