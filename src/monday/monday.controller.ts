@@ -11,6 +11,7 @@ import {
   returnPostTimetrackItemQuery,
   returnPostChangeColumnValueQuery,
   returnGetItemsinBoardQuery,
+  returnGetItemFromBoard,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -171,37 +172,41 @@ export class MondayController {
             console.log('changeNameResponse ****************************');
             console.log('changeNameResponse.data', changeNameResponse.data);
 
-            const itemsInNewBoardQuery = returnGetItemsinBoardQuery(newBoardId);
-            const itemsInNewBoardConfig = returnGetConfig(itemsInNewBoardQuery);
-            return axios.request(itemsInNewBoardConfig);
+            const getProposalItemQuery = returnGetItemFromBoard(
+              newBoardId,
+              'name',
+              'Proposal',
+            );
+            const getProposalItemConfig = returnGetConfig(getProposalItemQuery);
+            return axios.request(getProposalItemConfig);
           })
-          .then((getItemsInNewBoardResponse) => {
+          .then((getProposalItem) => {
+            console.log('getProposalItem ****************************');
             console.log(
-              'getItemsInNewBoardResponse ****************************',
+              'getProposalItem.data',
+              getProposalItem.data.data.boards[0].items_page.items[0].id,
             );
+            proposalItemId =
+              getProposalItem.data.data.boards[0].items_page.items[0].id;
+
+            const getActualValueItemQuery = returnGetItemFromBoard(
+              newBoardId,
+              'name',
+              'Proposal',
+            );
+            const getActualValueItemConfig = returnGetConfig(
+              getActualValueItemQuery,
+            );
+            return axios.request(getActualValueItemConfig);
+          })
+          .then((getActualItemReponse) => {
+            console.log('getActualItemReponse ****************************');
             console.log(
-              'getItemsInNewBoardResponse.data',
-              getItemsInNewBoardResponse.data,
+              'getActualItemReponse.data',
+              getActualItemReponse.data.data.boards[0].items_page.items[0].id,
             );
-
-            let items =
-              getItemsInNewBoardResponse.data.data.boards[0].items_page.items;
-            console.log('items', items);
-            let proposalItem = items.filter(
-              (item) => item.name === 'Proposal',
-            )[0];
-            console.log('proposalItem', proposalItem);
-            let actualValueItem = items.filter(
-              (item) => item.name === 'Actual Value of Project',
-            )[0];
-            console.log('actualValueItem', proposalItem);
-            proposalItemId = items.filter((item) => item.name === 'Proposal')[0]
-              .id;
-            actualValueItemId = items.filter(
-              (item) => item.name === 'Actual Value of Project',
-            )[0].id;
-            // const proposalValue = `{\"url\":\"${proposalURL}\",\"text\":\"Proposal\"}`
-
+            actualValueItemId =
+              getActualItemReponse.data.data.boards[0].items_page.items[0].id;
             const changeProposalQuery = returnPostChangeColumnValueQuery(
               newBoardId,
               newProposalColumnId,

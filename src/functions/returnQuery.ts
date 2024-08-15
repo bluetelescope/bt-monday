@@ -81,3 +81,13 @@ export function returnPostChangeColumnValueQuery(
     query: `mutation {\n  change_simple_column_value(\n  item_id: ${item_id}\n    board_id: ${boardID}\n    column_id:  \"${colID}\"\n  value: \"${value}\"\n create_labels_if_missing: true \n  ){name}\n}`,
   });
 }
+
+export function returnGetItemFromBoard(
+  boardID: number,
+  colID: string,
+  valueToSearchFor: string,
+) {
+  return JSON.stringify({
+    query: `query { boards (ids: [${boardID}]){  items_page (limit: 1, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"]}]}){items {id name}}}}\n`,
+  });
+}
