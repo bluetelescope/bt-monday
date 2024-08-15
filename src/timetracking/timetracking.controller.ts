@@ -162,10 +162,9 @@ export class TimetrackingController {
           label = formData.dropdown.chosenValues[0].name;
           personId = String(formData.person.personsAndTeams[0].id);
           console.log('personId', personId);
-          personData = users.filter((person) => {
-            person.id === String(personId);
-            return person;
-          })[0];
+          personData = users.filter(
+            (person) => person.id === String(personId),
+          )[0];
           console.log('personData', personData);
           hoursFromForm = formData.numbers.value;
           console.log('personId', personId);
