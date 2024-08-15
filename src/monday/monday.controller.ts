@@ -191,12 +191,13 @@ export class MondayController {
             actualValueItemId = items.filter(
               (item) => item.name === 'Actual Value of Project',
             )[0].id;
+            // const proposalValue = `{\"url\":\"${proposalURL}\",\"text\":\"Proposal\"}`
 
             const changeProposalQuery = returnPostChangeColumnValueQuery(
               newBoardId,
               newProposalColumnId,
               proposalItemId,
-              proposalURL,
+              JSON.stringify({ url: proposalURL }),
             );
             const changeProposalConfig = returnPostConfig(changeProposalQuery);
             return axios.request(changeProposalConfig);
