@@ -124,23 +124,24 @@ export class MondayController {
             );
             return axios.request(configDuplicateTimeTrackItem);
           })
-          // .then((postColValueLabelResponse) => {
-          //   console.log('postColValueLabelResponse **************');
-          //   console.log(
-          //     'postColValueLabelResponse.data',
-          //     postColValueLabelResponse.data,
-          //   );
-
-          // })
           .then((postTimeTrackItemRes) => {
             console.log('postTimeTrackItemRes **************');
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
             duplicatedItemID = postTimeTrackItemRes.data.data.duplicate_item.id;
+
+            const changeLabelQuery = returnPostChangeColumnValueQuery(
+              TIMETRACKING_BOARD,
+              TIMETRACKING_PROJECT_COL,
+              duplicatedItemID,
+              itemName,
+            );
+            const changeLabelConfig = returnPostConfig(changeLabelQuery);
+            return axios.request(changeLabelConfig);
           })
 
-          .then((changeLabelResponse) => {
-            console.log('changeLabelResponse ****************************');
-            console.log('changeLabelResponse.data', changeLabelResponse.data);
+          .then((response) => {
+            console.log('response ****************************');
+            console.log('response.data', response.data);
           })
           .catch((error) => {
             console.log(

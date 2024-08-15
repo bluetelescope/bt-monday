@@ -78,6 +78,6 @@ export function returnPostChangeColumnValueQuery(
   value: string,
 ) {
   return JSON.stringify({
-    query: `mutation {\n  change_simple_column_value(\n  item_id: ${item_id}\n    board_id: ${boardID}\n    column_id:  \"${colID}\"\n  value: \"${value}\"\n  ){name}\n}`,
+    query: `mutation {\n  change_simple_column_value(\n  item_id: ${item_id}\n    board_id: ${boardID}\n    column_id:  \"${colID}\"\n  value: \"${value}\"\n create_labels_if_missing: true \n  ){name}\n}`,
   });
 }
