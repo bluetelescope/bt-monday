@@ -10,6 +10,7 @@ import {
   returnPostTimetrackLabelQuery,
   returnPostTimetrackItemQuery,
   returnPostChangeColumnValueQuery,
+  returnGetItemsinBoardQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -39,6 +40,11 @@ let projectColumnId = 'dropdown';
 let duplicatedItemID;
 let proposalURL;
 let actualProjectValue;
+let newBoardId;
+let newProposalColumnId = 'link';
+let newCostColumnId = 'numbers_1';
+let proposalItemId;
+let actualValueItemId;
 
 @Controller('monday')
 export class MondayController {
@@ -87,15 +93,11 @@ export class MondayController {
             itemName = item.name.replace('_', ' ');
             columns = item.column_values;
             const { proposal, value } = parseColumnValues(item.column_values);
-            console.log('proposal', proposal);
-            console.log('value', value);
             proposalURL = proposal.value.substring(
               proposal.value.indexOf('http'),
               proposal.value.length,
             );
             actualProjectValue = value.value;
-            console.log('proposalURL', proposalURL);
-            console.log('actualProjectValue', actualProjectValue);
 
             //get all boards in prod workspace
             const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
@@ -126,7 +128,7 @@ export class MondayController {
           .then((postBoardResponse) => {
             console.log('postBoardResponse **************');
             console.log('postBoardResponse', postBoardResponse.data);
-
+            newBoardId = postBoardResponse.data.data.create_board.id;
             //post: duplicate item in 'active' group of time tracking board
             const graphqlDuplicateTimeTrackItem = returnPostTimetrackItemQuery(
               TIMETRACKING_ITEM_FORACTIVE,
@@ -168,6 +170,58 @@ export class MondayController {
           .then((changeNameResponse) => {
             console.log('changeNameResponse ****************************');
             console.log('changeNameResponse.data', changeNameResponse.data);
+
+            const itemsInNewBoardQuery = returnGetItemsinBoardQuery(newBoardId);
+            const itemsInNewBoardConfig = returnGetConfig(itemsInNewBoardQuery);
+            return axios.request(itemsInNewBoardConfig);
+          })
+          .then((getItemsInNewBoardResponse) => {
+            console.log(
+              'getItemsInNewBoardResponse ****************************',
+            );
+            console.log(
+              'getItemsInNewBoardResponse.data',
+              getItemsInNewBoardResponse.data,
+            );
+
+            let items =
+              getItemsInNewBoardResponse.data.data.boards[0].items_page.items;
+            proposalItemId = items.filter((item) => item.name === 'Proposal')[0]
+              .id;
+            actualValueItemId = items.filter(
+              (item) => item.name === 'Actual Value of Project',
+            )[0].id;
+
+            const changeProposalQuery = returnPostChangeColumnValueQuery(
+              newBoardId,
+              newProposalColumnId,
+              proposalItemId,
+              proposalURL,
+            );
+            const changeProposalConfig = returnPostConfig(changeProposalQuery);
+            return axios.request(changeProposalConfig);
+          })
+          .then((changeProposalResponse) => {
+            console.log('changeProposalResponse ****************************');
+            console.log(
+              'changeProposalResponse.data',
+              changeProposalResponse.data,
+            );
+
+            const changeActualValueQuery = returnPostChangeColumnValueQuery(
+              newBoardId,
+              newCostColumnId,
+              actualValueItemId,
+              actualProjectValue,
+            );
+            const changeActualValueConfig = returnPostConfig(
+              changeActualValueQuery,
+            );
+            return axios.request(changeActualValueConfig);
+          })
+          .then((response) => {
+            console.log('response ****************************');
+            console.log('response', response.data);
           })
           .catch((error) => {
             console.log(

@@ -75,7 +75,7 @@ const users = [
     id: '38929843',
     rate: 150,
     name: 'Patti Sande',
-    title: 'Back Office Administration - Support President/Owner',
+    title: 'Back Office Administration',
   },
   {
     id: '42467420',
@@ -122,6 +122,7 @@ let currentCostValue = '';
 let currentHoursValue = '';
 let newCostValue = '';
 let newHoursValue = '';
+
 @Controller('timetracking')
 export class TimetrackingController {
   // POST validate
