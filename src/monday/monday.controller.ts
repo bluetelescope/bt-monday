@@ -67,7 +67,7 @@ export class MondayController {
     } else {
       //if there is an event field on the body
       if (!!data.event) {
-        console.log('data:', data);
+        // console.log('data:', data);
         const axios = require('axios');
         itemIdFromForm = data.event.pulseId;
         //get: item data

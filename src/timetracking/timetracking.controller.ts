@@ -142,12 +142,16 @@ export class TimetrackingController {
     } else {
       //if there is an event field on the body
       if (!!data.event) {
-        console.log(
-          'data ******************************************************************',
-          data,
-        );
+        // console.log(
+        //   'data ******************************************************************',
+        //   data,
+        // );
 
-        if (data.event.type === 'create_pulse' && !!data.event.columnValues) {
+        if (
+          data.event.type === 'create_pulse' &&
+          !!data.event.columnValues &&
+          data.event.groupName !== 'Active Projects'
+        ) {
           console.log(
             'event is create pulse ****************************************************',
           );
