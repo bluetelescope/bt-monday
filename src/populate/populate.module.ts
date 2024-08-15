@@ -7,4 +7,4 @@ import { HttpModule } from '@nestjs/axios';
   controllers: [PopulateController],
   providers: [PopulateService],
 })
-export class MondayModule {}
+export class PopulateModule {}
