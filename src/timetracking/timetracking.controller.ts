@@ -69,7 +69,6 @@ const users = [
     id: '37385671',
     name: 'Carly Hayter',
     rate: 150,
-
     title: 'Creative Software Developer',
   },
   {
@@ -164,7 +163,8 @@ export class TimetrackingController {
           personId = String(formData.person.personsAndTeams[0].id);
           console.log('personId', personId);
           personData = users.filter((person) => {
-            person.id === personId;
+            person.id === String(personId);
+            return person;
           })[0];
           console.log('personData', personData);
           hoursFromForm = formData.numbers.value;
