@@ -197,7 +197,7 @@ export class MondayController {
               newBoardId,
               newProposalColumnId,
               proposalItemId,
-              JSON.stringify({ url: proposalURL }),
+              `${proposalURL} Proposal`,
             );
             const changeProposalConfig = returnPostConfig(changeProposalQuery);
             return axios.request(changeProposalConfig);
