@@ -43,7 +43,7 @@ let proposalURL;
 let actualProjectValue;
 let newBoardId;
 let newProposalColumnId = 'link';
-let newCostColumnId = 'numbers_1';
+let newCostColumnId = 'numbers__1';
 let proposalItemId;
 let actualValueItemId;
 
