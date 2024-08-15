@@ -103,5 +103,5 @@ export function parseRatefromUserID(users: any, personID: string) {
 export function parseValueofColumnFromColumnID(columns: any, colID: string) {
   const foundCol = columns.filter((col: any) => col.id === colID)[0];
   console.log('foundCol', foundCol);
-  return foundCol.text || 'null';
+  return foundCol.text || null;
 }
