@@ -1,3 +1,4 @@
+//creates new board based off of a template
 export function returnPostBoardQuery(
   TEMPLATE_BOARD: number,
   itemName: string,
@@ -13,65 +14,56 @@ export function returnPostBoardQuery(
   });
 }
 
+//returns all monday users
 export function returnGetUsersQuery() {
   return JSON.stringify({
     query:
       'query {\n  users (\n    limit:50\n  ) {name id is_admin teams {id name}} \n}\n',
   });
 }
+//returns a single item based off it's id
 export function returnGetItemQuery(itemID: number) {
   return JSON.stringify({
     query: `query {\n  items(limit: 1, ids: [${itemID}]) {\n    column_values {\n  id \n   value\n    text \n  column {\n        title\n      }\n    }\n    name\n    subscribers {\n      id\n      \n    }\n  }\n}`,
   });
 }
+
+//returrns all the boards in a workspace
 export function returnGetBoardsQuery(workspaceID: number) {
   return JSON.stringify({
     query: `query {\n  boards (\n    limit: 1000\n    workspace_ids: [${workspaceID}]\n  ) {id name  board_folder_id } \n}\n`,
   });
 }
 
+//returns all the groups in board
 export function returnGetBoardGroupsQuery(boardId: number) {
   return JSON.stringify({
     query: `query {\n  boards(\n    ids: [${boardId}]\n  ) {\n    groups { id title}\n  }\n}`,
   });
 }
 
-export function returnPostTimetrackLabelQuery(
-  itemID: number,
-  columnID: string,
-  boardID: number,
-  value: string,
-) {
-  return JSON.stringify({
-    query: `mutation {\n  change_simple_column_value(\n    item_id: ${itemID}\n    column_id: \"${columnID}\",\n    board_id: ${boardID}\n    create_labels_if_missing:true\n    value: \"${value}\"\n  ) {\n    name\n  }\n}`,
-  });
-}
-
-export function returnPostTimetrackItemQuery(itemID: number, boardID: number) {
+//duplicates an item in a board
+export function returnDuplicateItemQuery(itemID: number, boardID: number) {
   return JSON.stringify({
     query: `mutation {\n duplicate_item(\n    item_id: ${itemID}\n        board_id: ${boardID}\n      ) {\n  id\n  name\n  }\n}`,
   });
 }
 
-export function returnGetColumnsInBoard(boardID: number) {
+//returns first 25 items in a board
+export function returnTop25ItemsinBoardQuery(boardID: number) {
   return JSON.stringify({
     query: `query \n{ boards (ids: [${boardID}]){\n  items_page {items {id name}}\n}\n}`,
   });
 }
 
-export function returnGetItemsinBoardQuery(boardID: number) {
-  return JSON.stringify({
-    query: `query \n{ boards (ids: [${boardID}]){\n  items_page {items {id name}}\n}\n}`,
-  });
-}
-
-export function returnGetColumnsinBoardQuery(boardID: number) {
+//returns all columns in a board
+export function returnColumnsInBoard(boardID: number) {
   return JSON.stringify({
     query: `query \n{ boards (ids: [${boardID}]){\n  columns {title id}\n}\n}`,
   });
 }
-
-export function returnPostChangeColumnValueQuery(
+//changes a simple value in a column in an item
+export function returnChangeSimpleValueQuery(
   boardID: number,
   colID: string,
   item_id: number,
@@ -82,6 +74,7 @@ export function returnPostChangeColumnValueQuery(
   });
 }
 
+//returns an item in a board based off of a column value
 export function returnGetItemFromBoard(
   boardID: number,
   colID: string,
@@ -89,5 +82,16 @@ export function returnGetItemFromBoard(
 ) {
   return JSON.stringify({
     query: `query { boards (ids: [${boardID}]){  items_page (limit: 1, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"]}]}){items {id name}}}}\n`,
+  });
+}
+
+//returns all items in a board based off of a column value
+export function returnGetItemsFromBoard(
+  boardID: number,
+  colID: string,
+  valueToSearchFor: string,
+) {
+  return JSON.stringify({
+    query: `query { boards (ids: [${boardID}]){  items_page (limit: 500, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"]}]}){items {id name}}}}\n`,
   });
 }

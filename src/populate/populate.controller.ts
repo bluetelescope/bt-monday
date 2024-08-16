@@ -7,11 +7,12 @@ import {
   returnGetItemQuery,
   returnGetBoardsQuery,
   returnPostBoardQuery,
-  returnPostTimetrackLabelQuery,
-  returnPostTimetrackItemQuery,
-  returnPostChangeColumnValueQuery,
-  returnGetItemsinBoardQuery,
+  returnChangeSimpleValueQuery,
+  returnDuplicateItemQuery,
+  returnTop25ItemsinBoardQuery,
   returnGetItemFromBoard,
+  returnGetItemsFromBoard,
+  returnColumnsInBoard,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -37,7 +38,7 @@ let itemIdFromForm;
 let itemName = ''; //Hadley_Colored Musicians Club
 let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
-let projectColumnId = 'dropdown';
+let projectColumnId;
 let duplicatedItemID;
 let proposalURL;
 let actualProjectValue;
@@ -54,17 +55,6 @@ export class PopulateController {
     return {};
   }
 
-  @Get(':id')
-  getMondayID(@Param('id') id: string) {
-    return { id };
-  }
-
-  // POST
-  //when an items status is changed, this triggers a casacade which:
-  // + new board in active items
-  // + new time tracking label
-  // + new time tracking item
-  // +
   @Post()
   async index(@Body() data, @Req() req) {
     // we have to check req.readable because of raw-body issue #57
@@ -80,7 +70,26 @@ export class PopulateController {
       if (!!data.event) {
         // console.log('data:', data);
         const axios = require('axios');
+        itemName = data.event.pulseName;
 
+        const getColumnsQuery = returnColumnsInBoard(data.event.boardId);
+        const getColumnsConfig = returnGetConfig(getColumnsQuery);
+
+        axios
+          .request(getColumnsConfig)
+          .then((getColumnsResponse) => {
+            console.log('getColumnsResponse ***************************');
+
+            const columns = getColumnsResponse.data.data.boards[0].columns;
+            console.log('columns', columns);
+            projectColumnId = columns.filter(
+              (col) => col.title === 'Project',
+            )[0].id;
+            console.log('projectColumnId', projectColumnId);
+          })
+          .catch((error) => {
+            console.log('error.data', error.data);
+          });
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
       } else {

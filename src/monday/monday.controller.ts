@@ -2,28 +2,22 @@ import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
 import {
-  returnGetBoardGroupsQuery,
-  returnGetUsersQuery,
   returnGetItemQuery,
   returnGetBoardsQuery,
   returnPostBoardQuery,
-  returnPostTimetrackLabelQuery,
-  returnPostTimetrackItemQuery,
-  returnPostChangeColumnValueQuery,
-  returnGetItemsinBoardQuery,
+  returnChangeSimpleValueQuery,
+  returnDuplicateItemQuery,
   returnGetItemFromBoard,
 } from 'src/functions/returnQuery';
-import {
-  parseColumnValues,
-  parseBoards,
-  parseUsers,
-} from 'src/functions/parseData';
+import { parseColumnValues, parseBoards } from 'src/functions/parseData';
 
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
 const TIMETRACKING_BOARD = 5872168554;
+//id of two items that always remain on timetracking board for duplication
 const TIMETRACKING_ITEM_FORLABEL = 6721689025;
 const TIMETRACKING_ITEM_FORACTIVE = 7209467255;
+
 const TIMETRACKING_PROJECT_COL = 'dropdown';
 const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
@@ -131,7 +125,7 @@ export class MondayController {
             console.log('postBoardResponse', postBoardResponse.data);
             newBoardId = postBoardResponse.data.data.create_board.id;
             //post: duplicate item in 'active' group of time tracking board
-            const graphqlDuplicateTimeTrackItem = returnPostTimetrackItemQuery(
+            const graphqlDuplicateTimeTrackItem = returnDuplicateItemQuery(
               TIMETRACKING_ITEM_FORACTIVE,
               TIMETRACKING_BOARD,
             );
@@ -145,7 +139,7 @@ export class MondayController {
             console.log('postTimeTrackItemRes.data', postTimeTrackItemRes.data);
             duplicatedItemID = postTimeTrackItemRes.data.data.duplicate_item.id;
 
-            const changeLabelQuery = returnPostChangeColumnValueQuery(
+            const changeLabelQuery = returnChangeSimpleValueQuery(
               TIMETRACKING_BOARD,
               TIMETRACKING_PROJECT_COL,
               duplicatedItemID,
@@ -159,7 +153,7 @@ export class MondayController {
             console.log('changeLabelResponse ****************************');
             console.log('changeLabelResponse.data', changeLabelResponse.data);
 
-            const changeNameQuery = returnPostChangeColumnValueQuery(
+            const changeNameQuery = returnChangeSimpleValueQuery(
               TIMETRACKING_BOARD,
               'name',
               duplicatedItemID,
@@ -207,7 +201,7 @@ export class MondayController {
             );
             actualValueItemId =
               getActualItemReponse.data.data.boards[0].items_page.items[0].id;
-            const changeProposalQuery = returnPostChangeColumnValueQuery(
+            const changeProposalQuery = returnChangeSimpleValueQuery(
               newBoardId,
               newProposalColumnId,
               proposalItemId,
@@ -223,7 +217,7 @@ export class MondayController {
               changeProposalResponse.data,
             );
 
-            const changeActualValueQuery = returnPostChangeColumnValueQuery(
+            const changeActualValueQuery = returnChangeSimpleValueQuery(
               newBoardId,
               newCostColumnId,
               actualValueItemId,
@@ -262,7 +256,7 @@ export class MondayController {
 }
 
 // post new label to time tracking board
-// const graphqlPostCoLabelValue = returnPostTimetrackLabelQuery(
+// const graphqlPostCoLabelValue = returnChangeSimpleValueQuery(
 //   TIMETRACKING_ITEM_FORLABEL,
 //   TIMETRACKING_PROJECT_COL,
 //   TIMETRACKING_BOARD,

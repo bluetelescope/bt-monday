@@ -2,19 +2,16 @@ import { Controller, Post, Get, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
 import {
-  returnGetItemsinBoardQuery,
   returnGetBoardsQuery,
-  returnGetColumnsinBoardQuery,
-  returnPostChangeColumnValueQuery,
+  returnColumnsInBoard,
+  returnChangeSimpleValueQuery,
   returnGetItemQuery,
   returnGetItemFromBoard,
 } from 'src/functions/returnQuery';
 import {
   parseBoardID,
   parseValueofColumnFromColumnID,
-  parseItemIDfromUserTitle,
   parseColumnsForIDS,
-  parseRatefromUserID,
 } from 'src/functions/parseData';
 
 // import * as process from 'process';
@@ -189,7 +186,7 @@ export class TimetrackingController {
               boardId = parseBoardID(resGetBoards.data.data.boards, label);
 
               //GET: items in active project board
-              // const getBoardItemsQuery = returnGetItemsinBoardQuery(boardId);
+              // const getBoardItemsQuery = returnTop25ItemsinBoardQuery(boardId);
               const getBoardItemQuery = returnGetItemFromBoard(
                 boardId,
                 'name',
@@ -208,8 +205,7 @@ export class TimetrackingController {
                 getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
 
               //GET: columns in active project
-              const getBoardColumnsQuery =
-                returnGetColumnsinBoardQuery(boardId);
+              const getBoardColumnsQuery = returnColumnsInBoard(boardId);
               const getBoardColumnsConfig =
                 returnGetConfig(getBoardColumnsQuery);
               return axios.request(getBoardColumnsConfig);
@@ -252,7 +248,7 @@ export class TimetrackingController {
               console.log('newCostValue', newCostValue);
 
               //POST: hoursFromForm value to column
-              const postHoursToColumnQuery = returnPostChangeColumnValueQuery(
+              const postHoursToColumnQuery = returnChangeSimpleValueQuery(
                 boardId,
                 hoursColumnId,
                 itemIDinBoard,
@@ -268,7 +264,7 @@ export class TimetrackingController {
               console.log(postHoursToColumnRes.data.data);
               //parse hoursFromForm result
 
-              const postCostToColumnQuery = returnPostChangeColumnValueQuery(
+              const postCostToColumnQuery = returnChangeSimpleValueQuery(
                 boardId,
                 costColumnId,
                 itemIDinBoard,
