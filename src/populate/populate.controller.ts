@@ -104,7 +104,18 @@ export class PopulateController {
                   (column) => column.id === 'dropdown',
                 )[0],
             );
-            console.log('tags', tags);
+            const tags2 = tags.map((tag) => {
+              return {
+                text: tag.text,
+                newValue: tag.value.substring(
+                  tag.value.indexOf('['),
+                  tag.value.indexOf(']'),
+                ),
+              };
+            });
+
+            // console.log('tags', tags);
+            console.log('tags2', tags2);
           })
           .catch((error) => {
             console.log('error.data', error.data);
