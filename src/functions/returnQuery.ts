@@ -95,3 +95,10 @@ export function returnGetItemsFromBoard(
     query: `query { boards (ids: [${boardID}]){  items_page (limit: 500, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"]}]}){items {id name}}}}\n`,
   });
 }
+
+//get all columns values for 500 items, includes detailed column values
+export function returnGetAllItemsFromBoard(boardID: number) {
+  return JSON.stringify({
+    query: `query {\n  boards(ids: [${boardID}]) {\n    items_page(\n      limit: 500\n    ) {\n      items {\n        name\n        column_values {\n          id\n          type\n          text\n          value\n  \n        }\n      }\n    }\n  }\n}`,
+  });
+}

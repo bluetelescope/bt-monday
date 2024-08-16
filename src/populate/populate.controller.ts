@@ -13,6 +13,7 @@ import {
   returnGetItemFromBoard,
   returnGetItemsFromBoard,
   returnColumnsInBoard,
+  returnGetAllItemsFromBoard,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -86,6 +87,21 @@ export class PopulateController {
               (col) => col.title === 'Project',
             )[0].id;
             console.log('projectColumnId', projectColumnId);
+
+            const getAllItems = returnGetAllItemsFromBoard(TIMETRACKING_BOARD);
+            const getAllItemsConfig = returnGetConfig(getAllItems);
+            return axios.request(getAllItemsConfig);
+          })
+          .then((getAllItemsResponse) => {
+            console.log('getAllItemsResponse ***************************');
+            console.log('getAllItemsResponse.data', getAllItemsResponse.data);
+            const items =
+              getAllItemsResponse.data.data.boards[0].items_page.items;
+            console.log('items', items);
+            const tags = items.map((item) => {
+              item.column_values.filter((column) => column.id);
+            });
+            console.log('tags', tags);
           })
           .catch((error) => {
             console.log('error.data', error.data);
