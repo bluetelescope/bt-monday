@@ -99,7 +99,10 @@ export class PopulateController {
               getAllItemsResponse.data.data.boards[0].items_page.items;
             // console.log('items', items);
             const tags = items.map(
-              (item) => item.column_values.filter((column) => column.id)[0],
+              (item) =>
+                item.column_values.filter(
+                  (column) => column.id === 'dropdown',
+                )[0],
             );
             console.log('tags', tags);
           })
