@@ -36,6 +36,7 @@ const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 
 let itemIdFromForm;
+let itemId;
 let itemName = ''; //Hadley_Colored Musicians Club
 let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
@@ -69,44 +70,32 @@ export class PopulateController {
       console.log('populate endpoint data:', data);
       //if there is an event field on the body
       if (!!data.event) {
-        // console.log('data:', data);
+        console.log('data:', data);
+        console.log('data.event', data.event);
         const axios = require('axios');
         itemName = data.event.pulseName;
+        itemId = data.event.pulseId;
 
-        const getColumnsQuery = returnColumnsInBoard(data.event.boardId);
-        const getColumnsConfig = returnGetConfig(getColumnsQuery);
+        // const getColumnsQuery = returnColumnsInBoard(data.event.boardId);
+        // const getColumnsConfig = returnGetConfig(getColumnsQuery);
 
-        axios
-          .request(getColumnsConfig)
-          .then((getColumnsResponse) => {
-            console.log('getColumnsResponse ***************************');
+        // axios
+        //   .request(getColumnsConfig)
+        //   .then((getColumnsResponse) => {
+        //     console.log('getColumnsResponse ***************************');
 
-            const columns = getColumnsResponse.data.data.boards[0].columns;
-            console.log('columns', columns);
-            projectColumnId = columns.filter(
-              (col) => col.title === 'Project',
-            )[0].id;
-            console.log('projectColumnId', projectColumnId);
+        //     const columns = getColumnsResponse.data.data.boards[0].columns;
+        //     console.log('columns', columns);
+        //     projectColumnId = columns.filter(
+        //       (col) => col.title === 'Project',
+        //     )[0].id;
+        //     console.log('projectColumnId', projectColumnId);
+        //     //need to submit '
+        //   })
 
-            const getAllItems = returnGetAllItemsFromBoard(TIMETRACKING_BOARD);
-            const getAllItemsConfig = returnGetConfig(getAllItems);
-            return axios.request(getAllItemsConfig);
-          })
-          .then((getAllItemsResponse) => {
-            console.log('getAllItemsResponse ***************************');
-            console.log('getAllItemsResponse.data', getAllItemsResponse.data);
-            const items =
-              getAllItemsResponse.data.data.boards[0].items_page.items;
-            // console.log('items', items);
-
-            const items2 = items.map((item) => {
-              return item.column_values;
-            });
-            console.log('items2', items2);
-          })
-          .catch((error) => {
-            console.log('error.data', error.data);
-          });
+        //   .catch((error) => {
+        //     console.log('error.data', error.data);
+        //   });
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
       } else {
@@ -121,3 +110,14 @@ export class PopulateController {
     }
   }
 }
+
+// console.log('getColumnsResponse ***************************');
+
+// const columns = getColumnsResponse.data.data.boards[0].columns;
+// console.log('columns', columns);
+// projectColumnId = columns.filter((col) => col.title === 'Project')[0].id;
+// console.log('projectColumnId', projectColumnId);
+
+// const getAllItems = returnGetAllItemsFromBoard(TIMETRACKING_BOARD);
+// const getAllItemsConfig = returnGetConfig(getAllItems);
+// return axios.request(getAllItemsConfig);
