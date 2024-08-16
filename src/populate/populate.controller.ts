@@ -98,6 +98,9 @@ export class PopulateController {
             const items =
               getAllItemsResponse.data.data.boards[0].items_page.items;
             console.log('items', items);
+
+            const items2 = items.map((item) => item.column_values);
+            console.log('items2', items2);
           })
           .catch((error) => {
             console.log('error.data', error.data);
