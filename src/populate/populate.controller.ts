@@ -75,6 +75,7 @@ export class PopulateController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
+      console.log('populate endpoint data:', data);
       //if there is an event field on the body
       if (!!data.event) {
         // console.log('data:', data);
