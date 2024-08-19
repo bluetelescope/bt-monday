@@ -148,6 +148,14 @@ export class PopulateController {
               'getBoardItemsRes.data.data',
               getBoardItemsRes.data.data,
             );
+            console.log(
+              'getBoardItemsRes.data.data.boards[0]',
+              getBoardItemsRes.data.data.boards[0],
+            );
+            console.log(
+              'getBoardItemsRes.data.data.boards[0].items_page.items[0]',
+              getBoardItemsRes.data.data.boards[0].items_page.items[0],
+            );
             //parse items data
             itemIDinBoard =
               getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
