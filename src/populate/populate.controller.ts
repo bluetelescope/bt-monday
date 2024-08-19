@@ -82,8 +82,11 @@ export class PopulateController {
           .request(getItemConfig)
           .then((getItemResponse) => {
             console.log('getItemResponse ***************************');
-            console.log('getItemResponse.data', getItemResponse.data);
+            // console.log('getItemResponse.data', getItemResponse.data);
+            const itemInfo = getItemResponse.data.data.items[0];
+            console.log('itemInfo', itemInfo);
           })
+
           .catch((error) => {
             console.log('error.data', error.data);
           });
