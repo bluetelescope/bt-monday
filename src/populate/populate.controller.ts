@@ -40,11 +40,8 @@ let itemIdFromForm;
 let itemId;
 let itemName = ''; //Hadley_Colored Musicians Club
 let columns = [];
-let projectColumnId;
-let duplicatedItemID;
-let proposalURL;
-let actualProjectValue;
-let newBoardId;
+let projectColumnId = 'dropdown';
+let boardId;
 let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
@@ -87,6 +84,10 @@ export class PopulateController {
             const itemInfo = getItemResponse.data.data.items[0];
             console.log('itemInfo', itemInfo);
             personId = itemInfo.subscribers[0].id || null;
+            let boardName = itemInfo.column_values.filter(
+              (column) => column.id === 'dropdown',
+            )[0].text;
+            console.log('boardName', boardName);
             console.log('personId', personId);
             personData = users.filter(
               (person) => person.id === String(personId),
