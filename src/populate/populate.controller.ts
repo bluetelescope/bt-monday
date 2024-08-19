@@ -144,17 +144,25 @@ export class PopulateController {
             console.log(
               'getBoardItemsRes *****************************************************************',
             );
-            console.log('getBoardItemsRes.data', getBoardItemsRes.data);
+            console.log(
+              'getBoardItemsRes.data.data',
+              getBoardItemsRes.data.data,
+            );
             //parse items data
             itemIDinBoard =
               getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
-
+            console.log('itemIDinBoard', itemIDinBoard);
             //GET: columns in active project
             const getBoardColumnsQuery = returnColumnsInBoard(boardId);
             const getBoardColumnsConfig = returnGetConfig(getBoardColumnsQuery);
             return axios.request(getBoardColumnsConfig);
           })
           .then((getBoardColumnsRes) => {
+            console.log(
+              'getBoardColumnsRes.data.data',
+              getBoardColumnsRes.data.data,
+            );
+
             //parse columns data
             const { costColumnID, hoursColumnID } = parseColumnsForIDS(
               getBoardColumnsRes.data.data.boards[0].columns,
