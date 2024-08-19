@@ -20,6 +20,7 @@ import {
   parseBoards,
   parseUsers,
 } from 'src/functions/parseData';
+import { users, variables } from 'src/variables';
 
 const TEMPLATE_BOARD = 6198096739;
 const PIPELINE_BOARD = 5552219681;
@@ -39,7 +40,6 @@ let itemIdFromForm;
 let itemId;
 let itemName = ''; //Hadley_Colored Musicians Club
 let columns = [];
-let users = { adminUsers: [], prodTeam: [] };
 let projectColumnId;
 let duplicatedItemID;
 let proposalURL;
@@ -49,6 +49,8 @@ let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
 let actualValueItemId;
+let personId;
+let personData;
 
 @Controller('populate')
 export class PopulateController {
@@ -75,7 +77,6 @@ export class PopulateController {
         const axios = require('axios');
         itemName = data.event.pulseName;
         itemId = data.event.pulseId;
-
         const getItemQuery = returnGetItemQuery(itemId);
         const getItemConfig = returnGetConfig(getItemQuery);
         axios
@@ -85,6 +86,24 @@ export class PopulateController {
             // console.log('getItemResponse.data', getItemResponse.data);
             const itemInfo = getItemResponse.data.data.items[0];
             console.log('itemInfo', itemInfo);
+            personId = itemInfo.subscribers[0].id || null;
+            console.log('personId', personId);
+            personData = users.filter(
+              (person) => person.id === String(personId),
+            )[0];
+            console.log('personData', personData);
+            //get all boards in prod workspace
+            const graphqlGetBoards = returnGetBoardsQuery(
+              variables.PROD_WORKSPACE,
+            );
+            let configGetBoards = returnGetConfig(graphqlGetBoards);
+            return axios.request(configGetBoards);
+          })
+          .then((responseGetBoards) => {
+            console.log(
+              'responseGetBoards.data.data',
+              responseGetBoards.data.data,
+            );
           })
 
           .catch((error) => {
