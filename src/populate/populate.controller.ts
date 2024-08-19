@@ -19,6 +19,9 @@ import {
   parseColumnValues,
   parseBoards,
   parseUsers,
+  parseBoardID,
+  parseColumnsForIDS,
+  parseValueofColumnFromColumnID,
 } from 'src/functions/parseData';
 import { users, variables } from 'src/variables';
 
@@ -36,18 +39,25 @@ const ACTIVE_FOLDER = 7860571;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 
-let itemIdFromForm;
 let itemId;
-let itemName = ''; //Hadley_Colored Musicians Club
-let columns = [];
+let hoursFromForm = '0';
 let projectColumnId = 'dropdown';
 let boardId;
-let newProposalColumnId = 'link';
+let boardName;
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
 let actualValueItemId;
 let personId;
 let personData;
+let personTitle;
+let itemIDinBoard;
+let costColumnId = '';
+let hoursColumnId = '';
+let currentCostValue = '';
+let currentHoursValue = '';
+let newCostValue = '';
+let newHoursValue = '';
+let rate = 0;
 
 @Controller('populate')
 export class PopulateController {
@@ -72,7 +82,6 @@ export class PopulateController {
         console.log('data:', data);
         console.log('data.event', data.event);
         const axios = require('axios');
-        itemName = data.event.pulseName;
         itemId = data.event.pulseId;
         const getItemQuery = returnGetItemQuery(itemId);
         const getItemConfig = returnGetConfig(getItemQuery);
@@ -84,14 +93,24 @@ export class PopulateController {
             const itemInfo = getItemResponse.data.data.items[0];
             console.log('itemInfo', itemInfo);
             personId = itemInfo.subscribers[0].id || null;
-            let boardName = itemInfo.column_values.filter(
+            boardName = itemInfo.column_values.filter(
               (column) => column.id === 'dropdown',
             )[0].text;
+            hoursFromForm = itemInfo.column_values.filter(
+              (column) => column.id === 'numbers',
+            )[0].text;
+            console.log('hoursFromForm', hoursFromForm);
             console.log('boardName', boardName);
             console.log('personId', personId);
+
             personData = users.filter(
               (person) => person.id === String(personId),
             )[0];
+
+            personId = personData.id;
+            personTitle = personData.title;
+            rate = personData.rate;
+
             console.log('personData', personData);
             //get all boards in prod workspace
             const graphqlGetBoards = returnGetBoardsQuery(
@@ -104,6 +123,104 @@ export class PopulateController {
             console.log(
               'responseGetBoards.data.data',
               responseGetBoards.data.data,
+            );
+            boardId = parseBoardID(
+              responseGetBoards.data.data.boards,
+              boardName,
+            );
+            console.log('boardId', boardId);
+            const getBoardItemQuery = returnGetItemFromBoard(
+              boardId,
+              'name',
+              personData.title,
+            );
+            const getBoardItemsCofig = returnGetConfig(getBoardItemQuery);
+            return axios.request(getBoardItemsCofig);
+          })
+          .then((getBoardItemsRes) => {
+            console.log(
+              'getBoardItemsRes *****************************************************************',
+            );
+            console.log('getBoardItemsRes.data', getBoardItemsRes.data);
+            //parse items data
+            itemIDinBoard =
+              getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
+
+            //GET: columns in active project
+            const getBoardColumnsQuery = returnColumnsInBoard(boardId);
+            const getBoardColumnsConfig = returnGetConfig(getBoardColumnsQuery);
+            return axios.request(getBoardColumnsConfig);
+          })
+          .then((getBoardColumnsRes) => {
+            //parse columns data
+            const { costColumnID, hoursColumnID } = parseColumnsForIDS(
+              getBoardColumnsRes.data.data.boards[0].columns,
+            );
+            costColumnId = costColumnID;
+            hoursColumnId = hoursColumnID;
+
+            //GET: get item data
+            const getItemQuery = returnGetItemQuery(itemIDinBoard);
+            const getItemConfig = returnGetConfig(getItemQuery);
+            return axios.request(getItemConfig);
+          })
+          .then((getItemRes) => {
+            //parse item data
+            console.log('getItemRes.data', getItemRes.data.data);
+            const itemColumns = getItemRes.data.data.items[0].column_values;
+
+            currentHoursValue = parseValueofColumnFromColumnID(
+              itemColumns,
+              hoursColumnId,
+            );
+            currentCostValue = parseValueofColumnFromColumnID(
+              itemColumns,
+              costColumnId,
+            );
+            console.log('currentHoursValue', currentHoursValue);
+            console.log('currentCostValue', currentCostValue);
+
+            newHoursValue = `${
+              Number(currentHoursValue === null ? 0 : currentHoursValue) +
+              Number(hoursFromForm)
+            }`;
+            newCostValue = `${Number(newHoursValue === null ? 0 : newHoursValue) * Number(rate)}`;
+            console.log('newHoursValue', newHoursValue);
+            console.log('newCostValue', newCostValue);
+
+            //POST: hoursFromForm value to column
+            const postHoursToColumnQuery = returnChangeSimpleValueQuery(
+              boardId,
+              hoursColumnId,
+              itemIDinBoard,
+              newHoursValue,
+            );
+            const postHoursToColumnConfig = returnPostConfig(
+              postHoursToColumnQuery,
+            );
+            return axios.request(postHoursToColumnConfig);
+          })
+          .then((postHoursToColumnRes) => {
+            console.log('postHoursToColumnRes*************************');
+            console.log(postHoursToColumnRes.data.data);
+            //parse hoursFromForm result
+
+            const postCostToColumnQuery = returnChangeSimpleValueQuery(
+              boardId,
+              costColumnId,
+              itemIDinBoard,
+              newCostValue,
+            );
+
+            const postCostToColumnConfig = returnPostConfig(
+              postCostToColumnQuery,
+            );
+            return axios.request(postCostToColumnConfig);
+          })
+          .then((postCostToColumnRes) => {
+            console.log(
+              'postCostToColumnRes**********************************************************************',
+              postCostToColumnRes.data,
             );
           })
 
