@@ -1,0 +1,101 @@
+export const users = [
+  {
+    id: '23774585',
+    rate: 300,
+    name: 'Trent Oliver',
+    title: 'Principal + Managing Director',
+  },
+  {
+    id: '25891866',
+    rate: 190,
+    name: 'Dustin Stephan',
+    title: 'Sr. Creative Producer',
+  },
+  {
+    id: '26473580',
+    rate: 250,
+    name: 'Judith Zissman',
+    title: 'Exec. Creative Director',
+  },
+  {
+    id: '26815252',
+    rate: 175,
+    name: 'Reese Patillo',
+    title: 'Sr. Creative Designer',
+  },
+  {
+    id: '27253155',
+    rate: 150,
+    name: 'Shane Gallardo',
+    title: 'Back Office Support',
+  },
+  {
+    id: '27397545',
+    rate: 200,
+    name: 'Ron Cunningham',
+    title: 'Senior Creative Technologist',
+  },
+  {
+    id: '27397551',
+    rate: 225,
+    name: 'Valeria',
+    title: 'Lead Creative Developer',
+  },
+  {
+    id: '37385671',
+    name: 'Carly Hayter',
+    rate: 175,
+    title: 'Creative Software Developer',
+  },
+  {
+    id: '38929843',
+    rate: 160,
+    name: 'Patti Sande',
+    title: 'Back Office Administration',
+  },
+  {
+    id: '42467420',
+    rate: 175,
+    name: 'Anthony DeRita',
+    title: 'Creative Producer',
+  },
+  {
+    id: '42749849',
+    rate: 175,
+    name: 'Gianna Capadona',
+    title: 'Creative Producer',
+  },
+  {
+    id: '48317427',
+    rate: 160,
+    name: 'Renee Mancino',
+    title: 'Director of Creative Growth',
+  },
+  {
+    id: '62282324',
+    rate: 160,
+    name: 'Gabo Núñez Rojas',
+    title: 'Creative Graphic Designer',
+  },
+  {
+    id: '64324790',
+    rate: 150,
+    name: 'Patrick Snee',
+    title: null,
+  },
+];
+
+export const variables = {
+  PROD_WORKSPACE: 1080416,
+  TEMPLATE_BOARD: 6198096739,
+  PIPELINE_BOARD: 5552219681,
+  TIMETRACKING_BOARD: 5872168554,
+  TIMETRACKING_ITEM_FORLABEL: 6721689025,
+  TIMETRACKING_ITEM_FORACTIVE: 7209467255,
+  TIMETRACKING_PROJECT_COL: 'dropdown',
+  BIZDEV_WORKSPACE: 3839751,
+  MIDLEVEL_FOLDER: 14770065,
+  ACTIVE_FOLDER: 7860571,
+  PROD_TEAM: 614284,
+  ADMIN_TEAM: 614287,
+};

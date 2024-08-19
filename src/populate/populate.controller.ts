@@ -76,26 +76,17 @@ export class PopulateController {
         itemName = data.event.pulseName;
         itemId = data.event.pulseId;
 
-        // const getColumnsQuery = returnColumnsInBoard(data.event.boardId);
-        // const getColumnsConfig = returnGetConfig(getColumnsQuery);
-
-        // axios
-        //   .request(getColumnsConfig)
-        //   .then((getColumnsResponse) => {
-        //     console.log('getColumnsResponse ***************************');
-
-        //     const columns = getColumnsResponse.data.data.boards[0].columns;
-        //     console.log('columns', columns);
-        //     projectColumnId = columns.filter(
-        //       (col) => col.title === 'Project',
-        //     )[0].id;
-        //     console.log('projectColumnId', projectColumnId);
-        //     //need to submit '
-        //   })
-
-        //   .catch((error) => {
-        //     console.log('error.data', error.data);
-        //   });
+        const getItemQuery = returnGetItemQuery(itemId);
+        const getItemConfig = returnGetConfig(getItemQuery);
+        axios
+          .request(getItemConfig)
+          .then((getItemResponse) => {
+            console.log('getItemResponse ***************************');
+            console.log('getItemResponse.data', getItemResponse.data);
+          })
+          .catch((error) => {
+            console.log('error.data', error.data);
+          });
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
       } else {
@@ -112,7 +103,6 @@ export class PopulateController {
 }
 
 // console.log('getColumnsResponse ***************************');
-
 // const columns = getColumnsResponse.data.data.boards[0].columns;
 // console.log('columns', columns);
 // projectColumnId = columns.filter((col) => col.title === 'Project')[0].id;

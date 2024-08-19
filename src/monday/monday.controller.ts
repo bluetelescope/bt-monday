@@ -10,28 +10,12 @@ import {
   returnGetItemFromBoard,
 } from 'src/functions/returnQuery';
 import { parseColumnValues, parseBoards } from 'src/functions/parseData';
-
-const TEMPLATE_BOARD = 6198096739;
-const PIPELINE_BOARD = 5552219681;
-const TIMETRACKING_BOARD = 5872168554;
-//id of two items that always remain on timetracking board for duplication
-const TIMETRACKING_ITEM_FORLABEL = 6721689025;
-const TIMETRACKING_ITEM_FORACTIVE = 7209467255;
-
-const TIMETRACKING_PROJECT_COL = 'dropdown';
-const PROD_WORKSPACE = 1080416;
-const BIZDEV_WORKSPACE = 3839751;
-const MIDLEVEL_FOLDER = 14770065;
-const ACTIVE_FOLDER = 7860571;
-// const testItemID = 5104037469;
-const PROD_TEAM = 614284;
-const ADMIN_TEAM = 614287;
+import { variables } from 'src/variables';
 
 let itemIdFromForm;
 let itemName = ''; //Hadley_Colored Musicians Club
 let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
-let projectColumnId = 'dropdown';
 let duplicatedItemID;
 let proposalURL;
 let actualProjectValue;
@@ -58,7 +42,7 @@ export class MondayController {
   // + new board in active items
   // + new time tracking label
   // + new time tracking item
-  // +
+
   @Post()
   async index(@Body() data, @Req() req) {
     // we have to check req.readable because of raw-body issue #57
@@ -95,7 +79,9 @@ export class MondayController {
             actualProjectValue = value.value;
 
             //get all boards in prod workspace
-            const graphqlGetBoards = returnGetBoardsQuery(PROD_WORKSPACE);
+            const graphqlGetBoards = returnGetBoardsQuery(
+              variables.PROD_WORKSPACE,
+            );
             let configGetBoards = returnGetConfig(graphqlGetBoards);
             return axios.request(configGetBoards);
           })
@@ -103,18 +89,18 @@ export class MondayController {
             console.log('responseConfigGetBoards **************');
             // Parse boards data
             const boards = responseConfigGetBoards.data.data.boards;
-            const boardNumber = parseBoards(boards, ACTIVE_FOLDER);
+            const boardNumber = parseBoards(boards, variables.ACTIVE_FOLDER);
             itemName = `${boardNumber}_${itemName}`;
             // post: new board to active folder in prod workspace
             const graphqlPostBoard = returnPostBoardQuery(
-              TEMPLATE_BOARD,
+              variables.TEMPLATE_BOARD,
               itemName,
-              ACTIVE_FOLDER,
-              PROD_WORKSPACE,
+              variables.ACTIVE_FOLDER,
+              variables.PROD_WORKSPACE,
               users.prodTeam,
               users.adminUsers,
-              PROD_TEAM,
-              ADMIN_TEAM,
+              variables.PROD_TEAM,
+              variables.ADMIN_TEAM,
             );
             let configPostBoard = returnGetConfig(graphqlPostBoard);
             console.log('configPostBoard', configPostBoard);
@@ -126,8 +112,8 @@ export class MondayController {
             newBoardId = postBoardResponse.data.data.create_board.id;
             //post: duplicate item in 'active' group of time tracking board
             const graphqlDuplicateTimeTrackItem = returnDuplicateItemQuery(
-              TIMETRACKING_ITEM_FORACTIVE,
-              TIMETRACKING_BOARD,
+              variables.TIMETRACKING_ITEM_FORACTIVE,
+              variables.TIMETRACKING_BOARD,
             );
             let configDuplicateTimeTrackItem = returnPostConfig(
               graphqlDuplicateTimeTrackItem,
@@ -140,8 +126,8 @@ export class MondayController {
             duplicatedItemID = postTimeTrackItemRes.data.data.duplicate_item.id;
 
             const changeLabelQuery = returnChangeSimpleValueQuery(
-              TIMETRACKING_BOARD,
-              TIMETRACKING_PROJECT_COL,
+              variables.TIMETRACKING_BOARD,
+              variables.TIMETRACKING_PROJECT_COL,
               duplicatedItemID,
               itemName,
             );
@@ -154,7 +140,7 @@ export class MondayController {
             console.log('changeLabelResponse.data', changeLabelResponse.data);
 
             const changeNameQuery = returnChangeSimpleValueQuery(
-              TIMETRACKING_BOARD,
+              variables.TIMETRACKING_BOARD,
               'name',
               duplicatedItemID,
               itemName,
@@ -258,8 +244,8 @@ export class MondayController {
 // post new label to time tracking board
 // const graphqlPostCoLabelValue = returnChangeSimpleValueQuery(
 //   TIMETRACKING_ITEM_FORLABEL,
-//   TIMETRACKING_PROJECT_COL,
-//   TIMETRACKING_BOARD,
+//   variables.TIMETRACKING_PROJECT_COL,
+//   variables.TIMETRACKING_BOARD,
 //   itemName,
 // );
 // let configPostColLabelValue = returnPostConfig(
