@@ -74,6 +74,14 @@ export function parseBoardID(boards: any, label: string) {
   return board.id;
 }
 
+export function parseBoardIDFromSlug(boards: any, slug: string) {
+  const board = boards.filter(
+    (board) => board.name.includes(slug) && !!board.name.includes('subitem'),
+  )[0];
+  console.log('board', board);
+  return board.id;
+}
+
 export function parseItemIDfromUserTitle(
   users: any,
   items: any,

@@ -12,6 +12,7 @@ import {
   parseBoardID,
   parseValueofColumnFromColumnID,
   parseColumnsForIDS,
+  parseBoardIDFromSlug,
 } from 'src/functions/parseData';
 
 // import * as process from 'process';
@@ -33,6 +34,7 @@ let currentCostValue = '';
 let currentHoursValue = '';
 let newCostValue = '';
 let newHoursValue = '';
+let boardSlug;
 
 @Controller('timetracking')
 export class TimetrackingController {
@@ -54,11 +56,6 @@ export class TimetrackingController {
     } else {
       //if there is an event field on the body
       if (!!data.event) {
-        // console.log(
-        //   'data ******************************************************************',
-        //   data,
-        // );
-
         if (
           data.event.type === 'create_pulse' &&
           !!data.event.columnValues &&
@@ -70,6 +67,7 @@ export class TimetrackingController {
           //parse time tracking data
           const formData = data.event.columnValues;
           label = formData.dropdown.chosenValues[0].name;
+          boardSlug = label.substring(0, 4);
           personId = String(formData.person.personsAndTeams[0].id);
           console.log('personId', personId);
           personData = users.filter(
@@ -98,7 +96,10 @@ export class TimetrackingController {
               );
               //parse boards data
 
-              boardId = parseBoardID(resGetBoards.data.data.boards, label);
+              boardId = parseBoardIDFromSlug(
+                resGetBoards.data.data.boards,
+                boardSlug,
+              );
 
               //GET: items in active project board
               // const getBoardItemsQuery = returnTop25ItemsinBoardQuery(boardId);

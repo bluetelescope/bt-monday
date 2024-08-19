@@ -24,6 +24,7 @@ let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
 let actualValueItemId;
+let boardSlug;
 
 @Controller('monday')
 export class MondayController {

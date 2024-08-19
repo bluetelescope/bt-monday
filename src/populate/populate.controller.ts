@@ -21,6 +21,7 @@ import {
   parseUsers,
   parseBoardID,
   parseColumnsForIDS,
+  parseBoardIDFromSlug,
   parseValueofColumnFromColumnID,
 } from 'src/functions/parseData';
 import { users, variables } from 'src/variables';
@@ -58,6 +59,7 @@ let currentHoursValue = '';
 let newCostValue = '';
 let newHoursValue = '';
 let rate = 0;
+let boardSlug;
 
 @Controller('populate')
 export class PopulateController {
@@ -96,6 +98,7 @@ export class PopulateController {
             boardName = itemInfo.column_values.filter(
               (column) => column.id === 'dropdown',
             )[0].text;
+            boardSlug = boardName.substring(0, 4);
             hoursFromForm = itemInfo.column_values.filter(
               (column) => column.id === 'numbers',
             )[0].text;
@@ -124,9 +127,9 @@ export class PopulateController {
               'responseGetBoards.data.data',
               responseGetBoards.data.data,
             );
-            boardId = parseBoardID(
+            boardId = parseBoardIDFromSlug(
               responseGetBoards.data.data.boards,
-              boardName,
+              boardSlug,
             );
             console.log('boardId', boardId);
             const getBoardItemQuery = returnGetItemFromBoard(
