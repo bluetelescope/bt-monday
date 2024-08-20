@@ -127,6 +127,20 @@ export class MondayController {
           })
           .then((actualValueResponse) => {
             console.log('actualValueResponse.data', actualValueResponse.data);
+            console.log(
+              'actualValueResponse.data.data.boards[0]',
+              actualValueResponse.data.data.boards[0],
+            );
+
+            console.log(
+              'actualValueResponse.data.data.boards[0].items_page',
+              actualValueResponse.data.data.boards[0].items_page,
+            );
+
+            console.log(
+              'actualValueResponse.data.data.boards[0].items_page.items[0]',
+              actualValueResponse.data.data.boards[0].items_page.items[0],
+            );
             //parse items data
             actualValueItemId2 =
               actualValueResponse.data.data.boards[0].items_page.items[0].id;
