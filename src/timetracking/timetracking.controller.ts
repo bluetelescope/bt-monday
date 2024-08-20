@@ -165,7 +165,7 @@ export class TimetrackingController {
                 Number(currentHoursValue === null ? 0 : currentHoursValue) +
                 Number(hoursFromForm)
               }`;
-              newCostValue = `${Number(newHoursValue === null ? 0 : newHoursValue) * Number(rate)}`;
+              newCostValue = `${Number(newHoursValue === null ? 0 : newHoursValue) * Number(rate) * -1}`;
               console.log('newHoursValue', newHoursValue);
               console.log('newCostValue', newCostValue);
 
@@ -183,7 +183,7 @@ export class TimetrackingController {
             })
             .then((postHoursToColumnRes) => {
               console.log('postHoursToColumnRes*************************');
-              // console.log(postHoursToColumnRes.data.data);
+              console.log(postHoursToColumnRes.data.data);
               //parse hoursFromForm result
 
               const postCostToColumnQuery = returnChangeSimpleValueQuery(
