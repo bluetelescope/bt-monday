@@ -24,6 +24,7 @@ let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
 let actualValueItemId;
+let actualValueItemId2;
 let boardSlug;
 
 @Controller('monday')
@@ -92,6 +93,7 @@ export class MondayController {
             const boards = responseConfigGetBoards.data.data.boards;
             const boardNumber = parseBoards(boards, variables.ACTIVE_FOLDER);
             itemName = `${boardNumber}_${itemName}`;
+
             // post: new board to active folder in prod workspace
             const graphqlPostBoard = returnPostBoardQuery(
               variables.TEMPLATE_BOARD,
@@ -104,13 +106,31 @@ export class MondayController {
               variables.ADMIN_TEAM,
             );
             let configPostBoard = returnGetConfig(graphqlPostBoard);
-            console.log('configPostBoard', configPostBoard);
+            // console.log('configPostBoard', configPostBoard);
             return axios.request(configPostBoard);
           })
           .then((postBoardResponse) => {
             console.log('postBoardResponse **************');
             console.log('postBoardResponse', postBoardResponse.data);
             newBoardId = postBoardResponse.data.data.create_board.id;
+
+            //get id of actual value item
+            const getActualValueItemQuery = returnGetItemFromBoard(
+              newBoardId,
+              'name',
+              'Actual Project Value (from proposal)',
+            );
+            const getActualValueItemConfig = returnGetConfig(
+              getActualValueItemQuery,
+            );
+            return axios.request(getActualValueItemConfig);
+          })
+          .then((actualValueResponse) => {
+            console.log('actualValueResponse.data', actualValueResponse.data);
+            //parse items data
+            actualValueItemId2 =
+              actualValueResponse.data.data.boards[0].items_page.items[0].id;
+            console.log('actualValueItemId2', actualValueItemId2);
             //post: duplicate item in 'active' group of time tracking board
             const graphqlDuplicateTimeTrackItem = returnDuplicateItemQuery(
               variables.TIMETRACKING_ITEM_FORACTIVE,
@@ -207,7 +227,7 @@ export class MondayController {
             const changeActualValueQuery = returnChangeSimpleValueQuery(
               newBoardId,
               newCostColumnId,
-              actualValueItemId,
+              actualValueItemId2,
               actualProjectValue,
             );
             const changeActualValueConfig = returnPostConfig(

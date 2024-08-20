@@ -115,7 +115,7 @@ export class TimetrackingController {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
-              console.log('getBoardItemsRes.data', getBoardItemsRes.data);
+              // console.log('getBoardItemsRes.data', getBoardItemsRes.data);
               //parse items data
               itemIDinBoard =
                 getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
@@ -127,6 +127,9 @@ export class TimetrackingController {
               return axios.request(getBoardColumnsConfig);
             })
             .then((getBoardColumnsRes) => {
+              console.log(
+                'getBoardColumnsRes *****************************************************************',
+              );
               //parse columns data
               const { costColumnID, hoursColumnID } = parseColumnsForIDS(
                 getBoardColumnsRes.data.data.boards[0].columns,
@@ -140,8 +143,11 @@ export class TimetrackingController {
               return axios.request(getItemConfig);
             })
             .then((getItemRes) => {
+              console.log(
+                'getItemRes *****************************************************************',
+              );
               //parse item data
-              console.log('getItemRes.data', getItemRes.data.data);
+              // console.log('getItemRes.data', getItemRes.data.data);
               const itemColumns = getItemRes.data.data.items[0].column_values;
 
               currentHoursValue = parseValueofColumnFromColumnID(
@@ -177,7 +183,7 @@ export class TimetrackingController {
             })
             .then((postHoursToColumnRes) => {
               console.log('postHoursToColumnRes*************************');
-              console.log(postHoursToColumnRes.data.data);
+              // console.log(postHoursToColumnRes.data.data);
               //parse hoursFromForm result
 
               const postCostToColumnQuery = returnChangeSimpleValueQuery(
