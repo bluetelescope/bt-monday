@@ -28,7 +28,7 @@ export function returnGetItemQuery(itemID: number) {
   });
 }
 
-//returrns all the boards in a workspace
+//returns all the boards in a workspace
 export function returnGetBoardsQuery(workspaceID: number) {
   return JSON.stringify({
     query: `query {\n  boards (\n    limit: 1000\n    workspace_ids: [${workspaceID}]\n  ) {id name  board_folder_id } \n}\n`,

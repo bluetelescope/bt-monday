@@ -2,24 +2,13 @@ import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
 import {
-  returnGetBoardGroupsQuery,
-  returnGetUsersQuery,
   returnGetItemQuery,
   returnGetBoardsQuery,
-  returnPostBoardQuery,
   returnChangeSimpleValueQuery,
-  returnDuplicateItemQuery,
-  returnTop25ItemsinBoardQuery,
   returnGetItemFromBoard,
-  returnGetItemsFromBoard,
   returnColumnsInBoard,
-  returnGetAllItemsFromBoard,
 } from 'src/functions/returnQuery';
 import {
-  parseColumnValues,
-  parseBoards,
-  parseUsers,
-  parseBoardID,
   parseColumnsForIDS,
   parseBoardIDFromSlug,
   parseValueofColumnFromColumnID,

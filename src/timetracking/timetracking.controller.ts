@@ -9,7 +9,6 @@ import {
   returnGetItemFromBoard,
 } from 'src/functions/returnQuery';
 import {
-  parseBoardID,
   parseValueofColumnFromColumnID,
   parseColumnsForIDS,
   parseBoardIDFromSlug,
@@ -21,7 +20,6 @@ import axios from 'axios';
 import { users, variables } from 'src/variables';
 
 let hoursFromForm = '0';
-let costFromForm = 0;
 let personId = '';
 let personData;
 let rate = 0;
@@ -101,24 +99,23 @@ export class TimetrackingController {
                 boardSlug,
               );
 
-              //GET: items in active project board
-              // const getBoardItemsQuery = returnTop25ItemsinBoardQuery(boardId);
+              //GET: item in active project board with persons name
               const getBoardItemQuery = returnGetItemFromBoard(
                 boardId,
                 'name',
                 personData.title,
               );
-              const getBoardItemsCofig = returnGetConfig(getBoardItemQuery);
-              return axios.request(getBoardItemsCofig);
+              const getBoardItemCofig = returnGetConfig(getBoardItemQuery);
+              return axios.request(getBoardItemCofig);
             })
-            .then((getBoardItemsRes) => {
+            .then((getBoardItemRes) => {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
               // console.log('getBoardItemsRes.data', getBoardItemsRes.data);
               //parse items data
               itemIDinBoard =
-                getBoardItemsRes.data.data.boards[0].items_page.items[0].id;
+                getBoardItemRes.data.data.boards[0].items_page.items[0].id;
 
               //GET: columns in active project
               const getBoardColumnsQuery = returnColumnsInBoard(boardId);
