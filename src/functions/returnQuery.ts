@@ -106,6 +106,6 @@ export function returnGetAllItemsFromBoard(boardID: number) {
 //get all items and thier updates on a board
 export function returnGetAllItemsUpdatesFromBoard(boardID: number) {
   return JSON.stringify({
-    query: `query {\n  boards(ids: [${boardID}]) {\n    items_page(\n      limit: 500\n    ) {\n      items {\n        name\n        column_values {\n          id\n          type\n          text\n          value\n  \n        }\n      }\n    }\n  }\n}`,
+    query: `query  {\n  boards (ids: ${boardID} ) {\n    groups {\n      title\n      id\n      items_page {\n        items { name updates {text_body created_at}}\n    }\n    }}\n}`,
   });
 }
