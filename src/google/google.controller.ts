@@ -3,6 +3,8 @@ import * as rawbody from 'raw-body';
 import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
 import { variables } from 'src/variables';
 
+let devFolderID = '1Jl-R5c4PTrXQr1QGRTINwJ2R5jKbYk7t';
+
 @Controller('google')
 export class GoogleController {
   @Get()
@@ -26,7 +28,35 @@ export class GoogleController {
         console.log('data:', data);
         console.log('data.event', data.event);
 
-        // const axios = require('axios');
+        const axios = require('axios');
+        const fs = require('fs');
+        const GoogleAuth = require('google-auth-library');
+        const google = require('googleapis');
+
+        const auth = new GoogleAuth({
+          scopes: 'https://www.googleapis.com/auth/drive',
+        });
+        const service = google.drive({ version: 'v3', auth });
+        const fileMetadata = {
+          name: 'Testing',
+          mimeType: 'application/vnd.google-apps.folder',
+          parents: [devFolderID],
+        };
+        try {
+          const file = await service.files.create({
+            requestBody: fileMetadata,
+            fields: 'id',
+          });
+          console.log('Folder Id:', file.data.id);
+          return file.data.id;
+        } catch (err) {
+          // TODO(developer) - Handle error
+          console.log('err', err);
+          console.log('err.data', err.data);
+
+          throw err;
+        }
+
         // const getUpdatesConfig = returnGetConfig();
         // axios
         //   .request(getUpdatesConfig)
