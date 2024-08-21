@@ -56,8 +56,9 @@ export class TimetrackingController {
       if (!!data.event) {
         if (
           data.event.type === 'create_pulse' &&
-          !!data.event.columnValues &&
-          data.event.groupName !== 'Active Projects'
+          data.event.columnValues !== undefined &&
+          data.event.groupName !== 'Active Projects' &&
+          data.event.columnValues.dropdown !== undefined
         ) {
           console.log(
             'event is create pulse ****************************************************',
@@ -218,7 +219,8 @@ export class TimetrackingController {
             });
         } else {
           console.log(
-            'ERROR: event type is not create pulse, or column values does not exist ***********************************************',
+            'ERROR: event type is not create pulse OR data.event.columnValues undefined  ***********************************************',
+            'OR group name is not active projects OR data.event.columnValues.dropdown undefined  ***********************************************',
           );
         }
       } else {
