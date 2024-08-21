@@ -20,12 +20,12 @@ export class GoogleController {
       // body is ignored by NestJS -> get raw body from request
       const raw = await rawbody(req);
       const text = raw.toString().trim();
-      console.log('body:', text);
+      console.log('google body:', text);
     } else {
-      console.log('monday data:', data);
+      console.log('google data:', data);
       //if there is an event field on the body
       if (!!data.event) {
-        console.log('data.event', data.event);
+        console.log('google.event', data.event);
 
         const axios = require('axios');
         const fs = require('fs');
