@@ -20,41 +20,43 @@ export class GoogleController {
       // body is ignored by NestJS -> get raw body from request
       const raw = await rawbody(req);
       const text = raw.toString().trim();
-      console.log('body:', text);
+      console.log('google body:', text);
     } else {
-      console.log('monday data:', data);
+      console.log('google data:', data);
       //if there is an event field on the body
       if (!!data.event) {
-        console.log('data.event', data.event);
+        console.log('google.event', data.event);
 
-        const axios = require('axios');
-        const fs = require('fs');
-        const { GoogleAuth } = require('google-auth-library');
-        const { google } = require('googleapis');
+        // const axios = require('axios');
+        // const fs = require('fs');
+        // const { GoogleAuth } = require('google-auth-library');
 
-        const auth = new GoogleAuth({
-          scopes: 'https://www.googleapis.com/auth/drive',
-        });
-        const service = google.drive({ version: 'v3', auth });
-        const fileMetadata = {
-          name: 'Testing',
-          mimeType: 'application/vnd.google-apps.folder',
-          parents: [devFolderID],
-        };
-        try {
-          const file = await service.files.create({
-            requestBody: fileMetadata,
-            fields: 'id',
-          });
-          console.log('Folder Id:', file.data.id);
-          return file.data.id;
-        } catch (err) {
-          // TODO(developer) - Handle error
-          console.log('err', err);
-          console.log('err.data', err.data);
+        // const { google } = require('googleapis');
 
-          throw err;
-        }
+        // const auth = new GoogleAuth({
+        //   scopes: 'https://www.googleapis.com/auth/drive',
+        // });
+        // const service = google.drive({ version: 'v3', auth });
+
+        // const fileMetadata = {
+        //   name: 'Testing',
+        //   mimeType: 'application/vnd.google-apps.folder',
+        //   parents: [devFolderID],
+        // };
+        // try {
+        //   const file = await service.files.create({
+        //     requestBody: fileMetadata,
+        //     fields: 'id',
+        //   });
+        //   console.log('Folder Id:', file.data.id);
+        //   return file.data.id;
+        // } catch (err) {
+        //   // TODO(developer) - Handle error
+        //   console.log('err', err);
+        //   console.log('err.data', err.data);
+
+        //   throw err;
+        // }
 
         // const getUpdatesConfig = returnGetConfig();
         // axios
@@ -65,6 +67,26 @@ export class GoogleController {
         //   .catch((error) => {
         //     console.log('error.data', error.data);
         //   });
+
+        const { auth } = require('google-auth-library');
+
+        // load the environment variable with our keys
+        const keysEnvVar = process.env.SERVICE_ACCOUNT_CREDS;
+        if (!keysEnvVar) {
+          throw new Error('The $CREDS environment variable was not found!');
+        }
+        const keys = JSON.parse(keysEnvVar);
+
+        async function main() {
+          // load the JWT or UserRefreshClient from the keys
+          const client = auth.fromJSON(keys);
+          client.scopes = ['https://www.googleapis.com/auth/cloud-platform'];
+          const url = `https://dns.googleapis.com/dns/v1/projects/${keys.project_id}`;
+          const res = await client.request({ url });
+          console.log(res.data);
+        }
+
+        main().catch(console.error);
       } else {
         //if there is not an event field on the body
         //it's the verification request
