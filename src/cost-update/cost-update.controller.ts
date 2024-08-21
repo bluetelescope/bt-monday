@@ -7,6 +7,7 @@ import {
   returnChangeSimpleValueQuery,
   returnGetItemFromBoard,
   returnColumnsInBoard,
+  returnGetAllItemsUpdatesFromBoard,
 } from 'src/functions/returnQuery';
 import {
   parseColumnsForIDS,
@@ -14,20 +15,6 @@ import {
   parseValueofColumnFromColumnID,
 } from 'src/functions/parseData';
 import { users, variables } from 'src/variables';
-
-const TEMPLATE_BOARD = 6198096739;
-const PIPELINE_BOARD = 5552219681;
-const TIMETRACKING_BOARD = 5872168554;
-const TIMETRACKING_ITEM_FORLABEL = 6721689025;
-const TIMETRACKING_ITEM_FORACTIVE = 7209467255;
-const TIMETRACKING_PROJECT_COL = 'dropdown';
-const PROD_WORKSPACE = 1080416;
-const BIZDEV_WORKSPACE = 3839751;
-const MIDLEVEL_FOLDER = 14770065;
-const ACTIVE_FOLDER = 7860571;
-// const testItemID = 5104037469;
-const PROD_TEAM = 614284;
-const ADMIN_TEAM = 614287;
 
 let itemId;
 let hoursFromForm = '0';
@@ -72,10 +59,36 @@ export class CostUpdateController {
       if (!!data.event) {
         console.log('data:', data);
         console.log('data.event', data.event);
-        const axios = require('axios');
-
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
+        const axios = require('axios');
+
+        const getUpdatesQuery = returnGetAllItemsUpdatesFromBoard(
+          variables.PIPELINE_BOARD,
+        );
+        const getUpdatesConfig = returnGetConfig(getUpdatesQuery);
+        axios
+          .request(getUpdatesConfig)
+          .then((getUpdatesResponse) => {
+            console.log(
+              'getUpdatesResponse.data.data',
+              getUpdatesResponse.data.data.boards,
+            );
+
+            const groups = getUpdatesResponse.data.data.boards[0].groups;
+            console.log('groups', groups);
+            const opportunities = groups.filter(
+              (group) => group.title === 'Opportunity',
+            )[0];
+            console.log('opportunities', opportunities);
+            const itemsWithUpdates = opportunities.items_page.items.filter(
+              (item) => item.updates.length !== 0,
+            );
+            console.log('itemsWithUpdates', itemsWithUpdates);
+          })
+          .catch((error) => {
+            console.log('error.data', error.data);
+          });
       } else {
         //if there is not an event field on the body
         //it's the verification request

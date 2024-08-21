@@ -102,3 +102,10 @@ export function returnGetAllItemsFromBoard(boardID: number) {
     query: `query {\n  boards(ids: [${boardID}]) {\n    items_page(\n      limit: 500\n    ) {\n      items {\n        name\n        column_values {\n          id\n          type\n          text\n          value\n  \n        }\n      }\n    }\n  }\n}`,
   });
 }
+
+//get all items and thier updates on a board
+export function returnGetAllItemsUpdatesFromBoard(boardID: number) {
+  return JSON.stringify({
+    query: `query {\n  boards(ids: [${boardID}]) {\n    items_page(\n      limit: 500\n    ) {\n      items {\n        name\n        column_values {\n          id\n          type\n          text\n          value\n  \n        }\n      }\n    }\n  }\n}`,
+  });
+}
