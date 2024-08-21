@@ -75,8 +75,9 @@ export class GoogleController {
         if (!keysEnvVar) {
           throw new Error('The $CREDS environment variable was not found!');
         }
+        console.log('keysEnvVar', keysEnvVar);
         const keys = JSON.parse(keysEnvVar);
-
+        console.log('keys', keys);
         async function main() {
           // load the JWT or UserRefreshClient from the keys
           const client = auth.fromJSON(keys);
