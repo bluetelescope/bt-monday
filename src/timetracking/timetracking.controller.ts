@@ -62,6 +62,7 @@ export class TimetrackingController {
           console.log(
             'event is create pulse ****************************************************',
           );
+          console.log(' data.event', data.event);
           //parse time tracking data
           const formData = data.event.columnValues;
           console.log('data.event.columnValues', data.event.columnValues);
