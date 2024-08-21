@@ -72,10 +72,14 @@ export class CostUpdateController {
           .then((getUpdatesResponse) => {
             console.log(
               'getUpdatesResponse.data.data',
-              getUpdatesResponse.data.data.boards,
+              getUpdatesResponse.data.data.boards[0],
             );
-
-            const groups = getUpdatesResponse.data.data.boards[0].groups;
+            console.log(
+              'getUpdatesResponse.data.data.boards[0].items_page',
+              getUpdatesResponse.data.data.boards[0].items_page,
+            );
+            const groups =
+              getUpdatesResponse.data.data.boards[0].items_page.items.groups;
             console.log('groups', groups);
             const opportunities = groups.filter(
               (group) => group.title === 'Opportunity',
