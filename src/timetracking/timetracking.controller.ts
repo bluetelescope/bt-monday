@@ -64,7 +64,14 @@ export class TimetrackingController {
           );
           //parse time tracking data
           const formData = data.event.columnValues;
+          console.log('data.event.columnValues', data.event.columnValues);
+          console.log(
+            'data.event.columnValues.dropdown',
+            data.event.columnValues.dropdown,
+          );
+
           label = formData.dropdown.chosenValues[0].name;
+
           boardSlug = label.substring(0, 4);
           personId = String(formData.person.personsAndTeams[0].id);
           console.log('personId', personId);
