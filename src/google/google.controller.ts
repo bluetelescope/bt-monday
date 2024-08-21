@@ -1,41 +1,7 @@
 import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
-import {
-  returnGetItemQuery,
-  returnGetBoardsQuery,
-  returnChangeSimpleValueQuery,
-  returnGetItemFromBoard,
-  returnColumnsInBoard,
-  returnGetAllItemsUpdatesFromBoard,
-} from 'src/functions/returnQuery';
-import {
-  parseColumnsForIDS,
-  parseBoardIDFromSlug,
-  parseValueofColumnFromColumnID,
-} from 'src/functions/parseData';
-import { users, variables } from 'src/variables';
-
-let itemId;
-let hoursFromForm = '0';
-let projectColumnId = 'dropdown';
-let boardId;
-let boardName;
-let newCostColumnId = 'numbers__1';
-let proposalItemId;
-let actualValueItemId;
-let personId;
-let personData;
-let personTitle;
-let itemIDinBoard;
-let costColumnId = '';
-let hoursColumnId = '';
-let currentCostValue = '';
-let currentHoursValue = '';
-let newCostValue = '';
-let newHoursValue = '';
-let rate = 0;
-let boardSlug;
+import { variables } from 'src/variables';
 
 @Controller('google')
 export class GoogleController {
@@ -59,40 +25,17 @@ export class GoogleController {
       if (!!data.event) {
         console.log('data:', data);
         console.log('data.event', data.event);
-        //event info has information regarding only the value of this particular column information
-        //make a get request: get all information regarding this item
-        const axios = require('axios');
 
-        const getUpdatesQuery = returnGetAllItemsUpdatesFromBoard(
-          variables.PIPELINE_BOARD,
-        );
-        const getUpdatesConfig = returnGetConfig(getUpdatesQuery);
-        axios
-          .request(getUpdatesConfig)
-          .then((getUpdatesResponse) => {
-            console.log(
-              'getUpdatesResponse.data.data',
-              getUpdatesResponse.data.data.boards[0],
-            );
-            console.log(
-              'getUpdatesResponse.data.data.boards[0].items_page',
-              getUpdatesResponse.data.data.boards[0].items_page,
-            );
-            const groups =
-              getUpdatesResponse.data.data.boards[0].items_page.items.groups;
-            console.log('groups', groups);
-            const opportunities = groups.filter(
-              (group) => group.title === 'Opportunity',
-            )[0];
-            console.log('opportunities', opportunities);
-            const itemsWithUpdates = opportunities.items_page.items.filter(
-              (item) => item.updates.length !== 0,
-            );
-            console.log('itemsWithUpdates', itemsWithUpdates);
-          })
-          .catch((error) => {
-            console.log('error.data', error.data);
-          });
+        // const axios = require('axios');
+        // const getUpdatesConfig = returnGetConfig();
+        // axios
+        //   .request(getUpdatesConfig)
+        //   .then((getUpdatesResponse) => {
+
+        //   })
+        //   .catch((error) => {
+        //     console.log('error.data', error.data);
+        //   });
       } else {
         //if there is not an event field on the body
         //it's the verification request
