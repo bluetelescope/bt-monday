@@ -22,10 +22,9 @@ export class GoogleController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
-      console.log('populate endpoint data:', data);
+      console.log('monday data:', data);
       //if there is an event field on the body
       if (!!data.event) {
-        console.log('data:', data);
         console.log('data.event', data.event);
 
         const axios = require('axios');
