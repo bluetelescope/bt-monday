@@ -30,8 +30,8 @@ export class GoogleController {
 
         const axios = require('axios');
         const fs = require('fs');
-        const GoogleAuth = require('google-auth-library');
-        const google = require('googleapis');
+        const { GoogleAuth } = require('google-auth-library');
+        const { google } = require('googleapis');
 
         const auth = new GoogleAuth({
           scopes: 'https://www.googleapis.com/auth/drive',
