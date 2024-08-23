@@ -143,6 +143,8 @@ export class TimetrackingController {
               costColumnId = costColumnID;
               hoursColumnId = hoursColumnID;
 
+              //TODO: replace getting the item and replacing the entries with create new subitem
+
               //GET: get item data
               const getItemQuery = returnGetItemQuery(itemIDinBoard);
               const getItemConfig = returnGetConfig(getItemQuery);
