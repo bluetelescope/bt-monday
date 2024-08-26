@@ -31,6 +31,10 @@ let boardId = 0;
 let itemIDinBoard;
 let costColumnId = '';
 let hoursColumnId = '';
+let subitemCostColumnId = '';
+let subitemHoursColumnId = '';
+let subitemTimelineColumnId = '';
+
 let currentCostValue = '';
 let currentHoursValue = '';
 let newCostValue = '';
@@ -157,6 +161,9 @@ export class TimetrackingController {
               console.log('costColumnId', costColumnId);
               console.log('hoursColumnId', hoursColumnId);
               console.log('timelineColId', timelineColId);
+              subitemCostColumnId = costColumnId.split('subitems_').pop();
+              subitemHoursColumnId = hoursColumnId.split('subitems_').pop();
+              subitemTimelineColumnId = timelineColId.split('subitems_').pop();
 
               //TODO: replace getting the item and replacing the entries with create new subitem
               let query5 =
@@ -167,8 +174,8 @@ export class TimetrackingController {
                 },
               };
 
-              testing[`${costColumnId}`] = cost;
-              testing[`${hoursColumnId}`] = hoursFromForm;
+              testing[`${subitemCostColumnId}`] = cost;
+              testing[`${subitemHoursColumnId}`] = hoursFromForm;
 
               let vars = {
                 columnVals: JSON.stringify(testing),
