@@ -165,6 +165,9 @@ export class TimetrackingController {
                 columnVals: JSON.stringify({
                   hours__1: '333',
                   cost__1: '444',
+                  person: {
+                    personsAndTeams: [{ id: 27253155, kind: 'person' }],
+                  },
                 }),
               };
 
