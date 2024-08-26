@@ -161,14 +161,17 @@ export class TimetrackingController {
               //TODO: replace getting the item and replacing the entries with create new subitem
               let query5 =
                 'mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: 7263412897,item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }';
+              let testing = {
+                person: {
+                  personsAndTeams: [{ id: 27253155, kind: 'person' }],
+                },
+              };
+
+              testing[`${costColumnId}`] = cost;
+              testing[`${hoursColumnId}`] = hoursFromForm;
+
               let vars = {
-                columnVals: JSON.stringify({
-                  hours__1: '333',
-                  cost__1: '444',
-                  person: {
-                    personsAndTeams: [{ id: 27253155, kind: 'person' }],
-                  },
-                }),
+                columnVals: JSON.stringify(testing),
               };
 
               function testConfig(testBody: any, vars: any) {
