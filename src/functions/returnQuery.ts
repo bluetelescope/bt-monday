@@ -129,12 +129,8 @@ export function returnAddSubitem(
   // });
 
   // mutation {\n  create_subitem(\n    parent_item_id: 7263412897\n    item_name: \"Hours Log\"\n    column_values:\"zzzzzz\"\n    \n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}
-  const strungify = JSON.stringify({
-    query: `mutation {\n  create_subitem(\n    parent_item_id: 7263412897\n    item_name: \"Hours Log\"\n    column_values:\"zzzzzz\"\n    \n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}`,
-  });
-  const colValuesString =
-    '{\n  "hours__1": "4",\n  "timeline3__1": {\n    "to": "2024-04-26",\n    "from": "2024-04-22",\n    "changed_at": "2024-08-23T00:09:08.595Z"\n  },\n  "person": {\n    "personsAndTeams": [\n      {\n        "id": 27253155,\n        "kind": "person"\n      }\n    ]\n  },\n  "cost__1": "5"\n}';
-  const editedQuery = strungify.replace('zzzzzz', colValuesString);
 
-  return editedQuery;
+  return JSON.stringify({
+    query: `\n\nmutation {\n  create_subitem(\n    parent_item_id: 7263412862\n    item_name: \"Hours Log\"\n    column_values:{\n  \"hours__1\": \"4\",\n  \"timeline3__1\": {\n    \"to\": \"2024-04-26\",\n    \"from\": \"2024-04-22\",\n    \"changed_at\": \"2024-08-23T00:09:08.595Z\"\n  },\n  \"person\": {\n    \"personsAndTeams\": [\n      {\n        \"id\": 27253155,\n        \"kind\": \"person\"\n      }\n    ]\n  },\n  \"cost__1\": \"5\"\n}\n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}\n\n`,
+  });
 }
