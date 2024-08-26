@@ -124,6 +124,7 @@ export class TimetrackingController {
                 'name',
                 personData.title,
               );
+              console.log('getBoardItemQuery', getBoardItemQuery);
               const getBoardItemCofig = returnGetConfig(getBoardItemQuery);
               return axios.request(getBoardItemCofig);
             })
@@ -174,7 +175,7 @@ export class TimetrackingController {
                 cost,
               );
               console.log('postSubitemQuery', postSubitemQuery);
-              const postSubitemConfig = returnGetConfig(postSubitemQuery);
+              const postSubitemConfig = returnPostConfig(postSubitemQuery);
               return axios.request(postSubitemConfig);
             })
             .then((postSubitemRes) => {
