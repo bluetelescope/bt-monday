@@ -163,8 +163,8 @@ export class TimetrackingController {
                 'mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: 7263412897,item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }';
               let vars = {
                 columnVals: JSON.stringify({
-                  hours__1: { number: '333' },
-                  cost__1: { number: '444' },
+                  hours__1: '333',
+                  cost__1: '444',
                 }),
               };
 
