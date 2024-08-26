@@ -173,6 +173,7 @@ export class TimetrackingController {
                 costColumnId,
                 cost,
               );
+              console.log('postSubitemQuery', postSubitemQuery);
               const postSubitemConfig = returnGetConfig(postSubitemQuery);
               return axios.request(postSubitemConfig);
             })
