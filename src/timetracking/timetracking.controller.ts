@@ -7,11 +7,13 @@ import {
   returnChangeSimpleValueQuery,
   returnGetItemQuery,
   returnGetItemFromBoard,
+  returnAddSubitem,
 } from 'src/functions/returnQuery';
 import {
   parseValueofColumnFromColumnID,
   parseColumnsForIDS,
   parseBoardIDFromSlug,
+  parseColumnValuesForString,
 } from 'src/functions/parseData';
 
 // import * as process from 'process';
@@ -23,6 +25,7 @@ let hoursFromForm = '0';
 let personId = '';
 let personData;
 let rate = 0;
+let cost;
 let label = ' ';
 let boardId = 0;
 let itemIDinBoard;
@@ -33,6 +36,9 @@ let currentHoursValue = '';
 let newCostValue = '';
 let newHoursValue = '';
 let boardSlug;
+let timelineColId;
+let dateRangeData;
+let itemDescription;
 
 @Controller('timetracking')
 export class TimetrackingController {
@@ -64,6 +70,8 @@ export class TimetrackingController {
             'event is create pulse ****************************************************',
           );
           console.log(' data.event', data.event);
+          itemDescription = data.event.pulseName;
+          console.log('itemDescription', itemDescription);
           //parse time tracking data
           const formData = data.event.columnValues;
           console.log('data.event.columnValues', data.event.columnValues);
@@ -73,7 +81,7 @@ export class TimetrackingController {
           );
 
           label = formData.dropdown.chosenValues[0].name;
-
+          dateRangeData = formData.date_range;
           boardSlug = label.substring(0, 4);
           personId = String(formData.person.personsAndTeams[0].id);
           console.log('personId', personId);
@@ -90,6 +98,8 @@ export class TimetrackingController {
           rate = personData.rate;
           console.log('rate', rate);
 
+          cost = `${Number(hoursFromForm) * Number(rate) * -1}`;
+          console.log('cost', cost);
           //get: boards query
           const graphqlGetBoards = returnGetBoardsQuery(
             variables.PROD_WORKSPACE,
@@ -137,79 +147,39 @@ export class TimetrackingController {
                 'getBoardColumnsRes *****************************************************************',
               );
               //parse columns data
-              const { costColumnID, hoursColumnID } = parseColumnsForIDS(
-                getBoardColumnsRes.data.data.boards[0].columns,
-              );
-              costColumnId = costColumnID;
-              hoursColumnId = hoursColumnID;
+              const columns = getBoardColumnsRes.data.data.boards[0].columns;
+              console.log('columns', columns);
+
+              costColumnId = parseColumnValuesForString(columns, 'Cost');
+              hoursColumnId = parseColumnValuesForString(columns, 'Hours');
+              timelineColId = parseColumnValuesForString(columns, 'Timeline');
+              console.log('costColumnId', costColumnId);
+              console.log('hoursColumnId', hoursColumnId);
+              console.log('timelineColId', timelineColId);
 
               //TODO: replace getting the item and replacing the entries with create new subitem
 
-              //GET: get item data
-              const getItemQuery = returnGetItemQuery(itemIDinBoard);
-              const getItemConfig = returnGetConfig(getItemQuery);
-              return axios.request(getItemConfig);
-            })
-            .then((getItemRes) => {
-              console.log(
-                'getItemRes *****************************************************************',
-              );
-              //parse item data
-              // console.log('getItemRes.data', getItemRes.data.data);
-              const itemColumns = getItemRes.data.data.items[0].column_values;
-
-              currentHoursValue = parseValueofColumnFromColumnID(
-                itemColumns,
-                hoursColumnId,
-              );
-              currentCostValue = parseValueofColumnFromColumnID(
-                itemColumns,
-                costColumnId,
-              );
-              console.log('currentHoursValue', currentHoursValue);
-              console.log('currentCostValue', currentCostValue);
-
-              newHoursValue = `${
-                Number(currentHoursValue === null ? 0 : currentHoursValue) +
-                Number(hoursFromForm)
-              }`;
-              newCostValue = `${Number(newHoursValue === null ? 0 : newHoursValue) * Number(rate) * -1}`;
-              console.log('newHoursValue', newHoursValue);
-              console.log('newCostValue', newCostValue);
-
-              //POST: hoursFromForm value to column
-              const postHoursToColumnQuery = returnChangeSimpleValueQuery(
-                boardId,
-                hoursColumnId,
+              //POST: new subitem
+              const postSubitemQuery = returnAddSubitem(
                 itemIDinBoard,
-                newHoursValue,
-              );
-              const postHoursToColumnConfig = returnPostConfig(
-                postHoursToColumnQuery,
-              );
-              return axios.request(postHoursToColumnConfig);
-            })
-            .then((postHoursToColumnRes) => {
-              console.log('postHoursToColumnRes*************************');
-              console.log(postHoursToColumnRes.data.data);
-              //parse hoursFromForm result
-
-              const postCostToColumnQuery = returnChangeSimpleValueQuery(
-                boardId,
+                itemDescription,
+                hoursColumnId,
+                hoursFromForm,
+                timelineColId,
+                dateRangeData.to,
+                dateRangeData.from,
+                dateRangeData.changed_at,
+                personId,
                 costColumnId,
-                itemIDinBoard,
-                newCostValue,
+                cost,
               );
-
-              const postCostToColumnConfig = returnPostConfig(
-                postCostToColumnQuery,
-              );
-              return axios.request(postCostToColumnConfig);
+              const postSubitemConfig = returnGetConfig(postSubitemQuery);
+              return axios.request(postSubitemConfig);
             })
-            .then((postCostToColumnRes) => {
+            .then((postSubitemRes) => {
               console.log(
                 'postCostToColumnRes**********************************************************************',
-                postCostToColumnRes.data,
+                postSubitemRes.data,
               );
             })
 

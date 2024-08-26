@@ -109,3 +109,22 @@ export function returnGetAllItemsUpdatesFromBoard(boardID: number) {
     query: `query  {\n  boards (ids: ${boardID} ) {\n    groups {\n      title\n      id\n      items_page {\n        items { name updates {text_body created_at}}\n    }\n    }}\n}`,
   });
 }
+
+export function returnAddSubitem(
+  personItemID,
+  itemDescription: string,
+  hoursColID,
+  hours,
+  timelineColID,
+  startDate,
+  endDate,
+  changedAt,
+  personID,
+  costColID,
+  cost,
+) {
+  return JSON.stringify({
+    query: `mutation {\n  create_subitem(\n    parent_item_id: ${personItemID}\n    item_name: \"${itemDescription || 'Hours Log'}\"\n    column_values:\"{\n  \"${hoursColID}\": \"${hours}\",\n  \"${timelineColID}\": {\n    \"to\": \"${startDate}\",\n    \"from\": \"${endDate}\",\n    \"changed_at\": \"${changedAt}\"\n  },\n  \"person\": {\n    \"personsAndTeams\": [\n      {\n        \"id\": ${personID},\n        \"kind\": \"person\"\n      }\n    ]\n  },\n  \"${costColID}\": \"${cost}\"\n}"\n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}`,
+    // query: `mutation {\n  create_subitem(\n    parent_item_id: 7263412897\n    item_name: \"Hours Log\"\n    column_values:\"{\\n  \\\"hours__1\\\": \\\"4\\\",\\n  \\\"timeline3__1\\\": {\\n    \\\"to\\\": \\\"2024-04-26\\\",\\n    \\\"from\\\": \\\"2024-04-22\\\",\\n    \\\"changed_at\\\": \\\"2024-08-23T00:09:08.595Z\\\"\\n  },\\n  \\\"person\\\": {\\n    \\\"personsAndTeams\\\": [\\n      {\\n        \\\"id\\\": 27253155,\\n        \\\"kind\\\": \\\"person\\\"\\n      }\\n    ]\\n  },\\n  \\\"cost__1\\\": \\\"5\\\"\\n}\"\n    \n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}`,
+  });
+}
