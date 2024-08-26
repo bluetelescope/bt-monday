@@ -159,6 +159,29 @@ export class TimetrackingController {
               console.log('timelineColId', timelineColId);
 
               //TODO: replace getting the item and replacing the entries with create new subitem
+              let query5 =
+                'mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: 7263412897,item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }';
+              let vars = {
+                columnVals: JSON.stringify({
+                  hours__1: { number: '333' },
+                  cost__1: { number: '444' },
+                }),
+              };
+
+              function testConfig(testBody: any, vars: any) {
+                return {
+                  method: 'post',
+                  maxBodyLength: Infinity,
+                  url: 'https://api.monday.com/v2',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${process.env.MONDAY_AUTH}`,
+                    Cookie:
+                      '__cf_bm=m8zc61.IT0xf6oKWKbBo0QWuPhgxPFUC1dW87JwdnpE-1723044832-1.0.1.1-jUOMtZtUcNVOa.AdRWzi6gzMAurMpB6iDfAZol1F8eKTorhtD5fLHGey_bZSPocyVGvoqr2OMshqhyFugxndrzYrXfWvJml80MJlgJOvxY8',
+                  },
+                  data: { query: testBody, variables: vars },
+                };
+              }
 
               //POST: new subitem
               const postSubitemQuery = returnAddSubitem(
@@ -175,7 +198,8 @@ export class TimetrackingController {
                 cost,
               );
               console.log('postSubitemQuery', postSubitemQuery);
-              const postSubitemConfig = returnPostConfig(postSubitemQuery);
+              const postSubitemConfig = testConfig(query5, vars);
+              console.log('postSubitemConfig', postSubitemConfig);
               return axios.request(postSubitemConfig);
             })
             .then((postSubitemRes) => {

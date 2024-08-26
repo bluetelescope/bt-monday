@@ -127,13 +127,10 @@ export function returnAddSubitem(
   //   // query: `mutation {\n  create_subitem(\n    parent_item_id: ${personItemID}\n    item_name: \"${itemDescription || 'Hours Log'}\"\n    column_values:\"{\n  \"${hoursColID}\": \"${hours}\",\n  \"${timelineColID}\": {\n    \"to\": \"${startDate}\",\n    \"from\": \"${endDate}\",\n    \"changed_at\": \"${changedAt}\"\n  },\n  \"person\": {\n    \"personsAndTeams\": [\n      {\n        \"id\": ${personID},\n        \"kind\": \"person\"\n      }\n    ]\n  },\n  \"${costColID}\": \"${cost}\"\n}"\n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}`,
   //   query: `mutation {\n  create_subitem(\n    parent_item_id: ${personItemID}\n    item_name: \"${itemDescription || 'Hours Log'}\"\n    column_values:\"{\\n  \\\"${hoursColID}\\\": \\\"${hours}\\\",\\n  \\\"${timelineColID}\\\": {\\n    \\\"to\\\": \\\"${startDate}\\\",\\n    \\\"from\\\": \\\"${endDate}\\\",\\n    \\\"changed_at\\\": \\\"${changedAt}\\\"\\n  },\\n  \\\"person\\\": {\\n    \\\"personsAndTeams\\\": [\\n      {\\n        \\\"id\\\": ${personID},\\n        \\\"kind\\\": \\\"person\\\"\\n      }\\n    ]\\n  },\\n  \\\"${costColID}\\\": \\\"${cost}\\\"\\n}\"\n    \n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}`,
   // });
-
   // return JSON.stringify({
   //   query: `mutation {\n  create_subitem(\n    parent_item_id: 7263412897\n    item_name: \"Hours Log\"\n    column_values:\"{\n  \"hours__1\": \"4\",\n  \"timeline3__1\": {\n    \"to\": \"2024-04-26\",\n    \"from\": \"2024-04-22\",\n    \"changed_at\": \"2024-08-23T00:09:08.595Z\"\n  },\n  \"person\": {\n    \"personsAndTeams\": [\n      {\n        \"id\": 27253155,\n        \"kind\": \"person\"\n      }\n    ]\n  },\n  \"cost__1\": \"5\"\n}\"\n    \n    create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}`,
   // })
-
   // var obj = { id: 1, options: '{"code":3,"type":"AES"}' };
-
   // function checkVal(key, val) {
   //   if (typeof val === 'string') {
   //     try {
@@ -142,14 +139,11 @@ export function returnAddSubitem(
   //   }
   //   return val;
   // }
-
   // var res = JSON.stringify(obj, checkVal);
-
   // console.log('normal output', JSON.stringify(obj));
   // console.log('with replacer', res);
-
-  return {
-    query:
-      'mutation { create_subitem(   parent_item_id: 7263412897   item_name: "Hours Log"   column_values:"{ "hours__1": "4"  "timeline3__1": {    "to": "2024-04-26"    "from": "2024-04-22"    "changed_at": "2024-08-23T00:09:08.595Z"  }  "person": {    "personsAndTeams": [      {        "id": 27253155        "kind": "person"      }    ]  }  "cost__1": "5"}"        create_labels_if_missing: true) {  id  name  column_values {value text id column {title}}}}',
-  };
+  // return {
+  //   query:
+  //     'mutation { create_subitem(   parent_item_id: 7263412897   item_name: "Hours Log"   column_values:"{ "hours__1": "4"  "timeline3__1": {    "to": "2024-04-26"    "from": "2024-04-22"    "changed_at": "2024-08-23T00:09:08.595Z"  }  "person": {    "personsAndTeams": [      {        "id": 27253155        "kind": "person"      }    ]  }  "cost__1": "5"}"        create_labels_if_missing: true) {  id  name  column_values {value text id column {title}}}}',
+  // };
 }
