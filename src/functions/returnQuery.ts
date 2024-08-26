@@ -129,6 +129,6 @@ export function returnAddSubitem(
   // });
 
   return JSON.stringify({
-    query: `mutation {\n  create_subitem(\n    parent_item_id: 7263412897\n    item_name: \"Hours Log\"    \n  column_values: \"${JSON.parse('{\n  "hours__1": "4",\n  "timeline3__1": {\n    "to": "2024-04-26",\n    "from": "2024-04-22",\n    "changed_at": "2024-08-23T00:09:08.595Z"\n  },\n  "person": {\n    "personsAndTeams": [\n      {\n        "id": 27253155,\n        "kind": "person"\n      }\n    ]\n  },\n  "cost__1": "5"\n}')}\"    \n  create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}\n`,
+    query: `mutation {\n  create_subitem(\n    parent_item_id: 7263412897\n    item_name: \"Hours Log\"    \n  column_values: \"${JSON.parse(`{"hours__1": "4","timeline3__1": {"to": "2024-04-26","from": "2024-04-22","changed_at": "2024-08-23T00:09:08.595Z"},"person": {"personsAndTeams": [{"id": 27253155,"kind": "person"}]},"cost__1": "5"}`)}\"    \n  create_labels_if_missing: true\n) {\n  id\n  name\n  column_values {value text id column {title}}\n}\n}\n`,
   });
 }
