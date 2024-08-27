@@ -59,7 +59,7 @@ let subitemCostColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
 let boardSlug;
-let dateRangeData;
+let dateRangeValue;
 let itemDescription;
 
 @Controller('populate')
@@ -103,10 +103,14 @@ export class PopulateController {
             hoursFromForm = itemInfo.column_values.filter(
               (column) => column.id === 'numbers',
             )[0].text;
+            dateRangeValue = boardName = itemInfo.column_values.filter(
+              (column) => column.id === 'date_range',
+            )[0].value;
 
             console.log('hoursFromForm', hoursFromForm);
             console.log('boardName', boardName);
             console.log('personId', personId);
+            console.log('dateRangeValue', dateRangeValue);
 
             personData = users.filter(
               (person) => person.id === String(personId),
@@ -198,15 +202,13 @@ export class PopulateController {
 
             testing[`${subitemCostColumnId}`] = cost;
             testing[`${subitemHoursColumnId}`] = hoursFromForm;
-            testing[`${subitemTimelineColumnId}`] = {
-              to: dateRangeData.to,
-              from: dateRangeData.from,
-              changed_at: dateRangeData.changed_at,
-            };
+            testing[`${subitemTimelineColumnId}`] = dateRangeValue;
 
+            console.log('testing', testing);
             let vars = {
               columnVals: JSON.stringify(testing),
             };
+            console.log('vars', vars);
 
             //POST: new subitem
             const postSubitemConfig = postConfigWithVariables(
