@@ -108,6 +108,12 @@ export function parseColumnValuesForString(columns: any, findThis: string) {
   return foundID;
 }
 
+export function parseSubColumnValuesForString(columns: any, findThis: string) {
+  const foundID = columns.filter((col) => col.column.title === findThis)[0].id;
+  console.log('foundID', foundID);
+  return foundID;
+}
+
 export function parseRatefromUserID(users: any, personID: string) {
   const foundUser = users.filter((user) => user.id === String(personID))[0];
   console.log('foundUser', foundUser);

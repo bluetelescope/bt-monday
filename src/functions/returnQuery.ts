@@ -65,7 +65,7 @@ export function returnColumnsInBoard(boardID: number) {
 //returns all columns in a board
 export function returnColumnsInSubitem(itemId: number) {
   return JSON.stringify({
-    query: `query { items (ids: [7263412897\n]){\n  name id  subitems {id column_values {text id value type}}   }\n}`,
+    query: `query { items (ids: [${itemId}\n]){\n  name id  subitems {id column_values {text id column {title}}}   }\n}`,
   });
 }
 

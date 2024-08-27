@@ -1,6 +1,10 @@
 import { Controller, Post, Get, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
-import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
+import {
+  returnGetConfig,
+  returnPostConfig,
+  postConfigWithVariables,
+} from 'src/functions/returnConfig';
 import {
   returnGetBoardsQuery,
   returnColumnsInBoard,
@@ -15,6 +19,7 @@ import {
   parseColumnsForIDS,
   parseBoardIDFromSlug,
   parseColumnValuesForString,
+  parseSubColumnValuesForString,
 } from 'src/functions/parseData';
 
 // import * as process from 'process';
@@ -157,21 +162,25 @@ export class TimetrackingController {
                 getItemColumnsRes.data.data.items[0].subitems[0].column_values;
               console.log('columns', columns);
 
-              costColumnId = parseColumnValuesForString(columns, 'Cost');
-              hoursColumnId = parseColumnValuesForString(columns, 'Hours');
-              timelineColId = parseColumnValuesForString(
+              subitemCostColumnId = parseSubColumnValuesForString(
+                columns,
+                'Cost',
+              );
+              subitemCostColumnId = parseSubColumnValuesForString(
+                columns,
+                'Hours',
+              );
+              subitemTimelineColumnId = parseSubColumnValuesForString(
                 columns,
                 'Hours Timeline',
               );
-              console.log('costColumnId', costColumnId);
-              console.log('hoursColumnId', hoursColumnId);
-              console.log('timelineColId', timelineColId);
-              subitemCostColumnId = costColumnId.split('subitems_').pop();
-              subitemHoursColumnId = hoursColumnId.split('subitems_').pop();
-              subitemTimelineColumnId = timelineColId.split('subitems_').pop();
+
+              console.log('subitemCostColumnId', subitemCostColumnId);
+              console.log('subitemCostColumnId', subitemCostColumnId);
+              console.log('subitemTimelineColumnId', subitemTimelineColumnId);
 
               //TODO: replace getting the item and replacing the entries with create new subitem
-              let query5 = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${itemIDinBoard},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+              let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${itemIDinBoard},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
               let testing = {
                 person: {
                   personsAndTeams: [{ id: personId, kind: 'person' }],
@@ -190,23 +199,11 @@ export class TimetrackingController {
                 columnVals: JSON.stringify(testing),
               };
 
-              function testConfig(testBody: any, vars: any) {
-                return {
-                  method: 'post',
-                  maxBodyLength: Infinity,
-                  url: 'https://api.monday.com/v2',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${process.env.MONDAY_AUTH}`,
-                    Cookie:
-                      '__cf_bm=m8zc61.IT0xf6oKWKbBo0QWuPhgxPFUC1dW87JwdnpE-1723044832-1.0.1.1-jUOMtZtUcNVOa.AdRWzi6gzMAurMpB6iDfAZol1F8eKTorhtD5fLHGey_bZSPocyVGvoqr2OMshqhyFugxndrzYrXfWvJml80MJlgJOvxY8',
-                  },
-                  data: { query: testBody, variables: vars },
-                };
-              }
-
               //POST: new subitem
-              const postSubitemConfig = testConfig(query5, vars);
+              const postSubitemConfig = postConfigWithVariables(
+                postSubitemQuery,
+                vars,
+              );
               console.log('postSubitemConfig', postSubitemConfig);
               return axios.request(postSubitemConfig);
             })

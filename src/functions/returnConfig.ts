@@ -13,7 +13,7 @@ export function returnGetConfig(graphqlGet: any) {
   };
 }
 
-export function testConfig(testBody: any, vars: any) {
+export function postConfigWithVariables(testBody: any, vars: any) {
   return {
     method: 'post',
     maxBodyLength: Infinity,
