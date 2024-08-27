@@ -8,6 +8,7 @@ import {
   returnGetItemQuery,
   returnGetItemFromBoard,
   returnAddSubitem,
+  returnColumnsInSubitem,
 } from 'src/functions/returnQuery';
 import {
   parseValueofColumnFromColumnID,
@@ -136,23 +137,24 @@ export class TimetrackingController {
               console.log(
                 'getBoardItemsRes *****************************************************************',
               );
-              // console.log('getBoardItemsRes.data', getBoardItemsRes.data);
+              // console.log('getBoardItemsRes.data', getBoardItemRes.data);
+
               //parse items data
               itemIDinBoard =
                 getBoardItemRes.data.data.boards[0].items_page.items[0].id;
 
-              //GET: columns in active project
-              const getBoardColumnsQuery = returnColumnsInBoard(boardId);
-              const getBoardColumnsConfig =
-                returnGetConfig(getBoardColumnsQuery);
-              return axios.request(getBoardColumnsConfig);
+              //GET: columns in subitem
+              const getItemColumnsQuery = returnColumnsInSubitem(itemIDinBoard);
+              const getItemColumnsConfig = returnGetConfig(getItemColumnsQuery);
+              return axios.request(getItemColumnsConfig);
             })
-            .then((getBoardColumnsRes) => {
+            .then((getItemColumnsRes) => {
               console.log(
-                'getBoardColumnsRes *****************************************************************',
+                'getItemColumnsRes *****************************************************************',
               );
               //parse columns data
-              const columns = getBoardColumnsRes.data.data.boards[0].columns;
+              const columns =
+                getItemColumnsRes.data.data.items[0].subitems[0].column_values;
               console.log('columns', columns);
 
               costColumnId = parseColumnValuesForString(columns, 'Cost');

@@ -62,6 +62,13 @@ export function returnColumnsInBoard(boardID: number) {
     query: `query \n{ boards (ids: [${boardID}]){\n  columns {title id}\n}\n}`,
   });
 }
+//returns all columns in a board
+export function returnColumnsInSubitem(itemId: number) {
+  return JSON.stringify({
+    query: `query { items (ids: [7263412897\n]){\n  name id  subitems {id column_values {text id value type}}   }\n}`,
+  });
+}
+
 //changes a simple value in a column in an item
 export function returnChangeSimpleValueQuery(
   boardID: number,
