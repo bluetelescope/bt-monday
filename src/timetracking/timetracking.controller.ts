@@ -166,7 +166,7 @@ export class TimetrackingController {
                 columns,
                 'Cost',
               );
-              subitemCostColumnId = parseSubColumnValuesForString(
+              subitemHoursColumnId = parseSubColumnValuesForString(
                 columns,
                 'Hours',
               );
@@ -176,7 +176,7 @@ export class TimetrackingController {
               );
 
               console.log('subitemCostColumnId', subitemCostColumnId);
-              console.log('subitemCostColumnId', subitemCostColumnId);
+              console.log('subitemCostColumnId', subitemHoursColumnId);
               console.log('subitemTimelineColumnId', subitemTimelineColumnId);
 
               //TODO: replace getting the item and replacing the entries with create new subitem
