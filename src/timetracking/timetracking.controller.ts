@@ -157,7 +157,10 @@ export class TimetrackingController {
 
               costColumnId = parseColumnValuesForString(columns, 'Cost');
               hoursColumnId = parseColumnValuesForString(columns, 'Hours');
-              timelineColId = parseColumnValuesForString(columns, 'Timeline');
+              timelineColId = parseColumnValuesForString(
+                columns,
+                'Hours Timeline',
+              );
               console.log('costColumnId', costColumnId);
               console.log('hoursColumnId', hoursColumnId);
               console.log('timelineColId', timelineColId);
