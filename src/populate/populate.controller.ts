@@ -106,11 +106,14 @@ export class PopulateController {
             dateRangeValue = boardName = itemInfo.column_values.filter(
               (column) => column.id === 'date_range',
             )[0].value;
-
+            let dateRangeColumn = (boardName = itemInfo.column_values.filter(
+              (column) => column.id === 'date_range',
+            )[0].column);
             console.log('hoursFromForm', hoursFromForm);
             console.log('boardName', boardName);
             console.log('personId', personId);
             console.log('dateRangeValue', dateRangeValue);
+            console.log('dateRangeColumn', dateRangeColumn);
 
             personData = users.filter(
               (person) => person.id === String(personId),
@@ -119,6 +122,7 @@ export class PopulateController {
             personId = personData.id;
             personTitle = personData.title;
             rate = personData.rate;
+            cost = `${Number(hoursFromForm) * Number(rate) * -1}`;
 
             console.log('personData', personData);
             //get all boards in prod workspace
@@ -129,10 +133,10 @@ export class PopulateController {
             return axios.request(configGetBoards);
           })
           .then((responseGetBoards) => {
-            console.log(
-              'responseGetBoards.data.data',
-              responseGetBoards.data.data,
-            );
+            // console.log(
+            //   'responseGetBoards.data.data',
+            //   responseGetBoards.data.data,
+            // );
             boardId = parseBoardIDFromSlug(
               responseGetBoards.data.data.boards,
               boardSlug,
