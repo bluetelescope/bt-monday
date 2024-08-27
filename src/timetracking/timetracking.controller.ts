@@ -35,18 +35,10 @@ let cost;
 let label = ' ';
 let boardId = 0;
 let itemIDinBoard;
-let costColumnId = '';
-let hoursColumnId = '';
 let subitemCostColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
-
-let currentCostValue = '';
-let currentHoursValue = '';
-let newCostValue = '';
-let newHoursValue = '';
 let boardSlug;
-let timelineColId;
 let dateRangeData;
 let itemDescription;
 
