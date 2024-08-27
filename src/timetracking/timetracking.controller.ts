@@ -176,7 +176,11 @@ export class TimetrackingController {
 
               testing[`${subitemCostColumnId}`] = cost;
               testing[`${subitemHoursColumnId}`] = hoursFromForm;
-              testing[`${subitemTimelineColumnId}`] = dateRangeData;
+              testing[`${subitemTimelineColumnId}`] = {
+                to: dateRangeData.to,
+                from: dateRangeData.from,
+                changed_at: dateRangeData.changed_at,
+              };
 
               let vars = {
                 columnVals: JSON.stringify(testing),
