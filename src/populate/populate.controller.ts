@@ -60,6 +60,7 @@ let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
 let subitemRateColumnId;
 let boardSlug;
+let dateRangeData;
 let dateRangeValue;
 let itemDescription;
 
@@ -107,14 +108,13 @@ export class PopulateController {
             dateRangeValue = boardName = itemInfo.column_values.filter(
               (column) => column.id === 'date_range',
             )[0].value;
-            let dateRangeColumn = (boardName = itemInfo.column_values.filter(
-              (column) => column.id === 'date_range',
-            )[0].column);
+            dateRangeData = JSON.parse(dateRangeValue);
+
             console.log('hoursFromForm', hoursFromForm);
             console.log('boardName', boardName);
             console.log('personId', personId);
             console.log('dateRangeValue', dateRangeValue);
-            console.log('dateRangeColumn', dateRangeColumn);
+            console.log('dateRangeData', dateRangeData);
 
             personData = users.filter(
               (person) => person.id === String(personId),
@@ -207,8 +207,11 @@ export class PopulateController {
 
             testing[`${subitemRateColumnId}`] = rate;
             testing[`${subitemHoursColumnId}`] = hoursFromForm;
-            testing[`${subitemTimelineColumnId}`] = dateRangeValue;
-
+            testing[`${subitemTimelineColumnId}`] = {
+              to: dateRangeData.to,
+              from: dateRangeData.from,
+              changed_at: dateRangeData.changed_at,
+            };
             console.log('testing', testing);
 
             let vars = {
