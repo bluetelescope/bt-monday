@@ -58,6 +58,7 @@ let label = ' ';
 let subitemCostColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
+let subitemRateColumnId;
 let boardSlug;
 let dateRangeValue;
 let itemDescription;
@@ -179,9 +180,9 @@ export class PopulateController {
               getItemColumnsRes.data.data.items[0].subitems[0].column_values;
             console.log('columns', columns);
 
-            subitemCostColumnId = parseSubColumnValuesForString(
+            subitemRateColumnId = parseSubColumnValuesForString(
               columns,
-              'Cost',
+              'Rate',
             );
             subitemHoursColumnId = parseSubColumnValuesForString(
               columns,
@@ -192,8 +193,8 @@ export class PopulateController {
               'Hours Timeline',
             );
 
-            console.log('subitemCostColumnId', subitemCostColumnId);
-            console.log('subitemCostColumnId', subitemHoursColumnId);
+            console.log('subitemRateColumnId', subitemRateColumnId);
+            console.log('subitemHoursColumnId', subitemHoursColumnId);
             console.log('subitemTimelineColumnId', subitemTimelineColumnId);
 
             //TODO: replace getting the item and replacing the entries with create new subitem
@@ -204,11 +205,12 @@ export class PopulateController {
               },
             };
 
-            testing[`${subitemCostColumnId}`] = cost;
+            testing[`${subitemRateColumnId}`] = rate;
             testing[`${subitemHoursColumnId}`] = hoursFromForm;
             testing[`${subitemTimelineColumnId}`] = dateRangeValue;
 
             console.log('testing', testing);
+
             let vars = {
               columnVals: JSON.stringify(testing),
             };

@@ -35,6 +35,7 @@ let cost;
 let label = ' ';
 let boardId = 0;
 let itemIDinBoard;
+let subitemRateColumnId;
 let subitemCostColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
@@ -166,9 +167,13 @@ export class TimetrackingController {
                 columns,
                 'Hours Timeline',
               );
+              subitemRateColumnId = parseSubColumnValuesForString(
+                columns,
+                'Rate',
+              );
 
-              console.log('subitemCostColumnId', subitemCostColumnId);
-              console.log('subitemCostColumnId', subitemHoursColumnId);
+              console.log('subitemRateColumnId', subitemRateColumnId);
+              console.log('subitemHoursColumnId', subitemHoursColumnId);
               console.log('subitemTimelineColumnId', subitemTimelineColumnId);
 
               //TODO: replace getting the item and replacing the entries with create new subitem
@@ -179,7 +184,7 @@ export class TimetrackingController {
                 },
               };
 
-              testing[`${subitemCostColumnId}`] = cost;
+              testing[`${subitemRateColumnId}`] = rate;
               testing[`${subitemHoursColumnId}`] = hoursFromForm;
               testing[`${subitemTimelineColumnId}`] = {
                 to: dateRangeData.to,
