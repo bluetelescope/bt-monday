@@ -44,7 +44,7 @@ let proposalItemId;
 let actualValueItemId;
 let personId;
 let personData;
-let personTitle;
+let recipientName;
 let itemIDinBoard;
 let costColumnId = '';
 let hoursColumnId = '';
@@ -62,7 +62,8 @@ let subitemRateColumnId;
 let boardSlug;
 let dateRangeData;
 let dateRangeValue;
-let itemDescription;
+let scopeDescription;
+let boardRelation;
 
 @Controller('loas')
 export class LOASController {
@@ -81,21 +82,42 @@ export class LOASController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
-      console.log('populate endpoint data:', data);
+      console.log('loas endpoint data:', data);
       //if there is an event field on the body
       if (!!data.event) {
         console.log('data:', data);
         console.log('data.event', data.event);
+        const axios = require('axios');
 
-        // const axios = require('axios');
-        // axios
-        //   .request()
-        //   .then((getItemResponse) => {
-
-        //   })
-        //   .catch((error) => {
-        //     console.log('error.data', error.data);
-        //   });
+        itemId = data.event.pulseId;
+        const getItemQuery = returnGetItemQuery(itemId);
+        const getItemConfig = returnGetConfig(getItemQuery);
+        axios
+          .request(getItemConfig)
+          .then((getItemResponse) => {
+            const itemInfo = getItemResponse.data.data.items[0];
+            console.log('itemInfo', itemInfo);
+            recipientName = itemInfo.column_values.filter(
+              (column) => column.id === 'text4',
+            )[0].text;
+            scopeDescription = itemInfo.column_values.filter(
+              (column) => column.id === 'long_text',
+            )[0].text;
+            cost = itemInfo.column_values.filter(
+              (column) => column.id === 'numbers3',
+            )[0].text;
+            let boardRelationValue = itemInfo.column_values.filter(
+              (column) => column.id === 'board_relation',
+            )[0].value;
+            boardRelation = JSON.parse(boardRelationValue);
+            console.log('recipientName', recipientName);
+            console.log('cost', cost);
+            console.log('boardRelationValue', boardRelationValue);
+            console.log('boardRelation', boardRelation);
+          })
+          .catch((error) => {
+            console.log('error.data', error.data);
+          });
         //event info has information regarding only the value of this particular column information
         //make a get request: get all information regarding this item
       } else {
