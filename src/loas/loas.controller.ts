@@ -148,9 +148,6 @@ export class LOASController {
             let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${loaItemId},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
             let testing = {
               name: `${recipientName} - ID:${itemId} `,
-              person: {
-                personsAndTeams: [{ id: personId, kind: 'person' }],
-              },
             };
 
             testing[`${subitemRateColumnId}`] = 1;
