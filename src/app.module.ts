@@ -4,6 +4,7 @@ import { TimetrackingModule } from './timetracking/timetracking.module';
 import { PopulateModule } from './populate/populate.module';
 import { CostUpdateModule } from './cost-update/cost-update.module';
 import { GoogleModule } from './google/google.module';
+import { LOASModule } from './loas/loas.module';
 import { AppService } from './app.service';
 import { MondayModule } from './monday/monday.module';
 import { MondayItemModule } from './monday-item/monday-item.module';
@@ -16,6 +17,7 @@ import { MondayItemModule } from './monday-item/monday-item.module';
     PopulateModule,
     CostUpdateModule,
     GoogleModule,
+    LOASModule,
   ],
   controllers: [AppController],
   providers: [AppService],
