@@ -3,6 +3,7 @@ import * as rawbody from 'raw-body';
 import {
   returnGetConfig,
   postConfigWithVariables,
+  returnPostConfig,
 } from 'src/functions/returnConfig';
 import {
   returnGetItemQuery,
@@ -11,6 +12,8 @@ import {
   returnGetItemFromBoard,
   returnColumnsInBoard,
   returnColumnsInSubitem,
+  returnSubitemNamesOnItem,
+  returnDeleteItem,
 } from 'src/functions/returnQuery';
 import {
   parseColumnsForIDS,
@@ -64,6 +67,9 @@ let dateRangeData;
 let dateRangeValue;
 let scopeDescription;
 let boardRelation;
+let newSubitemLabel;
+let createNewItem = true;
+let oldItemID;
 
 @Controller('loas')
 export class LOASController {
@@ -97,6 +103,7 @@ export class LOASController {
           .then((getItemResponse) => {
             const itemInfo = getItemResponse.data.data.items[0];
             console.log('itemInfo', itemInfo);
+            //parse data from legal request item
             recipientName = itemInfo.column_values.filter(
               (column) => column.id === 'text4',
             )[0].text;
@@ -110,15 +117,34 @@ export class LOASController {
               (column) => column.id === 'board_relation',
             )[0].value;
             boardRelation = JSON.parse(boardRelationValue);
+            //loa item in active board
             loaItemId = boardRelation.linkedPulseIds[0].linkedPulseId;
-
+            newSubitemLabel = `${recipientName} // ItemID: ${itemId}`;
             console.log('recipientName', recipientName);
             console.log('cost', cost);
             console.log('boardRelationValue', boardRelationValue);
             console.log('boardRelation', boardRelation);
             console.log('loaItemId', loaItemId);
+            //GET: all subitems of loa item
+            const getSubitemsQuery = returnSubitemNamesOnItem(loaItemId);
+            const getSubitemsConfig = returnGetConfig(getSubitemsQuery);
+            return axios.request(getSubitemsConfig);
+          })
+          .then((getSubitemsRes) => {
+            //IF ITEM ID already exists amonst subitem names, modify item
+            const subitems = getSubitemsRes.data.data.items[0].subitems;
+            const itemIDAlreadyExists = subitems.some(
+              (item) => item.name === newSubitemLabel,
+            );
 
-            //GET: columns in subitem
+            if (itemIDAlreadyExists) {
+              createNewItem = false;
+              oldItemID = subitems.filter(
+                (item) => item.name === newSubitemLabel,
+              )[0].id;
+            }
+            //else create new subitem
+            //GET: columns in subitem elements in active board LOA
             const getItemColumnsQuery = returnColumnsInSubitem(loaItemId);
             const getItemColumnsConfig = returnGetConfig(getItemColumnsQuery);
             return axios.request(getItemColumnsConfig);
@@ -145,10 +171,8 @@ export class LOASController {
             console.log('subitemHoursColumnId', subitemHoursColumnId);
 
             //TODO: replace getting the item and replacing the entries with create new subitem
-            let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${loaItemId},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
-            let testing = {
-              name: `${recipientName} - ID:${itemId} `,
-            };
+            let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${loaItemId},item_name: "${newSubitemLabel}",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+            let testing = {};
 
             testing[`${subitemRateColumnId}`] = 1;
             testing[`${subitemHoursColumnId}`] = cost;
@@ -173,6 +197,18 @@ export class LOASController {
               'postCostToColumnRes**********************************************************************',
               postSubitemRes.data,
             );
+
+            if (!createNewItem) {
+              //POST: delete old value if id is the same
+              const deleteItemQuery = returnDeleteItem(oldItemID);
+              const deleteItemConfig = returnPostConfig(deleteItemQuery);
+              return axios.request(deleteItemConfig);
+            } else {
+              return;
+            }
+          })
+          .then((finalRes) => {
+            console.log('finalRes.data', finalRes.data);
           })
           .catch((error) => {
             console.log('error.data', error.data);

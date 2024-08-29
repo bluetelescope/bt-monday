@@ -117,6 +117,17 @@ export function returnGetAllItemsUpdatesFromBoard(boardID: number) {
   });
 }
 
+export function returnSubitemNamesOnItem(itemID: number) {
+  return JSON.stringify({
+    query: `{ items (ids: [${itemID}\n]){\n  name id  subitems {id name}   }\n}`,
+  });
+}
+
+export function returnDeleteItem(itemID: number) {
+  return JSON.stringify({
+    query: `mutation {\n  delete_item(\n    item_id: ${itemID}\n  ) {\n  id\n}\n}\n`,
+  });
+}
 export function returnAddSubitem(
   personItemID,
   itemDescription: string,
