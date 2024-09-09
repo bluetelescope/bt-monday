@@ -9,7 +9,7 @@ import {
   returnGetItemQuery,
   returnGetBoardsQuery,
   returnChangeSimpleValueQuery,
-  returnGetItemFromBoard,
+  returnGetItemFromBoardQuery,
   returnColumnsInBoard,
   returnColumnsInSubitem,
   returnSubitemNamesOnItem,

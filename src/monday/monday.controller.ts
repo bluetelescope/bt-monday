@@ -7,7 +7,7 @@ import {
   returnPostBoardQuery,
   returnChangeSimpleValueQuery,
   returnDuplicateItemQuery,
-  returnGetItemFromBoard,
+  returnGetItemFromBoardQuery,
 } from 'src/functions/returnQuery';
 import { parseColumnValues, parseBoards } from 'src/functions/parseData';
 import { variables } from 'src/variables';
@@ -114,37 +114,6 @@ export class MondayController {
             console.log('postBoardResponse', postBoardResponse.data);
             newBoardId = postBoardResponse.data.data.create_board.id;
 
-            //get id of actual value item
-            const getActualValueItemQuery = returnGetItemFromBoard(
-              newBoardId,
-              'name',
-              'Actual Project Value (from proposal)',
-            );
-            const getActualValueItemConfig = returnGetConfig(
-              getActualValueItemQuery,
-            );
-            return axios.request(getActualValueItemConfig);
-          })
-          .then((actualValueResponse) => {
-            console.log('actualValueResponse.data', actualValueResponse.data);
-            console.log(
-              'actualValueResponse.data.data.boards[0]',
-              actualValueResponse.data.data.boards[0],
-            );
-
-            console.log(
-              'actualValueResponse.data.data.boards[0].items_page',
-              actualValueResponse.data.data.boards[0].items_page,
-            );
-
-            console.log(
-              'actualValueResponse.data.data.boards[0].items_page.items[0]',
-              actualValueResponse.data.data.boards[0].items_page.items[0],
-            );
-            //parse items data
-            actualValueItemId2 =
-              actualValueResponse.data.data.boards[0].items_page.items[0].id;
-            console.log('actualValueItemId2', actualValueItemId2);
             //post: duplicate item in 'active' group of time tracking board
             const graphqlDuplicateTimeTrackItem = returnDuplicateItemQuery(
               variables.TIMETRACKING_ITEM_FORACTIVE,
@@ -169,7 +138,6 @@ export class MondayController {
             const changeLabelConfig = returnPostConfig(changeLabelQuery);
             return axios.request(changeLabelConfig);
           })
-
           .then((changeLabelResponse) => {
             console.log('changeLabelResponse ****************************');
             console.log('changeLabelResponse.data', changeLabelResponse.data);
@@ -187,7 +155,41 @@ export class MondayController {
             console.log('changeNameResponse ****************************');
             console.log('changeNameResponse.data', changeNameResponse.data);
 
-            const getProposalItemQuery = returnGetItemFromBoard(
+            //TODO: this fails because board isnt fully loaded
+            //get id of actual value item
+            const getActualValueItemQuery = returnGetItemFromBoardQuery(
+              newBoardId,
+              'name',
+              'Actual Project Value',
+            );
+            const getActualValueItemConfig = returnGetConfig(
+              getActualValueItemQuery,
+            );
+            return axios.request(getActualValueItemConfig);
+          })
+          .then((actualValueResponse) => {
+            console.log('actualValueResponse.data', actualValueResponse.data);
+            console.log(
+              'actualValueResponse.data.data.boards[0]',
+              actualValueResponse.data.data.boards[0],
+            );
+
+            console.log(
+              'actualValueResponse.data.data.boards[0].items_page',
+              actualValueResponse.data.data.boards[0].items_page,
+            );
+
+            console.log(
+              'actualValueResponse.data.data.boards[0].items_page.items[0]',
+              actualValueResponse.data.data.boards[0].items_page.items[0],
+            );
+
+            //parse items data
+            actualValueItemId2 =
+              actualValueResponse.data.data.boards[0].items_page.items[0].id;
+            console.log('actualValueItemId2', actualValueItemId2);
+
+            const getProposalItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
               'Proposal',
@@ -204,7 +206,7 @@ export class MondayController {
             proposalItemId =
               getProposalItem.data.data.boards[0].items_page.items[0].id;
 
-            const getActualValueItemQuery = returnGetItemFromBoard(
+            const getActualValueItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
               'Proposal',

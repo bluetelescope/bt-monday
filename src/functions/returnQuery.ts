@@ -82,7 +82,7 @@ export function returnChangeSimpleValueQuery(
 }
 
 //returns an item in a board based off of a column value
-export function returnGetItemFromBoard(
+export function returnGetItemFromBoardQuery(
   boardID: number,
   colID: string,
   valueToSearchFor: string,

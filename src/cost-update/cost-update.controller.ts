@@ -5,7 +5,7 @@ import {
   returnGetItemQuery,
   returnGetBoardsQuery,
   returnChangeSimpleValueQuery,
-  returnGetItemFromBoard,
+  returnGetItemFromBoardQuery,
   returnColumnsInBoard,
   returnGetAllItemsUpdatesFromBoard,
 } from 'src/functions/returnQuery';

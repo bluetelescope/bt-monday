@@ -10,7 +10,7 @@ import {
   returnColumnsInBoard,
   returnChangeSimpleValueQuery,
   returnGetItemQuery,
-  returnGetItemFromBoard,
+  returnGetItemFromBoardQuery,
   returnAddSubitem,
   returnColumnsInSubitem,
 } from 'src/functions/returnQuery';
@@ -122,7 +122,7 @@ export class TimetrackingController {
               );
 
               //GET: item in active project board with persons name
-              const getBoardItemQuery = returnGetItemFromBoard(
+              const getBoardItemQuery = returnGetItemFromBoardQuery(
                 boardId,
                 'name',
                 personData.title,

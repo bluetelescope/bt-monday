@@ -8,7 +8,7 @@ import {
   returnGetItemQuery,
   returnGetBoardsQuery,
   returnChangeSimpleValueQuery,
-  returnGetItemFromBoard,
+  returnGetItemFromBoardQuery,
   returnColumnsInBoard,
   returnColumnsInSubitem,
 } from 'src/functions/returnQuery';
@@ -145,7 +145,7 @@ export class PopulateSubitemsController {
             console.log('boardId', boardId);
 
             //GET: item in active project board with persons name
-            const getBoardItemQuery = returnGetItemFromBoard(
+            const getBoardItemQuery = returnGetItemFromBoardQuery(
               boardId,
               'name',
               personData.title,
