@@ -189,13 +189,15 @@ export class MondayController {
               actualValueResponse.data.data.boards[0].items_page.items[0].id;
             console.log('actualValueItemId2', actualValueItemId2);
 
-            const getProposalItemQuery = returnGetItemFromBoardQuery(
+            const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Proposal',
+              'Projected Cost',
             );
-            const getProposalItemConfig = returnGetConfig(getProposalItemQuery);
-            return axios.request(getProposalItemConfig);
+            const getProjectedCostItemConfig = returnGetConfig(
+              getProjectedCostItemQuery,
+            );
+            return axios.request(getProjectedCostItemConfig);
           })
           .then((getProposalItem) => {
             console.log('getProposalItem ****************************');
@@ -209,7 +211,7 @@ export class MondayController {
             const getActualValueItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Proposal',
+              'Actual Project Value',
             );
             const getActualValueItemConfig = returnGetConfig(
               getActualValueItemQuery,
@@ -218,27 +220,13 @@ export class MondayController {
           })
           .then((getActualItemReponse) => {
             console.log('getActualItemReponse ****************************');
+
             console.log(
               'getActualItemReponse.data',
               getActualItemReponse.data.data.boards[0].items_page.items[0].id,
             );
             actualValueItemId =
               getActualItemReponse.data.data.boards[0].items_page.items[0].id;
-            const changeProposalQuery = returnChangeSimpleValueQuery(
-              newBoardId,
-              newProposalColumnId,
-              proposalItemId,
-              `${proposalURL} Proposal`,
-            );
-            const changeProposalConfig = returnPostConfig(changeProposalQuery);
-            return axios.request(changeProposalConfig);
-          })
-          .then((changeProposalResponse) => {
-            console.log('changeProposalResponse ****************************');
-            console.log(
-              'changeProposalResponse.data',
-              changeProposalResponse.data,
-            );
 
             const changeActualValueQuery = returnChangeSimpleValueQuery(
               newBoardId,
