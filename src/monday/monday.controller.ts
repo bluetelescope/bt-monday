@@ -211,7 +211,7 @@ export class MondayController {
           .then((getProposalItem) => {
             console.log('getProposalItem ****************************');
             console.log(
-              'getProposalItem.data',
+              'getProposalItem.data.data.boards[0].items_page.items[0].id',
               getProposalItem.data.data.boards[0].items_page.items[0].id,
             );
             proposalItemId =
@@ -231,7 +231,7 @@ export class MondayController {
             console.log('getActualItemReponse ****************************');
 
             console.log(
-              'getActualItemReponse.data',
+              'getActualItemReponse.data.data.boards[0].items_page.items[0].id,',
               getActualItemReponse.data.data.boards[0].items_page.items[0].id,
             );
             actualValueItemId =
@@ -246,6 +246,7 @@ export class MondayController {
             const changeActualValueConfig = returnPostConfig(
               changeActualValueQuery,
             );
+            console.log('changeActualValueConfig', changeActualValueConfig);
             return axios.request(changeActualValueConfig);
           })
           .then((response) => {
