@@ -257,9 +257,10 @@ export class MondayController {
           })
           .catch((error) => {
             console.log(
-              'error.data ***************************************************************',
-              error.data,
+              'error ***************************************************************',
+              error,
             );
+            console.log('error.data', error.data);
           });
 
         //event info has information regarding only the value of this particular column information
