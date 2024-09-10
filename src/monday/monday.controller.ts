@@ -9,7 +9,11 @@ import {
   returnDuplicateItemQuery,
   returnGetItemFromBoardQuery,
 } from 'src/functions/returnQuery';
-import { parseColumnValues, parseBoards } from 'src/functions/parseData';
+import {
+  parseColumnValues,
+  parseBoards,
+  parseSubColumnValuesForString,
+} from 'src/functions/parseData';
 import { variables } from 'src/variables';
 
 let itemIdFromForm;
@@ -20,6 +24,7 @@ let duplicatedItemID;
 let proposalURL;
 let actualProjectValue;
 let newBoardId;
+let projectedCost;
 let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
@@ -76,12 +81,16 @@ export class MondayController {
             );
             itemName = item.name.replace('_', ' ');
             columns = item.column_values;
-            const { proposal, value } = parseColumnValues(item.column_values);
-            proposalURL = proposal.value.substring(
-              proposal.value.indexOf('http'),
-              proposal.value.length,
+            actualProjectValue = parseSubColumnValuesForString(
+              columns,
+              'Actual Project Value',
             );
-            actualProjectValue = value.value;
+            projectedCost = parseSubColumnValuesForString(
+              columns,
+              'Cost of Production',
+            );
+            console.log('actualProjectValue', actualProjectValue);
+            console.log('projectedCost', projectedCost);
 
             //get all boards in prod workspace
             const graphqlGetBoards = returnGetBoardsQuery(
