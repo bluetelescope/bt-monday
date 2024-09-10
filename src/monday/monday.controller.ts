@@ -12,7 +12,7 @@ import {
 import {
   parseColumnValues,
   parseBoards,
-  parseSubColumnValuesForString,
+  parseColumnValuesForString,
 } from 'src/functions/parseData';
 import { variables } from 'src/variables';
 
@@ -29,7 +29,6 @@ let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
 let actualValueItemId;
-let actualValueItemId2;
 let boardSlug;
 
 @Controller('monday')
@@ -81,18 +80,20 @@ export class MondayController {
             );
             itemName = item.name.replace('_', ' ');
             columns = item.column_values;
-            actualProjectValue = parseSubColumnValuesForString(
+            console.log('columns', columns);
+            //get the APC and PC from the pipeline item
+            actualProjectValue = parseColumnValuesForString(
               columns,
               'Actual Project Value',
             );
-            projectedCost = parseSubColumnValuesForString(
+            projectedCost = parseColumnValuesForString(
               columns,
               'Cost of Production',
             );
             console.log('actualProjectValue', actualProjectValue);
             console.log('projectedCost', projectedCost);
 
-            //get all boards in prod workspace
+            //get all boards in prod workspace, so we can generate the number for the new board
             const graphqlGetBoards = returnGetBoardsQuery(
               variables.PROD_WORKSPACE,
             );
@@ -105,7 +106,7 @@ export class MondayController {
               'responseConfigGetBoards.data.data.boards',
               responseConfigGetBoards.data.data.boards,
             );
-            // Parse boards data
+            // Parse boards data to generate the new number
             const boards = responseConfigGetBoards.data.data.boards;
             const boardNumber = parseBoards(boards, variables.ACTIVE_FOLDER);
             itemName = `${boardNumber}_${itemName}`;
@@ -176,7 +177,7 @@ export class MondayController {
             const getActualValueItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Actual Project Value',
+              'Actual Project Value Subitem',
             );
             const getActualValueItemConfig = returnGetConfig(
               getActualValueItemQuery,
@@ -184,33 +185,37 @@ export class MondayController {
             console.log('getActualValueItemConfig', getActualValueItemConfig);
             return axios.request(getActualValueItemConfig);
           })
-          .then((actualValueResponse) => {
-            console.log('actualValueResponse ****************************');
-            console.log('actualValueResponse.data', actualValueResponse.data);
+          .then((actualValueItemResponse) => {
+            console.log('actualValueItemResponse ****************************');
             console.log(
-              'actualValueResponse.data.data.boards[0]',
-              actualValueResponse.data.data.boards[0],
+              'actualValueItemResponse.data',
+              actualValueItemResponse.data,
+            );
+            console.log(
+              'actualValueItemResponse.data.data.boards[0]',
+              actualValueItemResponse.data.data.boards[0],
             );
 
             console.log(
-              'actualValueResponse.data.data.boards[0].items_page',
-              actualValueResponse.data.data.boards[0].items_page,
+              'actualValueItemResponse.data.data.boards[0].items_page',
+              actualValueItemResponse.data.data.boards[0].items_page,
             );
 
             console.log(
-              'actualValueResponse.data.data.boards[0].items_page.items[0]',
-              actualValueResponse.data.data.boards[0].items_page.items[0],
+              'actualValueItemResponse.data.data.boards[0].items_page.items[0]',
+              actualValueItemResponse.data.data.boards[0].items_page.items[0],
             );
 
             //parse items data
-            actualValueItemId2 =
-              actualValueResponse.data.data.boards[0].items_page.items[0].id;
-            console.log('actualValueItemId2', actualValueItemId2);
+            actualValueItemId =
+              actualValueItemResponse.data.data.boards[0].items_page.items[0]
+                .id;
+            console.log('actualValueItemId', actualValueItemId);
 
             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Projected Cost Item',
+              'Projected Cost Subitem',
             );
             const getProjectedCostItemConfig = returnGetConfig(
               getProjectedCostItemQuery,
@@ -234,29 +239,10 @@ export class MondayController {
             proposalItemId =
               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
 
-            const getActualValueItemQuery = returnGetItemFromBoardQuery(
-              newBoardId,
-              'name',
-              'Actual Project Value Item',
-            );
-            const getActualValueItemConfig = returnGetConfig(
-              getActualValueItemQuery,
-            );
-            return axios.request(getActualValueItemConfig);
-          })
-          .then((getActualItemReponse) => {
-            console.log('getActualItemReponse ****************************');
-            console.log(
-              'getActualItemReponse.data.data.boards[0].items_page.items[0].id,',
-              getActualItemReponse.data.data.boards[0].items_page.items[0].id,
-            );
-            actualValueItemId =
-              getActualItemReponse.data.data.boards[0].items_page.items[0].id;
-
             const changeActualValueQuery = returnChangeSimpleValueQuery(
               newBoardId,
               newCostColumnId,
-              actualValueItemId2,
+              actualValueItemId,
               actualProjectValue,
             );
             const changeActualValueConfig = returnPostConfig(
@@ -271,8 +257,8 @@ export class MondayController {
           })
           .catch((error) => {
             console.log(
-              'error ***************************************************************',
-              error,
+              'error.data ***************************************************************',
+              error.data,
             );
           });
 
