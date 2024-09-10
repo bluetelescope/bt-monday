@@ -206,10 +206,18 @@ export class MondayController {
             const getProjectedCostItemConfig = returnGetConfig(
               getProjectedCostItemQuery,
             );
+            console.log(
+              'getProjectedCostItemConfig',
+              getProjectedCostItemConfig,
+            );
             return axios.request(getProjectedCostItemConfig);
           })
           .then((getProjectedCostItem) => {
             console.log('getProjectedCostItem ****************************');
+            console.log(
+              'getProjectedCostItem.data.data.boards[0].items_page.items[0]',
+              getProjectedCostItem.data.data.boards[0].items_page.items[0],
+            );
             console.log(
               'getProjectedCostItem.data.data.boards[0].items_page.items[0].id',
               getProjectedCostItem.data.data.boards[0].items_page.items[0].id,
