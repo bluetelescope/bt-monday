@@ -201,26 +201,26 @@ export class MondayController {
             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Projected Cost',
+              'Projected Cost Item',
             );
             const getProjectedCostItemConfig = returnGetConfig(
               getProjectedCostItemQuery,
             );
             return axios.request(getProjectedCostItemConfig);
           })
-          .then((getProposalItem) => {
-            console.log('getProposalItem ****************************');
+          .then((getProjectedCostItem) => {
+            console.log('getProjectedCostItem ****************************');
             console.log(
-              'getProposalItem.data.data.boards[0].items_page.items[0].id',
-              getProposalItem.data.data.boards[0].items_page.items[0].id,
+              'getProjectedCostItem.data.data.boards[0].items_page.items[0].id',
+              getProjectedCostItem.data.data.boards[0].items_page.items[0].id,
             );
             proposalItemId =
-              getProposalItem.data.data.boards[0].items_page.items[0].id;
+              getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
 
             const getActualValueItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Actual Project Value',
+              'Actual Project Value Item',
             );
             const getActualValueItemConfig = returnGetConfig(
               getActualValueItemQuery,
@@ -229,7 +229,6 @@ export class MondayController {
           })
           .then((getActualItemReponse) => {
             console.log('getActualItemReponse ****************************');
-
             console.log(
               'getActualItemReponse.data.data.boards[0].items_page.items[0].id,',
               getActualItemReponse.data.data.boards[0].items_page.items[0].id,
