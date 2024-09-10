@@ -88,7 +88,7 @@ export function returnGetItemFromBoardQuery(
   valueToSearchFor: string,
 ) {
   return JSON.stringify({
-    query: `query { boards (ids: [${boardID}]){  items_page (limit: 1, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"]}]}){items {id name column_values { value text id column { title}}}}}}\n`,
+    query: `query { boards (ids: [${boardID}]){  items_page (limit: 1, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"]}]}){items {id name column_values { value text id  subitems {id column_values {text id column {title}}} column { title}}}}}}\n`,
   });
 }
 

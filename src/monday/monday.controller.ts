@@ -177,7 +177,7 @@ export class MondayController {
             const getActualValueItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Actual Project Value Subitem',
+              'Actual Project Value',
             );
             const getActualValueItemConfig = returnGetConfig(
               getActualValueItemQuery,
@@ -215,7 +215,7 @@ export class MondayController {
             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Projected Cost Subitem',
+              'Projected Cost',
             );
             const getProjectedCostItemConfig = returnGetConfig(
               getProjectedCostItemQuery,
