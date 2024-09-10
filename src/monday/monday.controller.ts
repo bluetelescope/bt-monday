@@ -70,7 +70,10 @@ export class MondayController {
             // parse item data
             console.log('responseConfigGetItem **************');
             const item = responseConfigGetItem.data.data.items[0];
-
+            console.log(
+              'responseConfigGetItem.data.data.items[0]',
+              responseConfigGetItem.data.data.items[0],
+            );
             itemName = item.name.replace('_', ' ');
             columns = item.column_values;
             const { proposal, value } = parseColumnValues(item.column_values);
@@ -89,6 +92,10 @@ export class MondayController {
           })
           .then((responseConfigGetBoards) => {
             console.log('responseConfigGetBoards **************');
+            console.log(
+              'responseConfigGetBoards.data.data.boards',
+              responseConfigGetBoards.data.data.boards,
+            );
             // Parse boards data
             const boards = responseConfigGetBoards.data.data.boards;
             const boardNumber = parseBoards(boards, variables.ACTIVE_FOLDER);
@@ -165,9 +172,11 @@ export class MondayController {
             const getActualValueItemConfig = returnGetConfig(
               getActualValueItemQuery,
             );
+            console.log('getActualValueItemConfig', getActualValueItemConfig);
             return axios.request(getActualValueItemConfig);
           })
           .then((actualValueResponse) => {
+            console.log('actualValueResponse ****************************');
             console.log('actualValueResponse.data', actualValueResponse.data);
             console.log(
               'actualValueResponse.data.data.boards[0]',
