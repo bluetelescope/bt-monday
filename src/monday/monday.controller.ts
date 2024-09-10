@@ -123,7 +123,7 @@ export class MondayController {
               variables.ADMIN_TEAM,
             );
             let configPostBoard = returnGetConfig(graphqlPostBoard);
-            // console.log('configPostBoard', configPostBoard);
+            console.log('configPostBoard', configPostBoard);
             return axios.request(configPostBoard);
           })
           .then((postBoardResponse) => {
