@@ -12,7 +12,7 @@ import {
 import {
   parseColumnValues,
   parseBoards,
-  parseColumnValuesForString,
+  parseSubColumnValuesForString,
 } from 'src/functions/parseData';
 import { variables } from 'src/variables';
 
@@ -82,11 +82,11 @@ export class MondayController {
             columns = item.column_values;
             console.log('columns', columns);
             //get the APC and PC from the pipeline item
-            actualProjectValue = parseColumnValuesForString(
+            actualProjectValue = parseSubColumnValuesForString(
               columns,
               'Actual Project Value',
             );
-            projectedCost = parseColumnValuesForString(
+            projectedCost = parseSubColumnValuesForString(
               columns,
               'Cost of Production',
             );
