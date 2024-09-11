@@ -196,18 +196,19 @@ export class MondayController {
             )[0].id;
 
             console.log('newSubitemBoardId', newSubitemBoardId);
-
-            //get id of actual value item
-            const getActualValueItemQuery = returnGetItemFromBoardQuery(
-              newSubitemBoardId,
-              'name',
-              'Actual Project Value Subitem',
-            );
-            const getActualValueItemConfig = returnGetConfig(
-              getActualValueItemQuery,
-            );
-            console.log('getActualValueItemConfig', getActualValueItemConfig);
-            return axios.request(getActualValueItemConfig);
+            setTimeout(() => {
+              //get id of actual value item
+              const getActualValueItemQuery = returnGetItemFromBoardQuery(
+                newSubitemBoardId,
+                'name',
+                'Actual Project Value Subitem',
+              );
+              const getActualValueItemConfig = returnGetConfig(
+                getActualValueItemQuery,
+              );
+              console.log('getActualValueItemConfig', getActualValueItemConfig);
+              return axios.request(getActualValueItemConfig);
+            }, 1000);
           })
           .then((actualValueItemResponse) => {
             console.log('actualValueItemResponse ****************************');
