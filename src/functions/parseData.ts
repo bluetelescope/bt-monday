@@ -114,6 +114,12 @@ export function parseSubColumnValuesForString(columns: any, findThis: string) {
   return foundID;
 }
 
+export function parseValueFromColumns(columns: any, findThis: string) {
+  const found = columns.filter((col) => col.column.title === findThis)[0].text;
+  console.log('found', found);
+  return found;
+}
+
 export function parseRatefromUserID(users: any, personID: string) {
   const foundUser = users.filter((user) => user.id === String(personID))[0];
   console.log('foundUser', foundUser);
