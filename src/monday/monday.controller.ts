@@ -27,8 +27,11 @@ let newBoardId;
 let projectedCost;
 let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
+let subitemHoursId = 'numbers__1';
 let proposalItemId;
 let actualValueItemId;
+let newSubitemBoardId;
+
 let boardSlug;
 
 @Controller('monday')
@@ -106,6 +109,7 @@ export class MondayController {
               'responseConfigGetBoards.data.data.boards',
               responseConfigGetBoards.data.data.boards,
             );
+
             // Parse boards data to generate the new number
             const boards = responseConfigGetBoards.data.data.boards;
             const boardNumber = parseBoards(boards, variables.ACTIVE_FOLDER);
@@ -172,12 +176,32 @@ export class MondayController {
             console.log('changeNameResponse ****************************');
             console.log('changeNameResponse.data', changeNameResponse.data);
 
-            //TODO: this fails because board isnt fully loaded
+            //get current boards,
+            const graphqlGetSubitemBoards = returnGetBoardsQuery(
+              variables.PROD_WORKSPACE,
+            );
+            let configGetSubitemBoards = returnGetConfig(
+              graphqlGetSubitemBoards,
+            );
+            return axios.request(configGetSubitemBoards);
+          })
+          .then((getSubitemsBoardResponse) => {
+            console.log(
+              'getSubitemsBoardResponse *************************************',
+            );
+            const boards = getSubitemsBoardResponse.data.data.boards;
+
+            newSubitemBoardId = boards.filter(
+              (board) => board.name === `Subitems of ${itemName}`,
+            )[0].id;
+
+            console.log('newSubitemBoardId', newSubitemBoardId);
+
             //get id of actual value item
             const getActualValueItemQuery = returnGetItemFromBoardQuery(
-              newBoardId,
+              newSubitemBoardId,
               'name',
-              'Actual Project Value',
+              'Actual Project Value Subitem',
             );
             const getActualValueItemConfig = returnGetConfig(
               getActualValueItemQuery,
@@ -213,9 +237,9 @@ export class MondayController {
             console.log('actualValueItemId', actualValueItemId);
 
             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
-              newBoardId,
+              newSubitemBoardId,
               'name',
-              'Projected Cost',
+              'Projected Cost Subitem',
             );
             const getProjectedCostItemConfig = returnGetConfig(
               getProjectedCostItemQuery,
@@ -238,6 +262,7 @@ export class MondayController {
             );
             proposalItemId =
               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
+            console.log('proposalItemId', proposalItemId);
 
             const changeActualValueQuery = returnChangeSimpleValueQuery(
               newBoardId,
@@ -290,3 +315,111 @@ export class MondayController {
 //   graphqlPostCoLabelValue,
 // );
 // return axios.request(configPostColLabelValue);
+
+//TODO: this fails because board isnt fully loaded
+//get id of actual value item
+//             const getActualValueItemQuery = returnGetItemFromBoardQuery(
+//               newBoardId,
+//               'name',
+//               'Actual Project Value',
+//             );
+//             const getActualValueItemConfig = returnGetConfig(
+//               getActualValueItemQuery,
+//             );
+//             console.log('getActualValueItemConfig', getActualValueItemConfig);
+//             return axios.request(getActualValueItemConfig);
+//           })
+//           .then((actualValueItemResponse) => {
+//             console.log('actualValueItemResponse ****************************');
+//             console.log(
+//               'actualValueItemResponse.data',
+//               actualValueItemResponse.data,
+//             );
+//             console.log(
+//               'actualValueItemResponse.data.data.boards[0]',
+//               actualValueItemResponse.data.data.boards[0],
+//             );
+
+//             console.log(
+//               'actualValueItemResponse.data.data.boards[0].items_page',
+//               actualValueItemResponse.data.data.boards[0].items_page,
+//             );
+
+//             console.log(
+//               'actualValueItemResponse.data.data.boards[0].items_page.items[0]',
+//               actualValueItemResponse.data.data.boards[0].items_page.items[0],
+//             );
+
+//             //parse items data
+//             actualValueItemId =
+//               actualValueItemResponse.data.data.boards[0].items_page.items[0]
+//                 .id;
+//             console.log('actualValueItemId', actualValueItemId);
+
+//             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
+//               newBoardId,
+//               'name',
+//               'Projected Cost',
+//             );
+//             const getProjectedCostItemConfig = returnGetConfig(
+//               getProjectedCostItemQuery,
+//             );
+//             console.log(
+//               'getProjectedCostItemConfig',
+//               getProjectedCostItemConfig,
+//             );
+//             return axios.request(getProjectedCostItemConfig);
+//           })
+//           .then((getProjectedCostItem) => {
+//             console.log('getProjectedCostItem ****************************');
+//             console.log(
+//               'getProjectedCostItem.data.data.boards[0].items_page.items[0]',
+//               getProjectedCostItem.data.data.boards[0].items_page.items[0],
+//             );
+//             console.log(
+//               'getProjectedCostItem.data.data.boards[0].items_page.items[0].id',
+//               getProjectedCostItem.data.data.boards[0].items_page.items[0].id,
+//             );
+//             proposalItemId =
+//               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
+//             console.log('proposalItemId', proposalItemId);
+
+//             const changeActualValueQuery = returnChangeSimpleValueQuery(
+//               newBoardId,
+//               newCostColumnId,
+//               actualValueItemId,
+//               actualProjectValue,
+//             );
+//             const changeActualValueConfig = returnPostConfig(
+//               changeActualValueQuery,
+//             );
+//             console.log('changeActualValueConfig', changeActualValueConfig);
+//             return axios.request(changeActualValueConfig);
+//           })
+//           .then((response) => {
+//             console.log('response ****************************');
+//             console.log('response', response.data);
+//           })
+//           .catch((error) => {
+//             console.log(
+//               'error ***************************************************************',
+//               error,
+//             );
+//             console.log('error.data', error.data);
+//           });
+
+//         //event info has information regarding only the value of this particular column information
+//         //make a get request: get all information regarding this item
+//       } else {
+//         //if there is not an event field on the body
+//         //it's the verification request
+//         console.log('no event:', data);
+//         const requestBody = JSON.stringify({
+//           challenge: `${data.challenge}`,
+//         });
+//         return requestBody;
+//         // body is parsed by NestJS
+//       }
+//     }
+//   }
+// }
