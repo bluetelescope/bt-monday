@@ -226,7 +226,7 @@ export class MondayController {
             console.log('actualValueItemId', actualValueItemId);
 
             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
-              newSubitemBoardId,
+              newBoardId,
               'name',
               'Projected Cost',
             );
