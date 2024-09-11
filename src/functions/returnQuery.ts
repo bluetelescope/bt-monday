@@ -91,6 +91,16 @@ export function returnGetItemFromBoardQuery(
     query: `query { boards (ids: [${boardID}]){  items_page (limit: 1, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"]}]}){items {id name subitems {id column_values {text id column {title}}} column_values { value text id  column { title}}}}}}\n`,
   });
 }
+//returns an item in a board based off of a column value
+export function returnGet2ItemsFromBoardQuery(
+  boardID: number,
+  colID: string,
+  valueToSearchFor: string,
+) {
+  return JSON.stringify({
+    query: `query { boards (ids: [${boardID}]){  items_page (limit: 2, query_params: {rules: [{column_id: \"${colID}\", compare_value: [\"${valueToSearchFor}\"], operator: contains_text}]}){items {id name subitems {id column_values {text id column {title}}} column_values { value text id  column { title}}}}}}\n`,
+  });
+}
 
 //returns all items in a board based off of a column value
 export function returnGetItemsFromBoard(

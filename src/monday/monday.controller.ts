@@ -8,6 +8,7 @@ import {
   returnChangeSimpleValueQuery,
   returnDuplicateItemQuery,
   returnGetItemFromBoardQuery,
+  returnGet2ItemsFromBoardQuery,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
@@ -196,19 +197,17 @@ export class MondayController {
             )[0].id;
 
             console.log('newSubitemBoardId', newSubitemBoardId);
-            setTimeout(() => {
-              //get id of actual value item
-              const getActualValueItemQuery = returnGetItemFromBoardQuery(
-                newSubitemBoardId,
-                'name',
-                'Actual Project Value Subitem',
-              );
-              const getActualValueItemConfig = returnGetConfig(
-                getActualValueItemQuery,
-              );
-              console.log('getActualValueItemConfig', getActualValueItemConfig);
-              return axios.request(getActualValueItemConfig);
-            }, 1000);
+            //get id of actual value item
+            const getActualValueItemQuery = returnGetItemFromBoardQuery(
+              newSubitemBoardId,
+              'name',
+              'Subitem',
+            );
+            const getActualValueItemConfig = returnGetConfig(
+              getActualValueItemQuery,
+            );
+            console.log('getActualValueItemConfig', getActualValueItemConfig);
+            return axios.request(getActualValueItemConfig);
           })
           .then((actualValueItemResponse) => {
             console.log('actualValueItemResponse ****************************');
