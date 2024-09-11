@@ -35,7 +35,7 @@ let newCostColumnId = 'numbers__1';
 let subitemRateColId = 'numbers9__1';
 let subitemHourColId = 'numbers__1';
 
-let proposalItemId;
+let projectedCostItemId;
 let actualValueItemId;
 let newSubitemBoardId;
 let subitemProjectedCostId;
@@ -200,24 +200,6 @@ export class MondayController {
               'actualValueItemResponse.data',
               actualValueItemResponse.data,
             );
-            console.log(
-              'actualValueItemResponse.data.data.boards',
-              actualValueItemResponse.data.data.boards,
-            );
-            console.log(
-              'actualValueItemResponse.data.data.boards[0]',
-              actualValueItemResponse.data.data.boards[0],
-            );
-
-            console.log(
-              'actualValueItemResponse.data.data.boards[0].items_page',
-              actualValueItemResponse.data.data.boards[0].items_page,
-            );
-
-            console.log(
-              'actualValueItemResponse.data.data.boards[0].items_page.items[0]',
-              actualValueItemResponse.data.data.boards[0].items_page.items[0],
-            );
 
             //parse items data
             actualValueItemId =
@@ -249,10 +231,10 @@ export class MondayController {
               'getProjectedCostItem.data.data.boards[0].items_page.items[0].id',
               getProjectedCostItem.data.data.boards[0].items_page.items[0].id,
             );
-            proposalItemId =
+            projectedCostItemId =
               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
-            console.log('proposalItemId', proposalItemId);
-            let postSubitemAPVQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${actualValueItemId},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+            console.log('projectedCostItemId', projectedCostItemId);
+            let postSubitemAPVQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${actualValueItemId},item_name: "Actual Project Value Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
             let testing = {};
 
             testing[`${subitemHourColId}`] = actualProjectValue;
@@ -263,6 +245,26 @@ export class MondayController {
             //POST: new subitem
             const postSubitemConfig = postConfigWithVariables(
               postSubitemAPVQuery,
+              vars,
+            );
+            console.log('postSubitemConfig', postSubitemConfig);
+            return axios.request(postSubitemConfig);
+          })
+          .then((postAPVSubitemResponse) => {
+            console.log('postAPVSubitemResponse ****************************');
+            console.log('postAPVSubitemResponse', postAPVSubitemResponse);
+
+            let postSubitemPCQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${projectedCostItemId},item_name: "Actual Project Value Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+            let testing = {};
+
+            testing[`${subitemHourColId}`] = projectedCost;
+            testing[`${subitemRateColId}`] = -1;
+            let vars = {
+              columnVals: JSON.stringify(testing),
+            };
+            //POST: new subitem
+            const postSubitemConfig = postConfigWithVariables(
+              postSubitemPCQuery,
               vars,
             );
             console.log('postSubitemConfig', postSubitemConfig);
@@ -372,9 +374,9 @@ export class MondayController {
 //               'getProjectedCostItem.data.data.boards[0].items_page.items[0].id',
 //               getProjectedCostItem.data.data.boards[0].items_page.items[0].id,
 //             );
-//             proposalItemId =
+//             projectedCostItemId =
 //               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
-//             console.log('proposalItemId', proposalItemId);
+//             console.log('projectedCostItemId', projectedCostItemId);
 
 //             const changeActualValueQuery = returnChangeSimpleValueQuery(
 //               newBoardId,
