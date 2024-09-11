@@ -263,7 +263,7 @@ export class MondayController {
             proposalItemId =
               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
             console.log('proposalItemId', proposalItemId);
-
+            //
             const changeActualValueQuery = returnChangeSimpleValueQuery(
               newBoardId,
               newCostColumnId,
