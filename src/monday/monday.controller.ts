@@ -1,6 +1,10 @@
 import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
-import { returnGetConfig, returnPostConfig } from 'src/functions/returnConfig';
+import {
+  returnGetConfig,
+  returnPostConfig,
+  postConfigWithVariables,
+} from 'src/functions/returnConfig';
 import {
   returnGetItemQuery,
   returnGetBoardsQuery,
@@ -28,11 +32,13 @@ let newBoardId;
 let projectedCost;
 let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
-let subitemHoursId = 'numbers__1';
+let subitemRateColId = 'numbers9__1';
+let subitemHourColId = 'numbers__1';
+
 let proposalItemId;
 let actualValueItemId;
 let newSubitemBoardId;
-
+let subitemProjectedCostId;
 let boardSlug;
 
 @Controller('monday')
@@ -177,31 +183,10 @@ export class MondayController {
             console.log('changeNameResponse ****************************');
             console.log('changeNameResponse.data', changeNameResponse.data);
 
-            //get current boards,
-            const graphqlGetSubitemBoards = returnGetBoardsQuery(
-              variables.PROD_WORKSPACE,
-            );
-            let configGetSubitemBoards = returnGetConfig(
-              graphqlGetSubitemBoards,
-            );
-            return axios.request(configGetSubitemBoards);
-          })
-          .then((getSubitemsBoardResponse) => {
-            console.log(
-              'getSubitemsBoardResponse *************************************',
-            );
-            const boards = getSubitemsBoardResponse.data.data.boards;
-
-            newSubitemBoardId = boards.filter(
-              (board) => board.name === `Subitems of ${itemName}`,
-            )[0].id;
-
-            console.log('newSubitemBoardId', newSubitemBoardId);
-            //get id of actual value item
-            const getActualValueItemQuery = returnGet2ItemsFromBoardQuery(
+            const getActualValueItemQuery = returnGetItemFromBoardQuery(
               newSubitemBoardId,
               'name',
-              'Subitem',
+              'Actual Project Value',
             );
             const getActualValueItemConfig = returnGetConfig(
               getActualValueItemQuery,
@@ -214,6 +199,10 @@ export class MondayController {
             console.log(
               'actualValueItemResponse.data',
               actualValueItemResponse.data,
+            );
+            console.log(
+              'actualValueItemResponse.data.data.boards',
+              actualValueItemResponse.data.data.boards,
             );
             console.log(
               'actualValueItemResponse.data.data.boards[0]',
@@ -239,7 +228,7 @@ export class MondayController {
             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
               newSubitemBoardId,
               'name',
-              'Projected Cost Subitem',
+              'Projected Cost',
             );
             const getProjectedCostItemConfig = returnGetConfig(
               getProjectedCostItemQuery,
@@ -263,18 +252,21 @@ export class MondayController {
             proposalItemId =
               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
             console.log('proposalItemId', proposalItemId);
-            //
-            const changeActualValueQuery = returnChangeSimpleValueQuery(
-              newBoardId,
-              newCostColumnId,
-              actualValueItemId,
-              actualProjectValue,
+            let postSubitemAPVQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${actualValueItemId},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+            let testing = {};
+
+            testing[`${subitemHourColId}`] = actualProjectValue;
+            testing[`${subitemRateColId}`] = -1;
+            let vars = {
+              columnVals: JSON.stringify(testing),
+            };
+            //POST: new subitem
+            const postSubitemConfig = postConfigWithVariables(
+              postSubitemAPVQuery,
+              vars,
             );
-            const changeActualValueConfig = returnPostConfig(
-              changeActualValueQuery,
-            );
-            console.log('changeActualValueConfig', changeActualValueConfig);
-            return axios.request(changeActualValueConfig);
+            console.log('postSubitemConfig', postSubitemConfig);
+            return axios.request(postSubitemConfig);
           })
           .then((response) => {
             console.log('response ****************************');
