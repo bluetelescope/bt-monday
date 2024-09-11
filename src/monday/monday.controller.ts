@@ -184,7 +184,7 @@ export class MondayController {
             console.log('changeNameResponse.data', changeNameResponse.data);
 
             const getActualValueItemQuery = returnGetItemFromBoardQuery(
-              newSubitemBoardId,
+              newBoardId,
               'name',
               'Actual Project Value',
             );
