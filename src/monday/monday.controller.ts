@@ -198,7 +198,7 @@ export class MondayController {
 
             console.log('newSubitemBoardId', newSubitemBoardId);
             //get id of actual value item
-            const getActualValueItemQuery = returnGetItemFromBoardQuery(
+            const getActualValueItemQuery = returnGet2ItemsFromBoardQuery(
               newSubitemBoardId,
               'name',
               'Subitem',
