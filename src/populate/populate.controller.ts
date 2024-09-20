@@ -55,10 +55,14 @@ let newHoursValue = '';
 let rate = 0;
 let cost;
 let label = ' ';
-let subitemCostColumnId = '';
+let subitemRateColumnId = '';
+let subitemIsHourlyColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
-let subitemRateColumnId;
+let subitemIsHourlyColumnString = 'Hourly Item?';
+let subitemRateColumnString = 'Rate';
+let subitemHoursColumnString = 'Hours';
+let subitemTimelineColumnString = 'Hours Timeline';
 let boardSlug;
 let dateRangeData;
 let dateRangeValue;
@@ -180,19 +184,25 @@ export class PopulateController {
               getItemColumnsRes.data.data.items[0].subitems[0].column_values;
             console.log('columns', columns);
 
-            subitemRateColumnId = parseSubColumnValuesForString(
+            subitemIsHourlyColumnId = parseSubColumnValuesForString(
               columns,
-              'Rate',
+              subitemIsHourlyColumnString,
             );
+
             subitemHoursColumnId = parseSubColumnValuesForString(
               columns,
-              'Hours',
+              subitemHoursColumnString,
             );
             subitemTimelineColumnId = parseSubColumnValuesForString(
               columns,
-              'Hours Timeline',
+              subitemTimelineColumnString,
+            );
+            subitemRateColumnId = parseSubColumnValuesForString(
+              columns,
+              subitemRateColumnString,
             );
 
+            console.log('subitemIsHourlyColumnId', subitemIsHourlyColumnId);
             console.log('subitemRateColumnId', subitemRateColumnId);
             console.log('subitemHoursColumnId', subitemHoursColumnId);
             console.log('subitemTimelineColumnId', subitemTimelineColumnId);
@@ -205,6 +215,7 @@ export class PopulateController {
               },
             };
 
+            testing[`${subitemIsHourlyColumnId}`] = { label: 'YES' };
             testing[`${subitemRateColumnId}`] = rate;
             testing[`${subitemHoursColumnId}`] = hoursFromForm;
             testing[`${subitemTimelineColumnId}`] = {

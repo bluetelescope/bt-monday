@@ -35,7 +35,7 @@ let cost;
 let label = ' ';
 let boardId = 0;
 let itemIDinBoard;
-let subitemRateColumnId;
+let subitemRateColumnId = '';
 let subitemIsHourlyColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
