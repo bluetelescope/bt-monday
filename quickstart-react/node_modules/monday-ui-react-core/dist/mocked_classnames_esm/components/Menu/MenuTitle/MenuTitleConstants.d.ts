@@ -1,5 +1,0 @@
-export declare enum MenuTitleCaptionPosition {
-    TOP = "top",
-    BOTTOM = "bottom",
-    CENTER = "center"
-}
