@@ -36,9 +36,13 @@ let label = ' ';
 let boardId = 0;
 let itemIDinBoard;
 let subitemRateColumnId;
-let subitemCostColumnId = '';
+let subitemIsHourlyColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
+let subitemIsHourlyColumnString = 'Hourly Item?';
+let subitemRateColumnString = 'Rate';
+let subitemHoursColumnString = 'Hours';
+let subitemTimelineColumnString = 'Hours Timeline';
 let boardSlug;
 let dateRangeData;
 let itemDescription;
@@ -155,23 +159,25 @@ export class TimetrackingController {
                 getItemColumnsRes.data.data.items[0].subitems[0].column_values;
               console.log('columns', columns);
 
-              subitemCostColumnId = parseSubColumnValuesForString(
+              subitemIsHourlyColumnId = parseSubColumnValuesForString(
                 columns,
-                'Cost',
+                subitemIsHourlyColumnString,
               );
+
               subitemHoursColumnId = parseSubColumnValuesForString(
                 columns,
-                'Hours',
+                subitemHoursColumnString,
               );
               subitemTimelineColumnId = parseSubColumnValuesForString(
                 columns,
-                'Hours Timeline',
+                subitemTimelineColumnString,
               );
               subitemRateColumnId = parseSubColumnValuesForString(
                 columns,
-                'Rate',
+                subitemRateColumnString,
               );
 
+              console.log('subitemIsHourlyColumnId', subitemIsHourlyColumnId);
               console.log('subitemRateColumnId', subitemRateColumnId);
               console.log('subitemHoursColumnId', subitemHoursColumnId);
               console.log('subitemTimelineColumnId', subitemTimelineColumnId);
@@ -184,6 +190,7 @@ export class TimetrackingController {
                 },
               };
 
+              testing[`${subitemIsHourlyColumnId}`] = { label: 'YES' };
               testing[`${subitemRateColumnId}`] = rate;
               testing[`${subitemHoursColumnId}`] = hoursFromForm;
               testing[`${subitemTimelineColumnId}`] = {

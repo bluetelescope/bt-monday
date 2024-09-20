@@ -27,18 +27,18 @@ let columns = [];
 let users = { adminUsers: [], prodTeam: [] };
 let duplicatedItemID;
 let proposalURL;
-let actualProjectValue;
+let sellPrice;
 let newBoardId;
-let projectedCost;
+let estimatedCost;
 let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let subitemRateColId = 'numbers9__1';
 let subitemHourColId = 'numbers__1';
 
-let projectedCostItemId;
-let actualValueItemId;
+let estimatedCostItemId;
+let sellPriceItemId;
 let newSubitemBoardId;
-let subitemProjectedCostId;
+let subitemEstimatedCostId;
 let boardSlug;
 
 @Controller('monday')
@@ -92,16 +92,13 @@ export class MondayController {
             columns = item.column_values;
             console.log('columns', columns);
             //get the APC and PC from the pipeline item
-            actualProjectValue = parseValueFromColumns(
-              columns,
-              'Actual Project Value',
-            );
-            projectedCost = parseValueFromColumns(
+            sellPrice = parseValueFromColumns(columns, 'Sell Price');
+            estimatedCost = parseValueFromColumns(
               columns,
               'Cost of Production',
             );
-            console.log('actualProjectValue', actualProjectValue);
-            console.log('projectedCost', projectedCost);
+            console.log('sellPrice', sellPrice);
+            console.log('estimatedCost', estimatedCost);
 
             //get all boards in prod workspace, so we can generate the number for the new board
             const graphqlGetBoards = returnGetBoardsQuery(
@@ -183,61 +180,60 @@ export class MondayController {
             console.log('changeNameResponse ****************************');
             console.log('changeNameResponse.data', changeNameResponse.data);
 
-            const getActualValueItemQuery = returnGetItemFromBoardQuery(
+            const getSellPriceItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Actual Project Value',
+              'Sell Price',
             );
-            const getActualValueItemConfig = returnGetConfig(
-              getActualValueItemQuery,
+            const getSellPriceItemConfig = returnGetConfig(
+              getSellPriceItemQuery,
             );
-            console.log('getActualValueItemConfig', getActualValueItemConfig);
-            return axios.request(getActualValueItemConfig);
+            console.log('getSellPriceItemConfig', getSellPriceItemConfig);
+            return axios.request(getSellPriceItemConfig);
           })
-          .then((actualValueItemResponse) => {
-            console.log('actualValueItemResponse ****************************');
+          .then((sellPriceItemResponse) => {
+            console.log('sellPriceItemResponse ****************************');
             console.log(
-              'actualValueItemResponse.data',
-              actualValueItemResponse.data,
+              'sellPriceItemResponse.data',
+              sellPriceItemResponse.data,
             );
 
             //parse items data
-            actualValueItemId =
-              actualValueItemResponse.data.data.boards[0].items_page.items[0]
-                .id;
-            console.log('actualValueItemId', actualValueItemId);
+            sellPriceItemId =
+              sellPriceItemResponse.data.data.boards[0].items_page.items[0].id;
+            console.log('sellPriceItemId', sellPriceItemId);
 
-            const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
+            const getEstimatedCostItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Projected Cost',
+              'Estimated Cost',
             );
-            const getProjectedCostItemConfig = returnGetConfig(
-              getProjectedCostItemQuery,
+            const getEstimatedCostItemConfig = returnGetConfig(
+              getEstimatedCostItemQuery,
             );
             console.log(
-              'getProjectedCostItemConfig',
-              getProjectedCostItemConfig,
+              'getEstimatedCostItemConfig',
+              getEstimatedCostItemConfig,
             );
-            return axios.request(getProjectedCostItemConfig);
+            return axios.request(getEstimatedCostItemConfig);
           })
-          .then((getProjectedCostItem) => {
-            console.log('getProjectedCostItem ****************************');
+          .then((getEstimatedCostItem) => {
+            console.log('getEstimatedCostItem ****************************');
             console.log(
-              'getProjectedCostItem.data.data.boards[0].items_page.items[0]',
-              getProjectedCostItem.data.data.boards[0].items_page.items[0],
+              'getEstimatedCostItem.data.data.boards[0].items_page.items[0]',
+              getEstimatedCostItem.data.data.boards[0].items_page.items[0],
             );
             console.log(
-              'getProjectedCostItem.data.data.boards[0].items_page.items[0].id',
-              getProjectedCostItem.data.data.boards[0].items_page.items[0].id,
+              'getEstimatedCostItem.data.data.boards[0].items_page.items[0].id',
+              getEstimatedCostItem.data.data.boards[0].items_page.items[0].id,
             );
-            projectedCostItemId =
-              getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
-            console.log('projectedCostItemId', projectedCostItemId);
-            let postSubitemAPVQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${actualValueItemId},item_name: "Actual Project Value Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+            estimatedCostItemId =
+              getEstimatedCostItem.data.data.boards[0].items_page.items[0].id;
+            console.log('estimatedCostItemId', estimatedCostItemId);
+            let postSubitemAPVQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${sellPriceItemId},item_name: "Sell Price Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
             let testing = {};
 
-            testing[`${subitemHourColId}`] = actualProjectValue;
+            testing[`${subitemHourColId}`] = sellPrice;
             testing[`${subitemRateColId}`] = -1;
             let vars = {
               columnVals: JSON.stringify(testing),
@@ -254,10 +250,10 @@ export class MondayController {
             console.log('postAPVSubitemResponse ****************************');
             console.log('postAPVSubitemResponse', postAPVSubitemResponse);
 
-            let postSubitemPCQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${projectedCostItemId},item_name: "Actual Project Value Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+            let postSubitemPCQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${estimatedCostItemId},item_name: "Sell Price Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
             let testing = {};
 
-            testing[`${subitemHourColId}`] = projectedCost;
+            testing[`${subitemHourColId}`] = estimatedCost;
             testing[`${subitemRateColId}`] = -1;
             let vars = {
               columnVals: JSON.stringify(testing),
@@ -312,83 +308,83 @@ export class MondayController {
 
 //TODO: this fails because board isnt fully loaded
 //get id of actual value item
-//             const getActualValueItemQuery = returnGetItemFromBoardQuery(
+//             const getSellPriceItemQuery = returnGetItemFromBoardQuery(
 //               newBoardId,
 //               'name',
-//               'Actual Project Value',
+//               'Sell Price',
 //             );
-//             const getActualValueItemConfig = returnGetConfig(
-//               getActualValueItemQuery,
+//             const getSellPriceItemConfig = returnGetConfig(
+//               getSellPriceItemQuery,
 //             );
-//             console.log('getActualValueItemConfig', getActualValueItemConfig);
-//             return axios.request(getActualValueItemConfig);
+//             console.log('getSellPriceItemConfig', getSellPriceItemConfig);
+//             return axios.request(getSellPriceItemConfig);
 //           })
-//           .then((actualValueItemResponse) => {
-//             console.log('actualValueItemResponse ****************************');
+//           .then((sellPriceItemResponse) => {
+//             console.log('sellPriceItemResponse ****************************');
 //             console.log(
-//               'actualValueItemResponse.data',
-//               actualValueItemResponse.data,
+//               'sellPriceItemResponse.data',
+//               sellPriceItemResponse.data,
 //             );
 //             console.log(
-//               'actualValueItemResponse.data.data.boards[0]',
-//               actualValueItemResponse.data.data.boards[0],
-//             );
-
-//             console.log(
-//               'actualValueItemResponse.data.data.boards[0].items_page',
-//               actualValueItemResponse.data.data.boards[0].items_page,
+//               'sellPriceItemResponse.data.data.boards[0]',
+//               sellPriceItemResponse.data.data.boards[0],
 //             );
 
 //             console.log(
-//               'actualValueItemResponse.data.data.boards[0].items_page.items[0]',
-//               actualValueItemResponse.data.data.boards[0].items_page.items[0],
+//               'sellPriceItemResponse.data.data.boards[0].items_page',
+//               sellPriceItemResponse.data.data.boards[0].items_page,
+//             );
+
+//             console.log(
+//               'sellPriceItemResponse.data.data.boards[0].items_page.items[0]',
+//               sellPriceItemResponse.data.data.boards[0].items_page.items[0],
 //             );
 
 //             //parse items data
-//             actualValueItemId =
-//               actualValueItemResponse.data.data.boards[0].items_page.items[0]
+//             sellPriceItemId =
+//               sellPriceItemResponse.data.data.boards[0].items_page.items[0]
 //                 .id;
-//             console.log('actualValueItemId', actualValueItemId);
+//             console.log('sellPriceItemId', sellPriceItemId);
 
-//             const getProjectedCostItemQuery = returnGetItemFromBoardQuery(
+//             const getEstimatedCostItemQuery = returnGetItemFromBoardQuery(
 //               newBoardId,
 //               'name',
-//               'Projected Cost',
+//               'Estimated Cost',
 //             );
-//             const getProjectedCostItemConfig = returnGetConfig(
-//               getProjectedCostItemQuery,
+//             const getEstimatedCostItemConfig = returnGetConfig(
+//               getEstimatedCostItemQuery,
 //             );
 //             console.log(
-//               'getProjectedCostItemConfig',
-//               getProjectedCostItemConfig,
+//               'getEstimatedCostItemConfig',
+//               getEstimatedCostItemConfig,
 //             );
-//             return axios.request(getProjectedCostItemConfig);
+//             return axios.request(getEstimatedCostItemConfig);
 //           })
-//           .then((getProjectedCostItem) => {
-//             console.log('getProjectedCostItem ****************************');
+//           .then((getEstimatedCostItem) => {
+//             console.log('getEstimatedCostItem ****************************');
 //             console.log(
-//               'getProjectedCostItem.data.data.boards[0].items_page.items[0]',
-//               getProjectedCostItem.data.data.boards[0].items_page.items[0],
+//               'getEstimatedCostItem.data.data.boards[0].items_page.items[0]',
+//               getEstimatedCostItem.data.data.boards[0].items_page.items[0],
 //             );
 //             console.log(
-//               'getProjectedCostItem.data.data.boards[0].items_page.items[0].id',
-//               getProjectedCostItem.data.data.boards[0].items_page.items[0].id,
+//               'getEstimatedCostItem.data.data.boards[0].items_page.items[0].id',
+//               getEstimatedCostItem.data.data.boards[0].items_page.items[0].id,
 //             );
-//             projectedCostItemId =
-//               getProjectedCostItem.data.data.boards[0].items_page.items[0].id;
-//             console.log('projectedCostItemId', projectedCostItemId);
+//             estimatedCostItemId =
+//               getEstimatedCostItem.data.data.boards[0].items_page.items[0].id;
+//             console.log('estimatedCostItemId', estimatedCostItemId);
 
-//             const changeActualValueQuery = returnChangeSimpleValueQuery(
+//             const changeSellPriceQuery = returnChangeSimpleValueQuery(
 //               newBoardId,
 //               newCostColumnId,
-//               actualValueItemId,
-//               actualProjectValue,
+//               sellPriceItemId,
+//               sellPrice,
 //             );
-//             const changeActualValueConfig = returnPostConfig(
-//               changeActualValueQuery,
+//             const changeSellPriceConfig = returnPostConfig(
+//               changeSellPriceQuery,
 //             );
-//             console.log('changeActualValueConfig', changeActualValueConfig);
-//             return axios.request(changeActualValueConfig);
+//             console.log('changeSellPriceConfig', changeSellPriceConfig);
+//             return axios.request(changeSellPriceConfig);
 //           })
 //           .then((response) => {
 //             console.log('response ****************************');

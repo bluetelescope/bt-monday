@@ -3,7 +3,7 @@ export function parseColumnValues(columnData: any) {
     { name: 'proposal', string: 'Proposal', value: '' },
     // { name: 'estRevenue', string: 'Est Revenue', value: '' },
     // { name: 'forecastValue', string: 'Forecast Value', value: '' },
-    { name: 'actualProjectValue', string: 'Project Value', value: '' },
+    { name: 'sellPrice', string: 'Project Value', value: '' },
     // { name: 'costOfProd', string: 'Cost of Production', value: '' },
     // { name: 'files', string: 'Files', value: '' },
     // { name: 'gDrive', string: '(G-Drive)', value: '' },

@@ -41,7 +41,7 @@ let boardId;
 let boardName;
 let newCostColumnId = 'numbers__1';
 let proposalItemId;
-let actualValueItemId;
+let sellPriceItemId;
 let personId;
 let personData;
 let personTitle;
