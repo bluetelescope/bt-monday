@@ -188,7 +188,7 @@ export class LOASController {
               console.log('subitemAmountColumnId', subitemAmountColumnId);
 
               //TODO: replace getting the item and replacing the entries with create new subitem
-              let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${itemIDinBoard},item_name: "${recipientName} - ${pulseItemId}",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+              let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${loaItemId},item_name: "${recipientName} - ${pulseItemId}",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
               let testing = {};
 
               testing[`${subitemAmountColumnId}`] = amount;
