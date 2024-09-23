@@ -13,11 +13,13 @@ import {
   returnDuplicateItemQuery,
   returnGetItemFromBoardQuery,
   returnGet2ItemsFromBoardQuery,
+  returnColumnsInSubitem,
 } from 'src/functions/returnQuery';
 import {
   parseColumnValues,
   parseBoards,
   parseValueFromColumns,
+  parseSubColumnValuesForString,
 } from 'src/functions/parseData';
 import { variables } from 'src/variables';
 
@@ -36,13 +38,14 @@ let subitemRateColId = 'numbers9__1';
 let subitemHourColId = 'numbers__1';
 let sellPriceString = 'Sell Price';
 let estCostString = 'Estimated Cost';
-
+let nonHrAmountString = '$ Non-Hourly Amount';
 let estimatedCostItemId;
 let sellPriceItemId;
 let newSubitemBoardId;
 let subitemEstimatedCostId;
 let boardSlug;
 
+let subitemNonHRColID;
 @Controller('monday')
 export class MondayController {
   @Get()
@@ -182,7 +185,7 @@ export class MondayController {
             const getSellPriceItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Sell Price',
+              sellPriceString,
             );
             const getSellPriceItemConfig = returnGetConfig(
               getSellPriceItemQuery,
@@ -205,7 +208,7 @@ export class MondayController {
             const getEstimatedCostItemQuery = returnGetItemFromBoardQuery(
               newBoardId,
               'name',
-              'Estimated Cost',
+              estCostString,
             );
             const getEstimatedCostItemConfig = returnGetConfig(
               getEstimatedCostItemQuery,
@@ -229,45 +232,79 @@ export class MondayController {
             estimatedCostItemId =
               getEstimatedCostItem.data.data.boards[0].items_page.items[0].id;
             console.log('estimatedCostItemId', estimatedCostItemId);
-            let postSubitemAPVQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${sellPriceItemId},item_name: "Sell Price Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+
+            const getItemSubitemColumnsQuery =
+              returnColumnsInSubitem(estimatedCostItemId);
+            const getItemSubitemColumnsConfig = returnGetConfig(
+              getItemSubitemColumnsQuery,
+            );
+            console.log(
+              'getItemSubitemColumnsConfig',
+              getItemSubitemColumnsConfig,
+            );
+            return axios.request(getItemSubitemColumnsConfig);
+          })
+          .then((getItemSubcolumns) => {
+            console.log('getItemSubcolumns ****************************');
+            console.log('getItemSubcolumns.data', getItemSubcolumns.data);
+
+            const columns =
+              getItemSubcolumns.data.data.items[0].subitems[0].column_values;
+
+            subitemNonHRColID = parseSubColumnValuesForString(
+              columns,
+              nonHrAmountString,
+            );
+
+            let postSubitemAPVQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${sellPriceItemId},item_name: "${estCostString} Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
             let testing = {};
 
-            testing[`${subitemHourColId}`] = sellPrice;
-            testing[`${subitemRateColId}`] = -1;
+            testing[`${subitemNonHRColID}`] = sellPrice;
+
             let vars = {
               columnVals: JSON.stringify(testing),
             };
             //POST: new subitem
-            const postSubitemConfig = postConfigWithVariables(
+            const postSubitemSellPriceConfig = postConfigWithVariables(
               postSubitemAPVQuery,
               vars,
             );
-            console.log('postSubitemConfig', postSubitemConfig);
-            return axios.request(postSubitemConfig);
+            console.log('postSubitemConfig', postSubitemSellPriceConfig);
+            return axios.request(postSubitemSellPriceConfig);
           })
-          .then((postAPVSubitemResponse) => {
-            console.log('postAPVSubitemResponse ****************************');
-            console.log('postAPVSubitemResponse', postAPVSubitemResponse);
+          .then((postSellPriceSubitemResponse) => {
+            console.log(
+              'postSellPriceSubitemResponse ****************************',
+            );
+            console.log(
+              'postSellPriceSubitemResponse',
+              postSellPriceSubitemResponse,
+            );
 
-            let postSubitemPCQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${estimatedCostItemId},item_name: "Sell Price Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+            let postSubitemEstCostQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${estimatedCostItemId},item_name: "${sellPriceString} Subitem",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
             let testing = {};
 
-            testing[`${subitemHourColId}`] = estimatedCost;
-            testing[`${subitemRateColId}`] = -1;
+            testing[`${subitemNonHRColID}`] = -estimatedCost;
             let vars = {
               columnVals: JSON.stringify(testing),
             };
+
             //POST: new subitem
-            const postSubitemConfig = postConfigWithVariables(
-              postSubitemPCQuery,
+            const postEstCostSubitemConfig = postConfigWithVariables(
+              postSubitemEstCostQuery,
               vars,
             );
-            console.log('postSubitemConfig', postSubitemConfig);
-            return axios.request(postSubitemConfig);
+            console.log('postSubitemConfig', postEstCostSubitemConfig);
+            return axios.request(postEstCostSubitemConfig);
           })
-          .then((response) => {
-            console.log('response ****************************');
-            console.log('response', response.data);
+          .then((postEstCostSubitemResponse) => {
+            console.log(
+              'postEstCostSubitemResponse ****************************',
+            );
+            console.log(
+              'postEstCostSubitemResponse',
+              postEstCostSubitemResponse.data,
+            );
           })
           .catch((error) => {
             console.log(
