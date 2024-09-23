@@ -163,10 +163,9 @@ export class LOASController {
                 'resGetBoardsQuery *****************************************************************',
               );
               //parse boards data
-
               targetBoardId = parseBoardIDFromSlug(
                 responseConfigGetBoards.data.data.boards,
-                boardSlug,
+                targetBoardName,
               );
 
               //GET: item in active project board with persons name
