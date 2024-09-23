@@ -34,6 +34,8 @@ let newProposalColumnId = 'link';
 let newCostColumnId = 'numbers__1';
 let subitemRateColId = 'numbers9__1';
 let subitemHourColId = 'numbers__1';
+let sellPriceString = 'Sell Price';
+let estCostString = 'Estimated Cost';
 
 let estimatedCostItemId;
 let sellPriceItemId;
@@ -92,11 +94,8 @@ export class MondayController {
             columns = item.column_values;
             console.log('columns', columns);
             //get the APC and PC from the pipeline item
-            sellPrice = parseValueFromColumns(columns, 'Sell Price');
-            estimatedCost = parseValueFromColumns(
-              columns,
-              'Cost of Production',
-            );
+            sellPrice = parseValueFromColumns(columns, sellPriceString);
+            estimatedCost = parseValueFromColumns(columns, estCostString);
             console.log('sellPrice', sellPrice);
             console.log('estimatedCost', estimatedCost);
 
