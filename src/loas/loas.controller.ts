@@ -20,6 +20,7 @@ import {
   parseBoardIDFromSlug,
   parseValueofColumnFromColumnID,
   parseSubColumnValuesForString,
+  parseValueFromColumns,
 } from 'src/functions/parseData';
 import { users, variables } from 'src/variables';
 
@@ -47,7 +48,6 @@ let proposalItemId;
 let sellPriceItemId;
 let personId;
 let personData;
-let recipientName;
 let itemIDinBoard;
 let costColumnId = '';
 let hoursColumnId = '';
@@ -70,7 +70,12 @@ let boardRelation;
 let newSubitemLabel;
 let createNewItem = true;
 let oldItemID;
-
+let typeString = 'Type';
+let recipientNameString = 'Recipient Name';
+let amountString = 'Amount';
+let type;
+let recipientName;
+let amount;
 @Controller('loas')
 export class LOASController {
   @Get()
@@ -102,9 +107,18 @@ export class LOASController {
           .request(getItemConfig)
           .then((getItemResponse) => {
             const itemInfo = getItemResponse.data.data.items[0];
-            const column = itemInfo.column_values;
+            const columns = itemInfo.column_values;
             console.log('itemInfo', itemInfo);
-            console.log('column', column);
+            console.log('columns', columns);
+
+            type = parseValueFromColumns(columns, typeString);
+            recipientName = parseValueFromColumns(columns, recipientNameString);
+            amount = parseValueFromColumns(columns, amountString);
+
+            console.log('type', type);
+            console.log('recipientName', recipientName);
+            console.log('amount', amount);
+
             //parse data from legal request item
             // recipientName = itemInfo.column_values.filter(
             //   (column) => column.id === 'text4',
