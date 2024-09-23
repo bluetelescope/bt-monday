@@ -38,7 +38,7 @@ const ACTIVE_FOLDER = 7860571;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 
-let itemId;
+let pulseItemId;
 let hoursFromForm = '0';
 let projectColumnId = 'dropdown';
 let loaItemId;
@@ -61,6 +61,8 @@ let label = ' ';
 let subitemCostColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
+let subitemAmountColumnId = '';
+
 let subitemRateColumnId;
 let boardSlug;
 let dateRangeData;
@@ -70,12 +72,20 @@ let boardRelation;
 let newSubitemLabel;
 let createNewItem = true;
 let oldItemID;
+let eventType;
+let loasString = 'LOAs';
 let typeString = 'Type';
 let recipientNameString = 'Recipient Name';
 let amountString = 'Amount';
+let targetBoardString = 'Project Name';
+let nonHrAmountString = '$ Non-Hourly Amount';
+
 let type;
 let recipientName;
 let amount;
+let targetBoardName;
+let targetBoardId;
+
 @Controller('loas')
 export class LOASController {
   @Get()
@@ -100,14 +110,12 @@ export class LOASController {
         console.log('data.event', data.event);
         const axios = require('axios');
 
-        itemId = data.event.pulseId;
+        pulseItemId = data.event.pulseId;
+        eventType = data.event.value.label.text;
 
-        if (
-          data.event.value.label.text === 'Idle' ||
-          data.event.value.label.text === 'Recieved'
-        ) {
+        if (eventType === 'Idle' || eventType === 'Recieved') {
         } else {
-          const getItemQuery = returnGetItemQuery(itemId);
+          const getItemQuery = returnGetItemQuery(pulseItemId);
           const getItemConfig = returnGetConfig(getItemQuery);
           axios
             .request(getItemConfig)
@@ -123,38 +131,125 @@ export class LOASController {
                 recipientNameString,
               );
               amount = parseValueFromColumns(columns, amountString);
+              targetBoardName = parseValueFromColumns(
+                columns,
+                targetBoardString,
+              );
 
               console.log('type', type);
               console.log('recipientName', recipientName);
               console.log('amount', amount);
+              console.log('targetBoardName', targetBoardName);
 
-              //parse data from legal request item
-              // recipientName = itemInfo.column_values.filter(
-              //   (column) => column.id === 'text4',
-              // )[0].text;
-              // scopeDescription = itemInfo.column_values.filter(
-              //   (column) => column.id === 'long_text',
-              // )[0].text;
-              // cost = itemInfo.column_values.filter(
-              //   (column) => column.id === 'numbers3',
-              // )[0].text;
-              // let boardRelationValue = itemInfo.column_values.filter(
-              //   (column) => column.id === 'board_relation',
-              // )[0].value;
-              // boardRelation = JSON.parse(boardRelationValue);
-              // //loa item in active board
-              // loaItemId = boardRelation.linkedPulseIds[0].linkedPulseId;
-              // newSubitemLabel = `${recipientName} // ItemID: ${itemId}`;
-              // console.log('recipientName', recipientName);
-              // console.log('cost', cost);
-              // console.log('boardRelationValue', boardRelationValue);
-              // console.log('boardRelation', boardRelation);
-              // console.log('loaItemId', loaItemId);
-              // //GET: all subitems of loa item
-              // const getSubitemsQuery = returnSubitemNamesOnItem(loaItemId);
-              // const getSubitemsConfig = returnGetConfig(getSubitemsQuery);
-              // return axios.request(getSubitemsConfig);
+              // find id of board in production, so
+              // get all boards in prod workspace
+              const graphqlGetBoards = returnGetBoardsQuery(
+                variables.PROD_WORKSPACE,
+              );
+              let configGetBoards = returnGetConfig(graphqlGetBoards);
+              return axios.request(configGetBoards);
             })
+            .then((responseConfigGetBoards) => {
+              console.log('responseConfigGetBoards **************');
+              console.log(
+                'responseConfigGetBoards.data.data.boards',
+                responseConfigGetBoards.data.data.boards,
+              );
+
+              const boards = responseConfigGetBoards.data.data.boards;
+              console.log('boards', boards);
+
+              console.log(
+                'resGetBoardsQuery *****************************************************************',
+              );
+              //parse boards data
+
+              targetBoardId = parseBoardIDFromSlug(
+                responseConfigGetBoards.data.data.boards,
+                boardSlug,
+              );
+
+              //GET: item in active project board with persons name
+              const getBoardItemQuery = returnGetItemFromBoardQuery(
+                targetBoardId,
+                'name',
+                loasString,
+              );
+              console.log('getBoardItemQuery', getBoardItemQuery);
+              const getBoardItemCofig = returnGetConfig(getBoardItemQuery);
+              return axios.request(getBoardItemCofig);
+            })
+            .then((getLoaItemRes) => {
+              console.log(
+                'getBoardItemsRes *****************************************************************',
+              );
+              // console.log('getBoardItemsRes.data', getLoaItemRes.data);
+
+              //parse items data
+              loaItemId =
+                getLoaItemRes.data.data.boards[0].items_page.items[0].id;
+
+              //GET: columns in subitem
+              const getLoaItemColumnsQuery = returnColumnsInSubitem(loaItemId);
+              const getLoaItemColumnsConfig = returnGetConfig(
+                getLoaItemColumnsQuery,
+              );
+              return axios.request(getLoaItemColumnsConfig);
+            })
+            .then((getLoaItemColumnsRes) => {
+              console.log(
+                'getLoaItemColumnsRes *****************************************************************',
+              );
+              //parse columns data
+              const columns =
+                getLoaItemColumnsRes.data.data.items[0].subitems[0]
+                  .column_values;
+              console.log('columns', columns);
+
+              subitemAmountColumnId = parseSubColumnValuesForString(
+                columns,
+                nonHrAmountString,
+              );
+
+              console.log('subitemAmountColumnId', subitemAmountColumnId);
+
+              //TODO: replace getting the item and replacing the entries with create new subitem
+              let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${itemIDinBoard},item_name: "${recipientName} - ${pulseItemId}",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+              let testing = {};
+
+              testing[`${subitemAmountColumnId}`] = amount;
+
+              let vars = {
+                columnVals: JSON.stringify(testing),
+              };
+
+              //POST: new subitem
+              const postSubitemConfig = postConfigWithVariables(
+                postSubitemQuery,
+                vars,
+              );
+              console.log('postSubitemConfig', postSubitemConfig);
+              return axios.request(postSubitemConfig);
+            })
+            .then((postSubitemRes) => {
+              console.log(
+                'postCostToColumnRes**********************************************************************',
+                postSubitemRes.data,
+              );
+            })
+            // //loa item in target board
+            // loaItemId = boardRelation.linkedPulseIds[0].linkedPulseId;
+            // newSubitemLabel = `${recipientName} // ItemID: ${pulseItemId}`;
+            // console.log('recipientName', recipientName);
+            // console.log('cost', cost);
+            // console.log('boardRelationValue', boardRelationValue);
+            // console.log('boardRelation', boardRelation);
+            // console.log('loaItemId', loaItemId);
+            // //GET: all subitems of loa item
+            // const getSubitemsQuery = returnSubitemNamesOnItem(loaItemId);
+            // const getSubitemsConfig = returnGetConfig(getSubitemsQuery);
+            // return axios.request(getSubitemsConfig);
+
             // .then((getSubitemsRes) => {
             //   //IF ITEM ID already exists amonst subitem names, modify item
             //   const subitems = getSubitemsRes.data.data.items[0].subitems;
@@ -170,17 +265,17 @@ export class LOASController {
             //   }
             //   //else create new subitem
             //   //GET: columns in subitem elements in active board LOA
-            //   const getItemColumnsQuery = returnColumnsInSubitem(loaItemId);
-            //   const getItemColumnsConfig = returnGetConfig(getItemColumnsQuery);
-            //   return axios.request(getItemColumnsConfig);
+            //   const getLoaItemColumnsQuery = returnColumnsInSubitem(loaItemId);
+            //   const getLoaItemColumnsConfig = returnGetConfig(getLoaItemColumnsQuery);
+            //   return axios.request(getLoaItemColumnsConfig);
             // })
-            // .then((getItemColumnsRes) => {
+            // .then((getLoaItemColumnsRes) => {
             //   console.log(
-            //     'getItemColumnsRes *****************************************************************',
+            //     'getLoaItemColumnsRes *****************************************************************',
             //   );
             //   //parse columns data
             //   const columns =
-            //     getItemColumnsRes.data.data.items[0].subitems[0].column_values;
+            //     getLoaItemColumnsRes.data.data.items[0].subitems[0].column_values;
             //   console.log('columns', columns);
 
             //   subitemRateColumnId = parseSubColumnValuesForString(
