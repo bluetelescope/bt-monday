@@ -102,114 +102,116 @@ export class LOASController {
           .request(getItemConfig)
           .then((getItemResponse) => {
             const itemInfo = getItemResponse.data.data.items[0];
+            const column = itemInfo.column_values;
             console.log('itemInfo', itemInfo);
+            console.log('column', column);
             //parse data from legal request item
-            recipientName = itemInfo.column_values.filter(
-              (column) => column.id === 'text4',
-            )[0].text;
-            scopeDescription = itemInfo.column_values.filter(
-              (column) => column.id === 'long_text',
-            )[0].text;
-            cost = itemInfo.column_values.filter(
-              (column) => column.id === 'numbers3',
-            )[0].text;
-            let boardRelationValue = itemInfo.column_values.filter(
-              (column) => column.id === 'board_relation',
-            )[0].value;
-            boardRelation = JSON.parse(boardRelationValue);
-            //loa item in active board
-            loaItemId = boardRelation.linkedPulseIds[0].linkedPulseId;
-            newSubitemLabel = `${recipientName} // ItemID: ${itemId}`;
-            console.log('recipientName', recipientName);
-            console.log('cost', cost);
-            console.log('boardRelationValue', boardRelationValue);
-            console.log('boardRelation', boardRelation);
-            console.log('loaItemId', loaItemId);
-            //GET: all subitems of loa item
-            const getSubitemsQuery = returnSubitemNamesOnItem(loaItemId);
-            const getSubitemsConfig = returnGetConfig(getSubitemsQuery);
-            return axios.request(getSubitemsConfig);
+            // recipientName = itemInfo.column_values.filter(
+            //   (column) => column.id === 'text4',
+            // )[0].text;
+            // scopeDescription = itemInfo.column_values.filter(
+            //   (column) => column.id === 'long_text',
+            // )[0].text;
+            // cost = itemInfo.column_values.filter(
+            //   (column) => column.id === 'numbers3',
+            // )[0].text;
+            // let boardRelationValue = itemInfo.column_values.filter(
+            //   (column) => column.id === 'board_relation',
+            // )[0].value;
+            // boardRelation = JSON.parse(boardRelationValue);
+            // //loa item in active board
+            // loaItemId = boardRelation.linkedPulseIds[0].linkedPulseId;
+            // newSubitemLabel = `${recipientName} // ItemID: ${itemId}`;
+            // console.log('recipientName', recipientName);
+            // console.log('cost', cost);
+            // console.log('boardRelationValue', boardRelationValue);
+            // console.log('boardRelation', boardRelation);
+            // console.log('loaItemId', loaItemId);
+            // //GET: all subitems of loa item
+            // const getSubitemsQuery = returnSubitemNamesOnItem(loaItemId);
+            // const getSubitemsConfig = returnGetConfig(getSubitemsQuery);
+            // return axios.request(getSubitemsConfig);
           })
-          .then((getSubitemsRes) => {
-            //IF ITEM ID already exists amonst subitem names, modify item
-            const subitems = getSubitemsRes.data.data.items[0].subitems;
-            const itemIDAlreadyExists = subitems.some(
-              (item) => item.name === newSubitemLabel,
-            );
+          // .then((getSubitemsRes) => {
+          //   //IF ITEM ID already exists amonst subitem names, modify item
+          //   const subitems = getSubitemsRes.data.data.items[0].subitems;
+          //   const itemIDAlreadyExists = subitems.some(
+          //     (item) => item.name === newSubitemLabel,
+          //   );
 
-            if (itemIDAlreadyExists) {
-              createNewItem = false;
-              oldItemID = subitems.filter(
-                (item) => item.name === newSubitemLabel,
-              )[0].id;
-            }
-            //else create new subitem
-            //GET: columns in subitem elements in active board LOA
-            const getItemColumnsQuery = returnColumnsInSubitem(loaItemId);
-            const getItemColumnsConfig = returnGetConfig(getItemColumnsQuery);
-            return axios.request(getItemColumnsConfig);
-          })
-          .then((getItemColumnsRes) => {
-            console.log(
-              'getItemColumnsRes *****************************************************************',
-            );
-            //parse columns data
-            const columns =
-              getItemColumnsRes.data.data.items[0].subitems[0].column_values;
-            console.log('columns', columns);
+          //   if (itemIDAlreadyExists) {
+          //     createNewItem = false;
+          //     oldItemID = subitems.filter(
+          //       (item) => item.name === newSubitemLabel,
+          //     )[0].id;
+          //   }
+          //   //else create new subitem
+          //   //GET: columns in subitem elements in active board LOA
+          //   const getItemColumnsQuery = returnColumnsInSubitem(loaItemId);
+          //   const getItemColumnsConfig = returnGetConfig(getItemColumnsQuery);
+          //   return axios.request(getItemColumnsConfig);
+          // })
+          // .then((getItemColumnsRes) => {
+          //   console.log(
+          //     'getItemColumnsRes *****************************************************************',
+          //   );
+          //   //parse columns data
+          //   const columns =
+          //     getItemColumnsRes.data.data.items[0].subitems[0].column_values;
+          //   console.log('columns', columns);
 
-            subitemRateColumnId = parseSubColumnValuesForString(
-              columns,
-              'Rate',
-            );
-            subitemHoursColumnId = parseSubColumnValuesForString(
-              columns,
-              'Hours',
-            );
+          //   subitemRateColumnId = parseSubColumnValuesForString(
+          //     columns,
+          //     'Rate',
+          //   );
+          //   subitemHoursColumnId = parseSubColumnValuesForString(
+          //     columns,
+          //     'Hours',
+          //   );
 
-            console.log('subitemRateColumnId', subitemRateColumnId);
-            console.log('subitemHoursColumnId', subitemHoursColumnId);
+          //   console.log('subitemRateColumnId', subitemRateColumnId);
+          //   console.log('subitemHoursColumnId', subitemHoursColumnId);
 
-            //TODO: replace getting the item and replacing the entries with create new subitem
-            let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${loaItemId},item_name: "${newSubitemLabel}",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
-            let testing = {};
+          //   //TODO: replace getting the item and replacing the entries with create new subitem
+          //   let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${loaItemId},item_name: "${newSubitemLabel}",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
+          //   let testing = {};
 
-            testing[`${subitemRateColumnId}`] = 1;
-            testing[`${subitemHoursColumnId}`] = cost;
+          //   testing[`${subitemRateColumnId}`] = 1;
+          //   testing[`${subitemHoursColumnId}`] = cost;
 
-            console.log('testing', testing);
+          //   console.log('testing', testing);
 
-            let vars = {
-              columnVals: JSON.stringify(testing),
-            };
-            console.log('vars', vars);
+          //   let vars = {
+          //     columnVals: JSON.stringify(testing),
+          //   };
+          //   console.log('vars', vars);
 
-            //POST: new subitem
-            const postSubitemConfig = postConfigWithVariables(
-              postSubitemQuery,
-              vars,
-            );
-            console.log('postSubitemConfig', postSubitemConfig);
-            return axios.request(postSubitemConfig);
-          })
-          .then((postSubitemRes) => {
-            console.log(
-              'postCostToColumnRes**********************************************************************',
-              postSubitemRes.data,
-            );
+          //   //POST: new subitem
+          //   const postSubitemConfig = postConfigWithVariables(
+          //     postSubitemQuery,
+          //     vars,
+          //   );
+          //   console.log('postSubitemConfig', postSubitemConfig);
+          //   return axios.request(postSubitemConfig);
+          // })
+          // .then((postSubitemRes) => {
+          //   console.log(
+          //     'postCostToColumnRes**********************************************************************',
+          //     postSubitemRes.data,
+          //   );
 
-            if (!createNewItem) {
-              //POST: delete old value if id is the same
-              const deleteItemQuery = returnDeleteItem(oldItemID);
-              const deleteItemConfig = returnPostConfig(deleteItemQuery);
-              return axios.request(deleteItemConfig);
-            } else {
-              return;
-            }
-          })
-          .then((finalRes) => {
-            console.log('finalRes.data', finalRes.data);
-          })
+          //   if (!createNewItem) {
+          //     //POST: delete old value if id is the same
+          //     const deleteItemQuery = returnDeleteItem(oldItemID);
+          //     const deleteItemConfig = returnPostConfig(deleteItemQuery);
+          //     return axios.request(deleteItemConfig);
+          //   } else {
+          //     return;
+          //   }
+          // })
+          // .then((finalRes) => {
+          //   console.log('finalRes.data', finalRes.data);
+          // })
           .catch((error) => {
             console.log('error.data', error.data);
           });
