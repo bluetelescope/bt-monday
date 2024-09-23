@@ -40,37 +40,10 @@ const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 
 let pulseItemId;
-let hoursFromForm = '0';
-let projectColumnId = 'dropdown';
 let loaItemId;
-let boardName;
-let newCostColumnId = 'numbers__1';
-let proposalItemId;
-let sellPriceItemId;
-let personId;
-let personData;
 let itemIDinBoard;
-let costColumnId = '';
-let hoursColumnId = '';
-let currentCostValue = '';
-let currentHoursValue = '';
-let newCostValue = '';
-let newHoursValue = '';
-let rate = 0;
-let cost;
-let label = ' ';
-let subitemCostColumnId = '';
-let subitemHoursColumnId = '';
-let subitemTimelineColumnId = '';
 let subitemAmountColumnId = '';
 
-let subitemRateColumnId;
-let boardSlug;
-let dateRangeData;
-let dateRangeValue;
-let scopeDescription;
-let boardRelation;
-let newSubitemLabel;
 let createNewItem = true;
 let oldItemID;
 let eventType;
@@ -181,14 +154,15 @@ export class LOASController {
             })
             .then((getLoaItemRes) => {
               console.log(
-                'getBoardItemsRes *****************************************************************',
+                'getLoaItemRes *****************************************************************',
               );
-              // console.log('getBoardItemsRes.data', getLoaItemRes.data);
+              console.log('getLoaItemRes.data', getLoaItemRes.data);
 
               //parse items data
               loaItemId =
                 getLoaItemRes.data.data.boards[0].items_page.items[0].id;
 
+              console.log('loaItemId', loaItemId);
               //GET: columns in subitem
               const getLoaItemColumnsQuery = returnColumnsInSubitem(loaItemId);
               const getLoaItemColumnsConfig = returnGetConfig(
