@@ -21,6 +21,7 @@ import {
   parseValueofColumnFromColumnID,
   parseSubColumnValuesForString,
   parseValueFromColumns,
+  parseBoardID,
 } from 'src/functions/parseData';
 import { users, variables } from 'src/variables';
 
@@ -163,11 +164,11 @@ export class LOASController {
                 'resGetBoardsQuery *****************************************************************',
               );
               //parse boards data
-              targetBoardId = parseBoardIDFromSlug(
+              targetBoardId = parseBoardID(
                 responseConfigGetBoards.data.data.boards,
                 targetBoardName,
               );
-
+              console.log('targetBoardId', targetBoardId);
               //GET: item in active project board with persons name
               const getBoardItemQuery = returnGetItemFromBoardQuery(
                 targetBoardId,
