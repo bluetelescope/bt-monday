@@ -37,9 +37,11 @@ let label = ' ';
 let boardId = 0;
 let itemIDinBoard;
 let subitemRateColumnId = '';
+let subitemNameColumnId = '';
 let subitemIsHourlyColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
+let subitemNameColumnString = 'Name';
 let subitemIsHourlyColumnString = 'Calculate Hourly Rate?';
 let subitemRateColumnString = 'Rate';
 let subitemHoursColumnString = 'Hours';
@@ -89,22 +91,22 @@ export class TimetrackingController {
           );
           console.log(
             'data.event.columnValues.multi_select1__1.chosenValues',
-            data.event.columnValues.multi_select1__1.chosenValues,
+            data.event.columnValues.multi_select1__1.chosenValues.name,
           );
 
           label = formData.dropdown.chosenValues[0].name;
           dateRangeData = formData.date_range;
-          personName = formData.multi_select1__1.chosenValues;
+          personName = formData.multi_select1__1.chosenValues.name;
           boardSlug = label.substring(0, 4);
 
-          personId = String(formData.person.personsAndTeams[0].id);
-          console.log('personId', personId);
+          // personId = String(formData.person.personsAndTeams[0].id);
+          // console.log('personId', personId);
           personData = users.filter(
-            (person) => person.id === String(personId),
+            (person) => person.name === String(personName),
           )[0];
           console.log('personData', personData);
           hoursFromForm = formData.numbers.value;
-          console.log('personId', personId);
+          // console.log('personId', personId);
           console.log('label', formData.dropdown.chosenValues[0].name);
           console.log('hoursFromForm', hoursFromForm);
           //parse users data
@@ -166,11 +168,14 @@ export class TimetrackingController {
                 getItemColumnsRes.data.data.items[0].subitems[0].column_values;
               console.log('columns', columns);
 
+              subitemNameColumnId = parseSubColumnValuesForString(
+                columns,
+                subitemNameColumnString,
+              );
               subitemIsHourlyColumnId = parseSubColumnValuesForString(
                 columns,
                 subitemIsHourlyColumnString,
               );
-
               subitemHoursColumnId = parseSubColumnValuesForString(
                 columns,
                 subitemHoursColumnString,
@@ -192,12 +197,13 @@ export class TimetrackingController {
               //TODO: replace getting the item and replacing the entries with create new subitem
               let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${itemIDinBoard},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
               let testing = {
-                person: {
-                  personsAndTeams: [{ id: personId, kind: 'person' }],
-                },
+                // person: {
+                //   personsAndTeams: [{ id: personId, kind: 'person' }],
+                // }
               };
 
               testing[`${subitemIsHourlyColumnId}`] = { label: 'YES' };
+              testing[`${subitemNameColumnId}`] = personName;
               testing[`${subitemRateColumnId}`] = rate;
               testing[`${subitemHoursColumnId}`] = hoursFromForm;
               testing[`${subitemTimelineColumnId}`] = {
