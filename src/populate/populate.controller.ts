@@ -108,7 +108,6 @@ export class PopulateController {
             personName = itemInfo.column_values.filter(
               (column) => column.id === 'multi_select1__1',
             )[0].text;
-            personId = itemInfo.subscribers[0].id || null;
             boardName = itemInfo.column_values.filter(
               (column) => column.id === 'dropdown',
             )[0].text;
@@ -124,15 +123,13 @@ export class PopulateController {
             console.log('personName', personName);
             console.log('hoursFromForm', hoursFromForm);
             console.log('boardName', boardName);
-            console.log('personId', personId);
             console.log('dateRangeValue', dateRangeValue);
             console.log('dateRangeData', dateRangeData);
 
             personData = users.filter(
-              (person) => person.id === String(personId),
+              (person) => person.name === String(personName),
             )[0];
 
-            personId = personData.id;
             personTitle = personData.title;
             rate = personData.rate;
             cost = `${Number(hoursFromForm) * Number(rate) * -1}`;
