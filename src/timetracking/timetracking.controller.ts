@@ -91,12 +91,16 @@ export class TimetrackingController {
           );
           console.log(
             'data.event.columnValues.multi_select1__1.chosenValues',
-            data.event.columnValues.multi_select1__1.chosenValues.name,
+            data.event.columnValues.multi_select1__1.chosenValues,
+          );
+          console.log(
+            'data.event.columnValues.multi_select1__1.chosenValues[0].name',
+            data.event.columnValues.multi_select1__1.chosenValues[0].name,
           );
 
           label = formData.dropdown.chosenValues[0].name;
           dateRangeData = formData.date_range;
-          personName = formData.multi_select1__1.chosenValues.name;
+          personName = formData.multi_select1__1.chosenValues[0].name;
           boardSlug = label.substring(0, 4);
 
           // personId = String(formData.person.personsAndTeams[0].id);
