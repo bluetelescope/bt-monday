@@ -105,6 +105,8 @@ export class PopulateController {
             // console.log('getItemResponse.data', getItemResponse.data);
             const itemInfo = getItemResponse.data.data.items[0];
             console.log('itemInfo', itemInfo);
+            personName =
+              itemInfo.column_values.multi_select1__1.chosenValues[0].name;
             personId = itemInfo.subscribers[0].id || null;
             boardName = itemInfo.column_values.filter(
               (column) => column.id === 'dropdown',
@@ -118,6 +120,7 @@ export class PopulateController {
             )[0].value;
             dateRangeData = JSON.parse(dateRangeValue);
 
+            console.log('personName', personName);
             console.log('hoursFromForm', hoursFromForm);
             console.log('boardName', boardName);
             console.log('personId', personId);
