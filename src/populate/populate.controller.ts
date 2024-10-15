@@ -116,7 +116,7 @@ export class PopulateController {
             hoursFromForm = itemInfo.column_values.filter(
               (column) => column.id === 'numbers',
             )[0].text;
-            dateRangeValue = boardName = itemInfo.column_values.filter(
+            dateRangeValue = itemInfo.column_values.filter(
               (column) => column.id === 'date_range',
             )[0].value;
             dateRangeData = JSON.parse(dateRangeValue);
