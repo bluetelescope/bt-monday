@@ -193,6 +193,7 @@ export class TimetrackingController {
                 subitemRateColumnString,
               );
 
+              console.log('subitemNameColumnId', subitemNameColumnId);
               console.log('subitemIsHourlyColumnId', subitemIsHourlyColumnId);
               console.log('subitemRateColumnId', subitemRateColumnId);
               console.log('subitemHoursColumnId', subitemHoursColumnId);
