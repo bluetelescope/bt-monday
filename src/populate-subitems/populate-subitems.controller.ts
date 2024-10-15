@@ -81,7 +81,7 @@ export class PopulateSubitemsController {
       const text = raw.toString().trim();
       console.log('body:', text);
     } else {
-      console.log('populate endpoint data:', data);
+      console.log('populate subitems endpoint data:', data);
       //if there is an event field on the body
       if (!!data.event) {
         console.log('data:', data);
