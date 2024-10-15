@@ -28,6 +28,7 @@ import axios from 'axios';
 import { users, variables } from 'src/variables';
 
 let hoursFromForm = '0';
+let personName = '';
 let personId = '';
 let personData;
 let rate = 0;
@@ -86,10 +87,16 @@ export class TimetrackingController {
             'data.event.columnValues.dropdown',
             data.event.columnValues.dropdown,
           );
+          console.log(
+            'data.event.columnValues.multi_select1__1.chosenValues',
+            data.event.columnValues.multi_select1__1.chosenValues,
+          );
 
           label = formData.dropdown.chosenValues[0].name;
           dateRangeData = formData.date_range;
+          personName = formData.multi_select1__1.chosenValues;
           boardSlug = label.substring(0, 4);
+
           personId = String(formData.person.personsAndTeams[0].id);
           console.log('personId', personId);
           personData = users.filter(

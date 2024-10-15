@@ -73,6 +73,11 @@ export function parseBoardID(boards: any, label: string) {
   console.log('board', board);
   return board.id;
 }
+export function parseBoardIncludesID(boards: any, label: string) {
+  const board = boards.filter((board) => board.name.includes(label))[0];
+  console.log('board', board);
+  return board.id;
+}
 
 export function parseBoardIDFromSlug(boards: any, slug: string) {
   const board = boards.filter(
