@@ -98,15 +98,16 @@ export class PopulateController {
         itemId = data.event.pulseId;
         const getItemQuery = returnGetItemQuery(itemId);
         const getItemConfig = returnGetConfig(getItemQuery);
+
         axios
           .request(getItemConfig)
           .then((getItemResponse) => {
             console.log('getItemResponse ***************************');
-            // console.log('getItemResponse.data', getItemResponse.data);
             const itemInfo = getItemResponse.data.data.items[0];
             console.log('itemInfo', itemInfo);
-            personName =
-              itemInfo.column_values.multi_select1__1.chosenValues[0].name;
+            personName = itemInfo.column_values.filter(
+              (column) => column.id === 'multi_select1__1',
+            )[0].text;
             personId = itemInfo.subscribers[0].id || null;
             boardName = itemInfo.column_values.filter(
               (column) => column.id === 'dropdown',
