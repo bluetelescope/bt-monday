@@ -46,6 +46,8 @@ let personId;
 let personData;
 let personTitle;
 let itemIDinBoard;
+let personName = '';
+
 let costColumnId = '';
 let hoursColumnId = '';
 let currentCostValue = '';
@@ -55,10 +57,12 @@ let newHoursValue = '';
 let rate = 0;
 let cost;
 let label = ' ';
+let subitemNameColumnId = '';
 let subitemRateColumnId = '';
 let subitemIsHourlyColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
+let subitemNameColumnString = 'Name';
 let subitemIsHourlyColumnString = 'Calculate Hourly Rate?';
 let subitemRateColumnString = 'Rate';
 let subitemHoursColumnString = 'Hours';
@@ -184,6 +188,11 @@ export class PopulateController {
               getItemColumnsRes.data.data.items[0].subitems[0].column_values;
             console.log('columns', columns);
 
+            subitemNameColumnId = parseSubColumnValuesForString(
+              columns,
+              subitemNameColumnString,
+            );
+
             subitemIsHourlyColumnId = parseSubColumnValuesForString(
               columns,
               subitemIsHourlyColumnString,
@@ -202,6 +211,7 @@ export class PopulateController {
               subitemRateColumnString,
             );
 
+            console.log('subitemNameColumnId', subitemNameColumnId);
             console.log('subitemIsHourlyColumnId', subitemIsHourlyColumnId);
             console.log('subitemRateColumnId', subitemRateColumnId);
             console.log('subitemHoursColumnId', subitemHoursColumnId);
@@ -210,10 +220,11 @@ export class PopulateController {
             //TODO: replace getting the item and replacing the entries with create new subitem
             let postSubitemQuery = `mutation ($columnVals: JSON!,) { create_subitem(parent_item_id: ${itemIDinBoard},item_name: "Hours Log",create_labels_if_missing: true, column_values:$columnVals) { id } }`;
             let testing = {
-              person: {
-                personsAndTeams: [{ id: personId, kind: 'person' }],
-              },
+              // person: {
+              //   personsAndTeams: [{ id: personId, kind: 'person' }],
+              // },
             };
+            testing[`${subitemNameColumnId}`] = personName;
 
             testing[`${subitemIsHourlyColumnId}`] = { label: 'YES' };
             testing[`${subitemRateColumnId}`] = rate;

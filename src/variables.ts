@@ -38,7 +38,7 @@ export const users = [
   {
     id: '27397551',
     rate: 225,
-    name: 'Valeria',
+    name: 'Valeria Valoueva',
     title: 'Lead Creative Developer',
   },
   {
@@ -82,6 +82,12 @@ export const users = [
     rate: 150,
     name: 'Patrick Snee',
     title: null,
+  },
+  {
+    id: '64324790',
+    rate: 160,
+    name: 'Debbie Baer',
+    title: 'Creative Narrative Strategist',
   },
 ];
 
