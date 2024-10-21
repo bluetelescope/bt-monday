@@ -55,16 +55,22 @@ let currentHoursValue = '';
 let newCostValue = '';
 let newHoursValue = '';
 let rate = 0;
+let actualRate = 0;
+let billedRate = 0;
 let cost;
 let label = ' ';
 let subitemNameColumnId = '';
 let subitemRateColumnId = '';
+let subitemActualRateColumnId = '';
+let subitemBilledRateColumnId = '';
 let subitemIsHourlyColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
 let subitemNameColumnString = 'Name';
 let subitemIsHourlyColumnString = 'Calculate Hourly Rate?';
 let subitemRateColumnString = 'Rate';
+let subitemActualRateColumnString = 'Actual Rate';
+let subitemBilledRateColumnString = 'Billed Rate';
 let subitemHoursColumnString = 'Hours';
 let subitemTimelineColumnString = 'Hours Timeline';
 let boardSlug;
@@ -131,7 +137,9 @@ export class PopulateController {
             )[0];
 
             personTitle = personData.title;
-            rate = personData.rate;
+            // rate = personData.rate;
+            actualRate = personData.actualRate;
+            billedRate = personData.billedRate;
             cost = `${Number(hoursFromForm) * Number(rate) * -1}`;
 
             console.log('personData', personData);
@@ -207,14 +215,23 @@ export class PopulateController {
               columns,
               subitemTimelineColumnString,
             );
-            subitemRateColumnId = parseSubColumnValuesForString(
+            // subitemRateColumnId = parseSubColumnValuesForString(
+            //   columns,
+            //   subitemRateColumnString,
+            // );
+            subitemActualRateColumnId = parseSubColumnValuesForString(
               columns,
-              subitemRateColumnString,
+              subitemActualRateColumnString,
+            );
+            subitemBilledRateColumnId = parseSubColumnValuesForString(
+              columns,
+              subitemBilledRateColumnString,
             );
 
             console.log('subitemNameColumnId', subitemNameColumnId);
             console.log('subitemIsHourlyColumnId', subitemIsHourlyColumnId);
-            console.log('subitemRateColumnId', subitemRateColumnId);
+            console.log('subitemActualRateColumnId', subitemActualRateColumnId);
+            console.log('subitemBilledRateColumnId', subitemBilledRateColumnId);
             console.log('subitemHoursColumnId', subitemHoursColumnId);
             console.log('subitemTimelineColumnId', subitemTimelineColumnId);
 
@@ -228,7 +245,9 @@ export class PopulateController {
             testing[`${subitemNameColumnId}`] = personName;
 
             testing[`${subitemIsHourlyColumnId}`] = { label: 'YES' };
-            testing[`${subitemRateColumnId}`] = rate;
+            // testing[`${subitemRateColumnId}`] = rate;
+            testing[`${subitemActualRateColumnId}`] = actualRate;
+            testing[`${subitemBilledRateColumnId}`] = billedRate;
             testing[`${subitemHoursColumnId}`] = hoursFromForm;
             testing[`${subitemTimelineColumnId}`] = {
               to: dateRangeData.to,

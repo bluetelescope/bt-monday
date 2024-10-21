@@ -2,23 +2,15 @@ import { Controller, Post, Get, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import {
   returnGetConfig,
-  returnPostConfig,
   postConfigWithVariables,
 } from 'src/functions/returnConfig';
 import {
   returnGetBoardsQuery,
-  returnColumnsInBoard,
-  returnChangeSimpleValueQuery,
-  returnGetItemQuery,
   returnGetItemFromBoardQuery,
-  returnAddSubitem,
   returnColumnsInSubitem,
 } from 'src/functions/returnQuery';
 import {
-  parseValueofColumnFromColumnID,
-  parseColumnsForIDS,
   parseBoardIDFromSlug,
-  parseColumnValuesForString,
   parseSubColumnValuesForString,
 } from 'src/functions/parseData';
 
@@ -32,18 +24,27 @@ let personName = '';
 let personId = '';
 let personData;
 let rate = 0;
+let actualRate = 0;
+let billedRate = 0;
+
 let cost;
+let actualCost;
+let billedCost;
+
 let label = ' ';
 let boardId = 0;
 let itemIDinBoard;
 let subitemRateColumnId = '';
+let subitemActualRateColumnId = '';
+let subitemBilledRateColumnId = '';
 let subitemNameColumnId = '';
 let subitemIsHourlyColumnId = '';
 let subitemHoursColumnId = '';
 let subitemTimelineColumnId = '';
 let subitemNameColumnString = 'Name';
 let subitemIsHourlyColumnString = 'Calculate Hourly Rate?';
-let subitemRateColumnString = 'Rate';
+let subitemActualRateColumnString = 'Actual Rate';
+let subitemBilledRateColumnString = 'Billed Rate';
 let subitemHoursColumnString = 'Hours';
 let subitemTimelineColumnString = 'Hours Timeline';
 let boardSlug;
@@ -115,12 +116,18 @@ export class TimetrackingController {
           console.log('label', formData.dropdown.chosenValues[0].name);
           console.log('hoursFromForm', hoursFromForm);
           //parse users data
-          // rate = parseRatefromUserID(users, personId);
-          rate = personData.rate;
-          console.log('rate', rate);
+          actualRate = personData.actualRate;
+          billedRate = personData.billedRate;
 
-          cost = `${Number(hoursFromForm) * Number(rate) * -1}`;
-          console.log('cost', cost);
+          console.log('actualRate', actualRate);
+          console.log('billedRate', billedRate);
+
+          actualCost = `${Number(hoursFromForm) * Number(actualRate) * -1}`;
+          billedCost = `${Number(hoursFromForm) * Number(billedRate) * -1}`;
+
+          console.log('actualCost', actualCost);
+          console.log('billedCost', billedCost);
+
           //get: boards query
           const graphqlGetBoards = returnGetBoardsQuery(
             variables.PROD_WORKSPACE,
@@ -189,14 +196,31 @@ export class TimetrackingController {
                 columns,
                 subitemTimelineColumnString,
               );
-              subitemRateColumnId = parseSubColumnValuesForString(
+              // subitemRateColumnId = parseSubColumnValuesForString(
+              //   columns,
+              //   subitemRateColumnString,
+              // );
+              subitemActualRateColumnId = parseSubColumnValuesForString(
                 columns,
-                subitemRateColumnString,
+                subitemActualRateColumnString,
+              );
+              subitemBilledRateColumnId = parseSubColumnValuesForString(
+                columns,
+                subitemBilledRateColumnString,
               );
 
               console.log('subitemNameColumnId', subitemNameColumnId);
               console.log('subitemIsHourlyColumnId', subitemIsHourlyColumnId);
-              console.log('subitemRateColumnId', subitemRateColumnId);
+              // console.log('subitemRateColumnId', subitemRateColumnId);
+              console.log(
+                'subitemActualRateColumnId',
+                subitemActualRateColumnId,
+              );
+              console.log(
+                'subitemBilledRateColumnId',
+                subitemBilledRateColumnId,
+              );
+
               console.log('subitemHoursColumnId', subitemHoursColumnId);
               console.log('subitemTimelineColumnId', subitemTimelineColumnId);
 
@@ -210,7 +234,9 @@ export class TimetrackingController {
 
               testing[`${subitemIsHourlyColumnId}`] = { label: 'YES' };
               testing[`${subitemNameColumnId}`] = personName;
-              testing[`${subitemRateColumnId}`] = rate;
+              // testing[`${subitemRateColumnId}`] = rate;
+              testing[`${subitemActualRateColumnId}`] = actualRate;
+              testing[`${subitemBilledRateColumnId}`] = billedRate;
               testing[`${subitemHoursColumnId}`] = hoursFromForm;
               testing[`${subitemTimelineColumnId}`] = {
                 to: dateRangeData.to,
