@@ -50,9 +50,9 @@ export const users = [
   },
   {
     id: '37385671',
-    actualRate: 175,
+    actualRate: 71,
     name: 'Carly Hayter',
-    billedRate: 71,
+    billedRate: 175,
     title: 'Creative Software Developer',
   },
   {
