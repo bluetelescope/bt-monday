@@ -2,6 +2,7 @@ import { Controller, Post, Get, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import {
   returnGetConfig,
+  returnPostConfig,
   postConfigWithVariables,
 } from 'src/functions/returnConfig';
 import {
@@ -132,7 +133,7 @@ export class TimetrackingController {
           const graphqlGetBoards = returnGetBoardsQuery(
             variables.PROD_WORKSPACE,
           );
-          const getBoardsQuery = returnGetConfig(graphqlGetBoards);
+          const getBoardsQuery = returnPostConfig(graphqlGetBoards);
           console.log('getBoardsQuery', getBoardsQuery);
           axios
             .request(getBoardsQuery)
@@ -154,7 +155,7 @@ export class TimetrackingController {
                 personData.title,
               );
               console.log('getBoardItemQuery', getBoardItemQuery);
-              const getBoardItemCofig = returnGetConfig(getBoardItemQuery);
+              const getBoardItemCofig = returnPostConfig(getBoardItemQuery);
               return axios.request(getBoardItemCofig);
             })
             .then((getBoardItemRes) => {
@@ -169,7 +170,8 @@ export class TimetrackingController {
 
               //GET: columns in subitem
               const getItemColumnsQuery = returnColumnsInSubitem(itemIDinBoard);
-              const getItemColumnsConfig = returnGetConfig(getItemColumnsQuery);
+              const getItemColumnsConfig =
+                returnPostConfig(getItemColumnsQuery);
               return axios.request(getItemColumnsConfig);
             })
             .then((getItemColumnsRes) => {

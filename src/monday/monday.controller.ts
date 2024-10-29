@@ -81,7 +81,7 @@ export class MondayController {
         itemIdFromForm = data.event.pulseId;
         //get: item data
         const graphqlGetItem = returnGetItemQuery(itemIdFromForm);
-        let configGetItem = returnGetConfig(graphqlGetItem);
+        let configGetItem = returnPostConfig(graphqlGetItem);
 
         axios
           .request(configGetItem)
@@ -106,7 +106,7 @@ export class MondayController {
             const graphqlGetBoards = returnGetBoardsQuery(
               variables.PROD_WORKSPACE,
             );
-            let configGetBoards = returnGetConfig(graphqlGetBoards);
+            let configGetBoards = returnPostConfig(graphqlGetBoards);
             return axios.request(configGetBoards);
           })
           .then((responseConfigGetBoards) => {
@@ -132,7 +132,7 @@ export class MondayController {
               variables.PROD_TEAM,
               variables.ADMIN_TEAM,
             );
-            let configPostBoard = returnGetConfig(graphqlPostBoard);
+            let configPostBoard = returnPostConfig(graphqlPostBoard);
             console.log('configPostBoard', configPostBoard);
             return axios.request(configPostBoard);
           })
@@ -187,7 +187,7 @@ export class MondayController {
               'name',
               sellPriceString,
             );
-            const getSellPriceItemConfig = returnGetConfig(
+            const getSellPriceItemConfig = returnPostConfig(
               getSellPriceItemQuery,
             );
             console.log('getSellPriceItemConfig', getSellPriceItemConfig);
@@ -210,7 +210,7 @@ export class MondayController {
               'name',
               estCostString,
             );
-            const getEstimatedCostItemConfig = returnGetConfig(
+            const getEstimatedCostItemConfig = returnPostConfig(
               getEstimatedCostItemQuery,
             );
             console.log(
@@ -235,7 +235,7 @@ export class MondayController {
 
             const getItemSubitemColumnsQuery =
               returnColumnsInSubitem(estimatedCostItemId);
-            const getItemSubitemColumnsConfig = returnGetConfig(
+            const getItemSubitemColumnsConfig = returnPostConfig(
               getItemSubitemColumnsQuery,
             );
             console.log(
@@ -349,7 +349,7 @@ export class MondayController {
 //               'name',
 //               'Sell Price',
 //             );
-//             const getSellPriceItemConfig = returnGetConfig(
+//             const getSellPriceItemConfig = returnPostConfig(
 //               getSellPriceItemQuery,
 //             );
 //             console.log('getSellPriceItemConfig', getSellPriceItemConfig);
@@ -387,7 +387,7 @@ export class MondayController {
 //               'name',
 //               'Estimated Cost',
 //             );
-//             const getEstimatedCostItemConfig = returnGetConfig(
+//             const getEstimatedCostItemConfig = returnPostConfig(
 //               getEstimatedCostItemQuery,
 //             );
 //             console.log(
