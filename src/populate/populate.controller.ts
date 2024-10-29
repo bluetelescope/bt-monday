@@ -163,7 +163,7 @@ export class PopulateController {
               personData.title,
             );
             console.log('getBoardItemQuery', getBoardItemQuery);
-            const getBoardItemCofig = returnGetConfig(getBoardItemQuery);
+            const getBoardItemCofig = returnPostConfig(getBoardItemQuery);
             return axios.request(getBoardItemCofig);
           })
           .then((getBoardItemsRes) => {
@@ -180,7 +180,7 @@ export class PopulateController {
 
             //GET: columns in subitem
             const getItemColumnsQuery = returnColumnsInSubitem(itemIDinBoard);
-            const getItemColumnsConfig = returnGetConfig(getItemColumnsQuery);
+            const getItemColumnsConfig = returnPostConfig(getItemColumnsQuery);
             return axios.request(getItemColumnsConfig);
           })
           .then((getItemColumnsRes) => {
