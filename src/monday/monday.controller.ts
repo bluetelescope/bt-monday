@@ -44,7 +44,6 @@ let sellPriceItemId;
 let newSubitemBoardId;
 let subitemEstimatedCostId;
 let boardSlug;
-
 let subitemNonHRColID;
 @Controller('monday')
 export class MondayController {
