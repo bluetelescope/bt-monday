@@ -133,6 +133,7 @@ export class TimetrackingController {
             variables.PROD_WORKSPACE,
           );
           const getBoardsQuery = returnGetConfig(graphqlGetBoards);
+          console.log('getBoardsQuery', getBoardsQuery);
           axios
             .request(getBoardsQuery)
             .then((resGetBoards) => {

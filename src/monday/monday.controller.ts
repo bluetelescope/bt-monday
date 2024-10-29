@@ -87,7 +87,7 @@ export class MondayController {
           .request(configGetItem)
           .then((responseConfigGetItem) => {
             // parse item data
-            console.log('responseConfigGetItem **************');
+            console.log('g **************');
             const item = responseConfigGetItem.data.data.items[0];
             console.log(
               'responseConfigGetItem.data.data.items[0]',
