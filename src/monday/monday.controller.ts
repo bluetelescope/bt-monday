@@ -82,7 +82,7 @@ export class MondayController {
         //get: item data
         const graphqlGetItem = returnGetItemQuery(itemIdFromForm);
         let configGetItem = returnPostConfig(graphqlGetItem);
-
+        console.log('configGetItem', configGetItem);
         axios
           .request(configGetItem)
           .then((responseConfigGetItem) => {
