@@ -104,6 +104,7 @@ export class PopulateController {
         itemId = data.event.pulseId;
         const getItemQuery = returnGetItemQuery(itemId);
         const getItemConfig = returnGetConfig(getItemQuery);
+        console.log('getItemConfig', getItemConfig);
 
         axios
           .request(getItemConfig)
