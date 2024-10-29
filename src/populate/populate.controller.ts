@@ -2,6 +2,7 @@ import { Controller, Post, Get, Param, Query, Body, Req } from '@nestjs/common';
 import * as rawbody from 'raw-body';
 import {
   returnGetConfig,
+  returnPostConfig,
   postConfigWithVariables,
 } from 'src/functions/returnConfig';
 import {
@@ -47,13 +48,6 @@ let personData;
 let personTitle;
 let itemIDinBoard;
 let personName = '';
-
-let costColumnId = '';
-let hoursColumnId = '';
-let currentCostValue = '';
-let currentHoursValue = '';
-let newCostValue = '';
-let newHoursValue = '';
 let rate = 0;
 let actualRate = 0;
 let billedRate = 0;
@@ -103,7 +97,7 @@ export class PopulateController {
         const axios = require('axios');
         itemId = data.event.pulseId;
         const getItemQuery = returnGetItemQuery(itemId);
-        const getItemConfig = returnGetConfig(getItemQuery);
+        const getItemConfig = returnPostConfig(getItemQuery);
         console.log('getItemConfig', getItemConfig);
 
         axios
