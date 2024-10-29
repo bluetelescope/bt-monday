@@ -247,6 +247,10 @@ export class MondayController {
           .then((getItemSubcolumns) => {
             console.log('getItemSubcolumns ****************************');
             console.log('getItemSubcolumns.data', getItemSubcolumns.data);
+            console.log(
+              'getItemSubcolumns.data.data.items[0]',
+              getItemSubcolumns.data.data.items[0],
+            );
 
             const columns =
               getItemSubcolumns.data.data.items[0].subitems[0].column_values;
