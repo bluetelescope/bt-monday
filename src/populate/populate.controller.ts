@@ -8,9 +8,7 @@ import {
 import {
   returnGetItemQuery,
   returnGetBoardsQuery,
-  returnChangeSimpleValueQuery,
   returnGetItemFromBoardQuery,
-  returnColumnsInBoard,
   returnColumnsInSubitem,
 } from 'src/functions/returnQuery';
 import {
@@ -31,7 +29,6 @@ const PROD_WORKSPACE = 1080416;
 const BIZDEV_WORKSPACE = 3839751;
 const MIDLEVEL_FOLDER = 14770065;
 const ACTIVE_FOLDER = 7860571;
-// const testItemID = 5104037469;
 const PROD_TEAM = 614284;
 const ADMIN_TEAM = 614287;
 
@@ -138,11 +135,13 @@ export class PopulateController {
             cost = `${Number(hoursFromForm) * Number(rate) * -1}`;
 
             console.log('personData', personData);
+
             //get all boards in prod workspace
+
             const graphqlGetBoards = returnGetBoardsQuery(
               variables.PROD_WORKSPACE,
             );
-            let configGetBoards = returnGetConfig(graphqlGetBoards);
+            let configGetBoards = returnPostConfig(graphqlGetBoards);
             return axios.request(configGetBoards);
           })
           .then((responseGetBoards) => {
