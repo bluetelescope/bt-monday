@@ -212,10 +212,10 @@ export class MondayController {
             const getEstimatedCostItemConfig = returnPostConfig(
               getEstimatedCostItemQuery,
             );
-            console.log(
-              'getEstimatedCostItemConfig',
-              getEstimatedCostItemConfig,
-            );
+            // console.log(
+            //   'getEstimatedCostItemConfig',
+            //   getEstimatedCostItemConfig,
+            // );
             return axios.request(getEstimatedCostItemConfig);
           })
           .then((getEstimatedCostItem) => {
@@ -237,10 +237,10 @@ export class MondayController {
             const getItemSubitemColumnsConfig = returnPostConfig(
               getItemSubitemColumnsQuery,
             );
-            console.log(
-              'getItemSubitemColumnsConfig',
-              getItemSubitemColumnsConfig,
-            );
+            // console.log(
+            //   'getItemSubitemColumnsConfig',
+            //   getItemSubitemColumnsConfig,
+            // );
             return axios.request(getItemSubitemColumnsConfig);
           })
           .then((getItemSubcolumns) => {
@@ -332,123 +332,3 @@ export class MondayController {
     }
   }
 }
-
-// post new label to time tracking board
-// const graphqlPostCoLabelValue = returnChangeSimpleValueQuery(
-//   TIMETRACKING_ITEM_FORLABEL,
-//   variables.TIMETRACKING_PROJECT_COL,
-//   variables.TIMETRACKING_BOARD,
-//   itemName,
-// );
-// let configPostColLabelValue = returnPostConfig(
-//   graphqlPostCoLabelValue,
-// );
-// return axios.request(configPostColLabelValue);
-
-//TODO: this fails because board isnt fully loaded
-//get id of actual value item
-//             const getSellPriceItemQuery = returnGetItemFromBoardQuery(
-//               newBoardId,
-//               'name',
-//               'Sell Price',
-//             );
-//             const getSellPriceItemConfig = returnPostConfig(
-//               getSellPriceItemQuery,
-//             );
-//             console.log('getSellPriceItemConfig', getSellPriceItemConfig);
-//             return axios.request(getSellPriceItemConfig);
-//           })
-//           .then((sellPriceItemResponse) => {
-//             console.log('sellPriceItemResponse ****************************');
-//             console.log(
-//               'sellPriceItemResponse.data',
-//               sellPriceItemResponse.data,
-//             );
-//             console.log(
-//               'sellPriceItemResponse.data.data.boards[0]',
-//               sellPriceItemResponse.data.data.boards[0],
-//             );
-
-//             console.log(
-//               'sellPriceItemResponse.data.data.boards[0].items_page',
-//               sellPriceItemResponse.data.data.boards[0].items_page,
-//             );
-
-//             console.log(
-//               'sellPriceItemResponse.data.data.boards[0].items_page.items[0]',
-//               sellPriceItemResponse.data.data.boards[0].items_page.items[0],
-//             );
-
-//             //parse items data
-//             sellPriceItemId =
-//               sellPriceItemResponse.data.data.boards[0].items_page.items[0]
-//                 .id;
-//             console.log('sellPriceItemId', sellPriceItemId);
-
-//             const getEstimatedCostItemQuery = returnGetItemFromBoardQuery(
-//               newBoardId,
-//               'name',
-//               'Estimated Cost',
-//             );
-//             const getEstimatedCostItemConfig = returnPostConfig(
-//               getEstimatedCostItemQuery,
-//             );
-//             console.log(
-//               'getEstimatedCostItemConfig',
-//               getEstimatedCostItemConfig,
-//             );
-//             return axios.request(getEstimatedCostItemConfig);
-//           })
-//           .then((getEstimatedCostItem) => {
-//             console.log('getEstimatedCostItem ****************************');
-//             console.log(
-//               'getEstimatedCostItem.data.data.boards[0].items_page.items[0]',
-//               getEstimatedCostItem.data.data.boards[0].items_page.items[0],
-//             );
-//             console.log(
-//               'getEstimatedCostItem.data.data.boards[0].items_page.items[0].id',
-//               getEstimatedCostItem.data.data.boards[0].items_page.items[0].id,
-//             );
-//             estimatedCostItemId =
-//               getEstimatedCostItem.data.data.boards[0].items_page.items[0].id;
-//             console.log('estimatedCostItemId', estimatedCostItemId);
-
-//             const changeSellPriceQuery = returnChangeSimpleValueQuery(
-//               newBoardId,
-//               newCostColumnId,
-//               sellPriceItemId,
-//               sellPrice,
-//             );
-//             const changeSellPriceConfig = returnPostConfig(
-//               changeSellPriceQuery,
-//             );
-//             console.log('changeSellPriceConfig', changeSellPriceConfig);
-//             return axios.request(changeSellPriceConfig);
-//           })
-//           .then((response) => {
-//             console.log('response ****************************');
-//             console.log('response', response.data);
-//           })
-//           .catch((error) => {
-//             console.log(
-//               'error ***************************************************************',
-//               error,
-//             );
-//             console.log('error.data', error.data);
-//           });
-
-//         //event info has information regarding only the value of this particular column information
-//         //make a get request: get all information regarding this item
-//       } else {
-//         //if there is not an event field on the body
-//         //it's the verification request
-//         console.log('no event:', data);
-//         const requestBody = JSON.stringify({
-//           challenge: `${data.challenge}`,
-//         });
-//         return requestBody;
-//         // body is parsed by NestJS
-//       }
-//     }
-//   }
-// }
