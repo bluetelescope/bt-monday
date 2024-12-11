@@ -195,7 +195,7 @@ export class PopulateController {
               columns,
               subitemNameColumnString,
             );
-
+            console.log('got there');
             subitemIsHourlyColumnId = parseSubColumnValuesForString(
               columns,
               subitemIsHourlyColumnString,
