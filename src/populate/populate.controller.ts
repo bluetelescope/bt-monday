@@ -190,12 +190,13 @@ export class PopulateController {
             const columns =
               getItemColumnsRes.data.data.items[0].subitems[0].column_values;
             console.log('columns', columns);
+            console.log('got there 1');
 
             subitemNameColumnId = parseSubColumnValuesForString(
               columns,
               subitemNameColumnString,
             );
-            console.log('got there');
+            console.log('got there 2');
             subitemIsHourlyColumnId = parseSubColumnValuesForString(
               columns,
               subitemIsHourlyColumnString,
